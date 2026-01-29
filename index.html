@@ -1,0 +1,264 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>كراش الثقافة - نسخة المتجر</title>
+    <style>
+        :root {
+            --main-bg: #0f172a;
+            --card-bg: #1e293b;
+            --accent: #38bdf8;
+            --success: #22c55e;
+            --danger: #ef4444;
+            --text: #f8fafc;
+        }
+        body {
+            font-family: 'Segoe UI', Tahoma, sans-serif;
+            background: var(--main-bg);
+            color: var(--text);
+            margin: 0;
+            padding: 0;
+            overflow: hidden;
+            height: 100vh;
+            display: flex;
+            justify-content: center;
+        }
+        #app {
+            width: 100%;
+            max-width: 500px;
+            display: flex;
+            flex-direction: column;
+            padding: 20px;
+            box-sizing: border-box;
+        }
+        .screen { flex: 1; display: flex; flex-direction: column; align-items: center; justify-content: center; width: 100%; }
+        h1 { font-size: 2.5rem; color: var(--accent); margin-bottom: 10px; text-shadow: 0 4px 10px rgba(0,0,0,0.5); text-align: center; }
+        
+        .fact-box {
+            background: var(--card-bg);
+            padding: 15px;
+            border-radius: 15px;
+            border-right: 4px solid var(--accent);
+            margin: 20px 0;
+            font-size: 0.95rem;
+            width: 100%;
+            box-sizing: border-box;
+        }
+
+        .category-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 15px;
+            width: 100%;
+        }
+
+        .btn {
+            background: var(--card-bg);
+            color: white;
+            border: 2px solid #334155;
+            padding: 15px;
+            border-radius: 12px;
+            font-size: 1.1rem;
+            font-weight: bold;
+            cursor: pointer;
+            transition: 0.2s;
+        }
+        .btn:active { transform: scale(0.95); background: var(--accent); }
+
+        .header { display: flex; justify-content: space-between; align-items: center; width: 100%; margin-bottom: 20px; }
+        .question-card {
+            background: var(--card-bg);
+            padding: 20px;
+            border-radius: 20px;
+            width: 100%;
+            box-sizing: border-box;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.3);
+            margin-bottom: 20px;
+            min-height: 100px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        .options-grid { display: grid; gap: 10px; width: 100%; }
+        .opt-btn {
+            background: #334155;
+            color: white;
+            border: none;
+            padding: 16px;
+            border-radius: 12px;
+            font-size: 1.1rem;
+            text-align: right;
+            transition: 0.3s;
+        }
+        .hint-btn { background: #b45309; margin-top: 20px; width: 100%; border: none; }
+        .hidden { display: none !important; }
+    </style>
+</head>
+<body>
+
+<div id="app">
+    <div id="start-screen" class="screen">
+        <h1>كراش الثقافة 🏆</h1>
+        <div class="fact-box">
+            <small style="color:var(--accent)">معلومة تهمك:</small><br>
+            <span id="fact-text">جاري التحميل...</span>
+        </div>
+        <div class="category-grid">
+            <button class="btn" onclick="initGame('653248671')">⚽ الرياضة</button>
+            <button class="btn" onclick="initGame('1520110825')">🌍 الجغرافيا</button>
+            <button class="btn" onclick="initGame('1076241975')">💡 ثقافة عامة</button>
+            <button class="btn" onclick="initGame('0')">🧬 العلوم</button>
+        </div>
+        <p style="margin-top:20px; opacity:0.6">أعلى نتيجة: <span id="high-score">0</span></p>
+    </div>
+
+    <div id="game-screen" class="screen hidden">
+        <div class="header">
+            <div id="hearts-ui" style="font-size: 1.5rem;">❤️❤️❤️</div>
+            <div style="font-weight:bold; font-size: 1.2rem;">النقاط: <span id="score-ui">0</span></div>
+        </div>
+        
+        <div class="question-card">
+            <h2 id="q-text" style="margin:0; font-size:1.2rem; text-align:center;">جاري جلب السؤال...</h2>
+        </div>
+
+        <div id="options-box" class="options-grid"></div>
+
+        <button class="btn hint-btn" id="h-btn" onclick="useHint()">حذف إجابتين (50 نقطة)</button>
+    </div>
+</div>
+
+<script>
+    // رابط CSV الخاص بك
+    const CSV_URL = "https://docs.google.com/spreadsheets/d/e/2PACX-1vSJ4RCU1_iXMqLS3ApB1g8SjSrL2hbIAv-1VniqdMElnalov--mSDTpe9rjMxaWGCuP6gpxWV7OZDe1/pub?output=csv";
+
+    let gameState = {
+        score: 0,
+        hearts: 3,
+        questions: [],
+        currentIndex: 0
+    };
+
+    window.onload = async () => {
+        // عرض أعلى نتيجة محفوظة
+        document.getElementById('high-score').innerText = localStorage.getItem('highScore') || 0;
+        
+        // جلب معلومة عشوائية من تبويب Facts
+        const factsData = await fetchCSV('1753444855');
+        if(factsData && factsData.length > 0) {
+            document.getElementById('fact-text').innerText = factsData[Math.floor(Math.random()*factsData.length)].q;
+        }
+    };
+
+    async function fetchCSV(gid) {
+        try {
+            const res = await fetch(`${CSV_URL}&gid=${gid}`);
+            const text = await res.text();
+            const rows = text.split('\n').slice(1);
+            return rows.map(r => {
+                const c = r.split(/,(?=(?:(?:[^"]*"){2})*[^"]*$)/);
+                return { 
+                    q: c[0]?.replace(/"/g,''), 
+                    opts: [c[1], c[2], c[3], c[4]], 
+                    a: c[5]?.trim().replace(/"/g,'') 
+                };
+            });
+        } catch (e) { return null; }
+    }
+
+    async function initGame(gid) {
+        document.getElementById('start-screen').classList.add('hidden');
+        document.getElementById('game-screen').classList.remove('hidden');
+        gameState.questions = await fetchCSV(gid);
+        if(!gameState.questions || gameState.questions.length === 0) {
+            alert("فشل جلب الأسئلة، تأكد من اتصال الإنترنت.");
+            location.reload();
+            return;
+        }
+        render();
+    }
+
+    function render() {
+        if (gameState.currentIndex >= gameState.questions.length) {
+            alert("تهانينا! أكملت كافة الأسئلة في هذا القسم.");
+            saveHighScore();
+            return location.reload();
+        }
+        
+        const q = gameState.questions[gameState.currentIndex];
+        document.getElementById('q-text').innerText = q.q;
+        const box = document.getElementById('options-box');
+        box.innerHTML = '';
+
+        q.opts.forEach(opt => {
+            if(!opt || opt.trim() === "") return;
+            const b = document.createElement('button');
+            b.className = 'opt-btn';
+            b.innerText = opt.trim();
+            b.onclick = () => validate(opt.trim(), q.a, b);
+            box.appendChild(b);
+        });
+    }
+
+    function validate(choice, correct, btn) {
+        // تنظيف الإجابة الصحيحة من الحروف الزائدة (مثل b وفراغ)
+        // إذا كانت الإجابة تبدأ بحرف وفراغ، نأخذ ما بعدهما
+        let cleanedCorrect = correct;
+        if (correct.includes(" ")) {
+            cleanedCorrect = correct.split(" ").slice(1).join(" ").trim();
+        }
+
+        if (choice === cleanedCorrect) {
+            btn.style.background = "#22c55e";
+            gameState.score += 10;
+            setTimeout(() => { 
+                gameState.currentIndex++; 
+                render(); 
+                updateUI(); 
+            }, 600);
+        } else {
+            btn.style.background = "#ef4444";
+            if(window.navigator.vibrate) window.navigator.vibrate(200); 
+            gameState.hearts--;
+            updateUI();
+            if (gameState.hearts <= 0) {
+                saveHighScore();
+                alert("انتهت المحاولات! نقاطك: " + gameState.score);
+                location.reload();
+            }
+        }
+    }
+
+    function updateUI() {
+        document.getElementById('score-ui').innerText = gameState.score;
+        document.getElementById('hearts-ui').innerText = "❤️".repeat(Math.max(0, gameState.hearts));
+    }
+
+    function useHint() {
+        if (gameState.score >= 50) {
+            gameState.score -= 50;
+            updateUI();
+            let hidden = 0;
+            const btns = document.querySelectorAll('.opt-btn');
+            
+            // تحديد النص الصحيح للمقارنة
+            let correct = gameState.questions[gameState.currentIndex].a;
+            let cleanedCorrect = correct.includes(" ") ? correct.split(" ").slice(1).join(" ").trim() : correct;
+
+            btns.forEach(b => {
+                if (b.innerText !== cleanedCorrect && hidden < 2) {
+                    b.classList.add('hidden');
+                    hidden++;
+                }
+            });
+        } else { alert("تحتاج إلى 50 نقطة لاستخدام المساعدة!"); }
+    }
+
+    function saveHighScore() {
+        const currentHigh = parseInt(localStorage.getItem('highScore') || 0);
+        if (gameState.score > currentHigh) localStorage.setItem('highScore', gameState.score);
+    }
+</script>
+</body>
+</html>
