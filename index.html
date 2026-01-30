@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>كنز الثقافة - Pro</title>
+    <title>كنز الثقافة - الإصدار الذهبي</title>
     <style>
         :root {
             --bg: #0f172a;
@@ -23,10 +23,11 @@
             min-height: 100vh;
             margin: 0;
             padding: 20px;
-            font-family: 'Segoe UI', sans-serif;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
             overflow-x: hidden;
         }
 
+        /* زر التحكم بالصوت */
         .audio-control {
             position: fixed;
             top: 20px;
@@ -38,8 +39,10 @@
             border-radius: 50%;
             cursor: pointer;
             backdrop-filter: blur(15px);
+            font-size: 1.2rem;
         }
 
+        /* شاشة البداية */
         #splash-screen {
             display: flex;
             flex-direction: column;
@@ -57,25 +60,30 @@
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
             margin-bottom: 20px;
+            filter: drop-shadow(0 0 15px rgba(245, 158, 11, 0.3));
         }
 
         .fact-card {
             background: var(--glass);
             backdrop-filter: blur(20px);
-            padding: 30px;
+            padding: 25px;
             border-radius: 28px;
             border: 1px solid var(--glass-border);
             max-width: 480px;
             margin-bottom: 30px;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.3);
         }
 
+        /* واجهة اللعبة */
         .header { display: none; width: 100%; max-width: 500px; margin-bottom: 25px; }
         .top-bar {
             display: flex;
             justify-content: space-between;
+            align-items: center;
             background: var(--glass);
             padding: 18px 30px;
             border-radius: 22px;
+            border: 1px solid var(--glass-border);
         }
 
         .categories {
@@ -91,15 +99,16 @@
             border: 1px solid var(--glass-border);
             padding: 30px 15px;
             border-radius: 24px;
+            font-size: 1.2rem;
             color: white;
             cursor: pointer;
             transition: 0.3s;
-            font-size: 1.2rem;
             font-weight: bold;
         }
 
         .cat-btn:hover { background: var(--primary); transform: translateY(-5px); }
 
+        /* منطقة الأسئلة */
         .quiz-container { display: none; width: 100%; max-width: 500px; }
         .question-card {
             background: var(--glass);
@@ -108,6 +117,7 @@
             margin-bottom: 25px;
             text-align: center;
             font-size: 1.5rem;
+            font-weight: 600;
             border: 1px solid var(--glass-border);
         }
 
@@ -118,6 +128,7 @@
             padding: 20px;
             border-radius: 20px;
             text-align: right;
+            font-size: 1.15rem;
             cursor: pointer;
             transition: 0.2s;
         }
@@ -135,6 +146,7 @@
             font-weight: 800;
             border: none;
             cursor: pointer;
+            box-shadow: 0 10px 25px rgba(245, 158, 11, 0.4);
         }
     </style>
 </head>
@@ -146,9 +158,9 @@
         <div class="logo">💎 كنز الثقافة</div>
         <div class="fact-card">
             <span style="color: var(--secondary); font-weight: 800;">هل تعلم؟</span>
-            <p id="fact-text" style="font-size: 1.2rem; margin-top: 10px;">جاري تحميل المعلومات...</p>
+            <p id="fact-text" style="font-size: 1.2rem; margin-top: 10px;">جاري استخراج الجواهر...</p>
         </div>
-        <button class="start-action" onclick="initGame()">ابدأ المغامرة</button>
+        <button class="start-action" onclick="initGame()">ابدأ المغامرة 🔊</button>
     </div>
 
     <div class="header" id="game-header">
@@ -172,7 +184,7 @@
         <div class="options-grid" id="options"></div>
     </div>
 
-    <audio id="bg-music" loop src="https://files.freemusicarchive.org/storage-freemusicarchive-org/music/no_curator/Ketsa/The_Lost_Files/Ketsa_-_10_-_Thinking_Free.mp3"></audio>
+    <audio id="bg-music" loop src="https://cdn.pixabay.com/audio/2022/03/23/audio_8cc3142277.mp3"></audio>
     <audio id="correct-snd" src="https://cdn.pixabay.com/audio/2021/08/04/audio_bbd1304da8.mp3"></audio>
     <audio id="wrong-snd" src="https://cdn.pixabay.com/audio/2022/03/10/audio_c35078832a.mp3"></audio>
 
@@ -193,16 +205,17 @@
                 const text = await res.text();
                 const rows = text.split(/\r?\n/).filter(r => r.trim() !== "");
                 if (rows.length > 1) {
-                    const facts = rows.slice(1);
-                    const randomFact = facts[Math.floor(Math.random() * facts.length)].split(',')[0].replace(/^"|"$/g, '');
+                    const randomFact = rows.slice(1)[Math.floor(Math.random() * (rows.length-1))].split(',')[0].replace(/^"|"$/g, '');
                     document.getElementById('fact-text').innerText = randomFact;
                 }
-            } catch (e) { document.getElementById('fact-text').innerText = "استعد لرحلة معرفية فريدة!"; }
+            } catch (e) { document.getElementById('fact-text').innerText = "كنز الثقافة في انتظارك!"; }
         }
 
         function initGame() {
+            // تشغيل موسيقى الجاز فور الضغط على ابدأ
             bgMusic.volume = 0.2;
-            bgMusic.play(); // الموسيقى تبدأ هنا وتستمر في اللعبة كاملة
+            bgMusic.play().catch(error => console.log("Music play failed:", error));
+            
             document.getElementById('splash-screen').style.display = 'none';
             document.getElementById('game-header').style.display = 'block';
             document.getElementById('main-menu').style.display = 'grid';
@@ -218,46 +231,4 @@
                 state.questions = rows.map(row => {
                     const cols = row.split(',').map(c => c.replace(/^"|"$/g, '').trim());
                     return { q: cols[0], options: [cols[1], cols[2], cols[3], cols[4]], a: cols[5] };
-                }).filter(item => item.q);
-                state.currentIdx = 0;
-                showQuestion();
-            } catch (e) { alert("خطأ في الاتصال بالبيانات!"); }
-        }
-
-        function showQuestion() {
-            if (state.currentIdx >= state.questions.length) {
-                alert("رائع! لقد أتممت المهمة بنجاح.");
-                location.reload();
-                return;
-            }
-            const q = state.questions[state.currentIdx];
-            document.getElementById('question').innerText = q.q;
-            const optionsDiv = document.getElementById('options');
-            optionsDiv.innerHTML = '';
-            
-            q.options.forEach((opt) => {
-                const div = document.createElement('div');
-                div.className = 'opt-item';
-                div.innerText = opt;
-                div.onclick = () => {
-                    if (opt === q.a) {
-                        document.getElementById('correct-snd').play();
-                        div.classList.add('correct');
-                        state.score += 10;
-                        document.getElementById('score').innerText = state.score;
-                        setTimeout(() => { state.currentIdx++; showQuestion(); }, 700);
-                    } else {
-                        document.getElementById('wrong-snd').play();
-                        div.classList.add('wrong');
-                        state.hearts--;
-                        document.getElementById('hearts-ui').innerText = "❤️".repeat(Math.max(0, state.hearts));
-                        if (state.hearts <= 0) { alert("نهاية الرحلة!"); location.reload(); }
-                    }
-                };
-                optionsDiv.appendChild(div);
-            });
-        }
-        fetchFact();
-    </script>
-</body>
-</html>
+                }).filter(item => item
