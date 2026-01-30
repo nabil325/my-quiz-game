@@ -16,6 +16,7 @@
             margin: 0; padding: 0; height: 100%; width: 100%;
             font-family: 'Cairo', sans-serif; color: white;
             overflow: hidden;
+            /* ربط ملف الصورة الخاص بك بالخلفية */
             background: url('Warface Wallpaper.jpeg') no-repeat center center;
             background-size: cover;
             background-attachment: fixed;
@@ -23,134 +24,187 @@
 
         .overlay {
             position: fixed; inset: 0;
-            background: rgba(0, 0, 0, 0.6);
+            background: rgba(0, 0, 0, 0.5);
             z-index: -1;
         }
 
         .top-bar {
             position: fixed; top: 0; width: 100%; padding: 15px;
-            display: flex; justify-content: space-around; z-index: 1000;
+            display: none; justify-content: space-around; z-index: 1000;
             background: rgba(0,0,0,0.6); backdrop-filter: blur(10px);
-            border-bottom: 2px solid var(--gold);
         }
 
-        /* تنسيق حاوية المحتوى */
+        .screen {
+            position: relative; z-index: 10; height: 100vh;
+            display: none; flex-direction: column; align-items: center; justify-content: center;
+            text-align: center; padding: 20px;
+        }
+        .active { display: flex; }
+
+        .cat-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; width: 100%; max-width: 450px; }
+        .cat-btn {
+            background: var(--glass); backdrop-filter: blur(15px);
+            padding: 25px 10px; border-radius: 20px; border: 1px solid rgba(255,255,255,0.1);
+            cursor: pointer; font-weight: 900; transition: 0.3s;
+        }
+        .cat-btn:hover { background: var(--blue); }
+
+        .map-view { width: 100%; overflow-y: auto; padding: 100px 0; display: flex; flex-direction: column-reverse; align-items: center; gap: 30px; }
+        .lvl-node {
+            width: 70px; height: 70px; border-radius: 50%;
+            background: rgba(0,0,0,0.6); border: 4px solid #444;
+            display: flex; align-items: center; justify-content: center;
+            font-size: 1.5rem; font-weight: 900; cursor: pointer; transition: 0.4s;
+        }
+        .unlocked { border-color: var(--blue); background: rgba(14, 165, 233, 0.2); }
+        .current { border-color: var(--gold); background: var(--gold); color: black; animation: pulse 2s infinite; }
+
+        @keyframes pulse { 0%, 100% { transform: scale(1); } 50% { transform: scale(1.1); box-shadow: 0 0 20px var(--gold); } }
+
         .quiz-container {
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-            height: 100vh;
-            text-align: center;
-            padding: 20px;
+            position: fixed; bottom: -100%; left: 0; width: 100%;
+            background: var(--glass); backdrop-filter: blur(25px);
+            border-radius: 35px 35px 0 0; border-top: 2px solid var(--gold);
+            padding: 40px 25px; box-sizing: border-box; z-index: 2000;
+            transition: 0.6s cubic-bezier(0.19, 1, 0.22, 1);
         }
+        .quiz-container.show { bottom: 0; }
 
-        /* تنسيق الزر الجديد */
-        .help-btn {
-            background: var(--gold);
-            color: #000;
-            border: none;
-            padding: 12px 25px;
-            font-family: 'Cairo', sans-serif;
-            font-weight: 900;
-            border-radius: 50px;
-            cursor: pointer;
-            transition: 0.3s;
-            box-shadow: 0 4px 15px rgba(255, 189, 57, 0.4);
-            margin-top: 20px;
-            font-size: 1.1rem;
-        }
-
-        .help-btn:hover {
-            transform: translateY(-3px);
-            box-shadow: 0 6px 20px rgba(255, 189, 57, 0.6);
-        }
-
-        .help-btn:disabled {
-            background: #4b5563;
-            color: #94a3b8;
-            cursor: not-allowed;
-            transform: none;
-            box-shadow: none;
-        }
-
-        .points-display {
-            color: var(--gold);
-            font-weight: bold;
-            font-size: 1.2rem;
-        }
-
-        /* تمويه بسيط للخيارات عند حذفها */
-        .option.hidden {
-            visibility: hidden;
-            opacity: 0;
-        }
+        .ans-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; margin-top: 20px; }
+        .ans-btn { background: rgba(255,255,255,0.05); padding: 18px; border-radius: 15px; cursor: pointer; border: 1px solid rgba(255,255,255,0.1); font-weight: bold; }
+        .correct { background: #10b981 !important; }
     </style>
 </head>
 <body>
 
     <div class="overlay"></div>
 
-    <div class="top-bar">
-        <div>النقاط: <span id="points" class="points-display">100</span></div>
-        <div>IQ Quiz Pro</div>
+    <div id="top-bar" class="top-bar">
+        <span>🏆 <span id="score-val">0</span></span>
+        <span>❤️ <span id="hearts-val">3</span></span>
+        <span onclick="location.reload()" style="cursor:pointer">🏠</span>
     </div>
 
-    <div class="quiz-container">
-        <h2 id="question">ما هو ناتج 5 + 5؟</h2>
-        
-        <div id="options-container">
-            <button class="option" onclick="checkAnswer(false)">8</button>
-            <button class="option" onclick="checkAnswer(true)">10</button>
-            <button class="option" onclick="checkAnswer(false)">12</button>
-            <button class="option" onclick="checkAnswer(false)">15</button>
+    <div id="scr-start" class="screen active">
+        <h1 style="font-size: 4rem; color: var(--gold); font-weight: 900;">IQ ثقافة</h1>
+        <div style="background: var(--glass); padding: 20px; border-radius: 20px; margin: 20px; max-width: 350px;">
+            <p id="fact-txt">تحميل معلومة اليوم...</p>
         </div>
+        <button onclick="showCats()" style="background: var(--gold); border: none; padding: 18px 80px; border-radius: 50px; font-weight: 900; cursor: pointer; font-size: 1.2rem;">استمرار</button>
+    </div>
 
-        <br>
+    <div id="scr-cats" class="screen">
+        <h2 style="margin-bottom: 30px;">اختر التصنيف</h2>
+        <div class="cat-grid">
+            <div class="cat-btn" onclick="startCat('11216236', 'history')">⏳ التاريخ</div>
+            <div class="cat-btn" onclick="startCat('99625756', 'geo')">🌍 الجغرافيا</div>
+            <div class="cat-btn" onclick="startCat('1843208636', 'science')">🧬 العلوم</div>
+            <div class="cat-btn" onclick="startCat('564130158', 'general')">💡 ثقافة عامة</div>
+            <div class="cat-btn" onclick="startCat('0', 'sports')" style="grid-column: span 2;">⚽ الرياضة</div>
+        </div>
+    </div>
 
-        <button id="delete-two-btn" class="help-btn" onclick="use5050()">
-            حذف إجابتين (50 نقطة) 💡
-        </button>
+    <div id="scr-map" class="screen" style="padding:0">
+        <div class="map-view" id="map-cont"></div>
+    </div>
+
+    <div class="quiz-container" id="quiz-ui">
+        <div id="q-text" style="font-size: 1.3rem; font-weight: bold; margin-bottom: 10px;"></div>
+        <div class="ans-grid" id="ans-box"></div>
     </div>
 
     <script>
-        let currentPoints = 100;
-        const correctIndex = 1; // نفترض أن الإجابة الثانية هي الصحيحة (رقم 1 في المصفوفة)
+        const CSV = "https://docs.google.com/spreadsheets/d/e/2PACX-1vSJ4RCU1_iXMqLS3ApB1g8SjSrL2hbIAv-1VniqdMElnalov--mSDTpe9rjMxaWGCuP6gpxWV7OZDe1/pub?output=csv";
+        
+        let gameState = {
+            score: parseInt(localStorage.getItem('iq_total_score')) || 0,
+            progress: JSON.parse(localStorage.getItem('iq_cat_progress')) || { history: 1, geo: 1, science: 1, general: 1, sports: 1 },
+            currentCat: '',
+            questions: [],
+            activeIdx: 0
+        };
 
-        function use5050() {
-            if (currentPoints >= 50) {
-                // خصم النقاط
-                currentPoints -= 50;
-                document.getElementById('points').innerText = currentPoints;
-
-                // جلب كل الخيارات
-                const options = document.querySelectorAll('.option');
-                let countDeleted = 0;
-
-                // حذف إجابتين بشرط ألا تكون الإجابة الصحيحة
-                for (let i = 0; i < options.length; i++) {
-                    if (i !== correctIndex && countDeleted < 2) {
-                        options[i].classList.add('hidden');
-                        countDeleted++;
-                    }
-                }
-
-                // تعطيل الزر بعد الاستخدام
-                document.getElementById('delete-two-btn').disabled = true;
-                document.getElementById('delete-two-btn').innerText = "تم استخدام المساعدة";
-            } else {
-                alert("نقاطك غير كافية!");
-            }
+        async function init() {
+            try {
+                const r = await fetch(CSV + "&gid=605574246");
+                const d = await r.text();
+                const lines = d.split('\n').slice(1);
+                document.getElementById('fact-txt').innerText = lines[Math.floor(Math.random()*lines.length)].split(',')[0].replace(/"/g, '');
+            } catch(e) {}
         }
 
-        function checkAnswer(isCorrect) {
-            if (isCorrect) {
-                alert("إجابة صحيحة!");
-            } else {
-                alert("إجابة خاطئة!");
-            }
+        function showCats() {
+            document.getElementById('top-bar').style.display = 'flex';
+            document.getElementById('score-val').innerText = gameState.score;
+            switchScreen('scr-cats');
         }
+
+        async function startCat(gid, catName) {
+            gameState.currentCat = catName;
+            switchScreen('scr-map');
+            const r = await fetch(CSV + "&gid=" + gid);
+            const d = await r.text();
+            gameState.questions = d.split('\n').slice(1).map(row => {
+                const c = row.split(',').map(x => x.trim().replace(/"/g, ''));
+                return { q: c[0], opts: [c[1], c[2], c[3], c[4]], a: c[5] };
+            }).filter(q => q.q);
+            renderMap();
+        }
+
+        function renderMap() {
+            const cont = document.getElementById('map-cont');
+            cont.innerHTML = '';
+            const unlocked = gameState.progress[gameState.currentCat] || 1;
+            gameState.questions.forEach((_, i) => {
+                const node = document.createElement('div');
+                node.className = `lvl-node ${i+1 <= unlocked ? 'unlocked' : ''} ${i+1 === unlocked ? 'current' : ''}`;
+                node.innerText = i + 1;
+                if(i+1 <= unlocked) node.onclick = () => openQuiz(i);
+                cont.appendChild(node);
+            });
+        }
+
+        function openQuiz(idx) {
+            gameState.activeIdx = idx;
+            const q = gameState.questions[idx];
+            document.getElementById('q-text').innerText = q.q;
+            const box = document.getElementById('ans-box');
+            box.innerHTML = '';
+            q.opts.forEach(o => {
+                const b = document.createElement('div');
+                b.className = 'ans-btn';
+                b.innerText = o;
+                b.onclick = () => {
+                    if(o === q.a) {
+                        b.classList.add('correct');
+                        gameState.score += 10;
+                        if(idx + 1 === gameState.progress[gameState.currentCat]) {
+                            gameState.progress[gameState.currentCat]++;
+                        }
+                        save();
+                        setTimeout(() => {
+                            document.getElementById('quiz-ui').classList.remove('show');
+                            renderMap();
+                        }, 600);
+                    } else { b.style.background = "#ef4444"; }
+                };
+                box.appendChild(b);
+            });
+            document.getElementById('quiz-ui').classList.add('show');
+        }
+
+        function save() {
+            localStorage.setItem('iq_total_score', gameState.score);
+            localStorage.setItem('iq_cat_progress', JSON.stringify(gameState.progress));
+            document.getElementById('score-val').innerText = gameState.score;
+        }
+
+        function switchScreen(id) {
+            document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
+            document.getElementById(id).classList.add('active');
+        }
+
+        init();
     </script>
-
 </body>
 </html>
