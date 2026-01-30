@@ -3,208 +3,345 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>IQ Quiz Pro - الإصدار الاحترافي</title>
+    <title>IQ ثقافة - الإصدار الكامل</title>
     <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;700;900&display=swap" rel="stylesheet">
     <style>
         :root {
-            --gold: #ffbd39;
+            --gold: #ffd700;
             --blue: #0ea5e9;
-            --glass: rgba(15, 23, 42, 0.85);
+            --glass: rgba(255, 255, 255, 0.1);
+            --dark-glass: rgba(0, 0, 0, 0.7);
         }
 
         body, html {
             margin: 0; padding: 0; height: 100%; width: 100%;
             font-family: 'Cairo', sans-serif; color: white;
             overflow: hidden;
-            /* ربط ملف الصورة الخاص بك بالخلفية */
-            background: url('Warface Wallpaper.jpeg') no-repeat center center;
+            background: #1a1a1a url('Warface Wallpaper.jpeg') no-repeat center center;
             background-size: cover;
             background-attachment: fixed;
         }
 
         .overlay {
             position: fixed; inset: 0;
-            background: rgba(0, 0, 0, 0.5);
-            z-index: -1;
+            background: rgba(0, 0, 0, 0.55);
+            z-index: 1;
         }
 
+        /* Top Bar */
         .top-bar {
-            position: fixed; top: 0; width: 100%; padding: 15px;
-            display: none; justify-content: space-around; z-index: 1000;
+            position: fixed; top: 0; width: 100%; padding: 10px 15px;
+            display: none; justify-content: space-between; align-items: center; z-index: 1000;
             background: rgba(0,0,0,0.6); backdrop-filter: blur(10px);
+            box-sizing: border-box; border-bottom: 1px solid rgba(255,255,255,0.1);
         }
 
+        .top-left, .top-right { display: flex; gap: 12px; align-items: center; }
+
+        .icon-btn {
+            background: rgba(255,255,255,0.05);
+            border: 1px solid rgba(255,255,255,0.1);
+            padding: 8px 12px; border-radius: 12px; cursor: pointer; 
+            font-weight: 700; color: white; transition: 0.2s;
+        }
+
+        /* Screens */
         .screen {
             position: relative; z-index: 10; height: 100vh;
             display: none; flex-direction: column; align-items: center; justify-content: center;
-            text-align: center; padding: 20px;
+            text-align: center; padding: 20px; box-sizing: border-box;
         }
         .active { display: flex; }
 
+        /* Categories */
         .cat-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; width: 100%; max-width: 450px; }
         .cat-btn {
             background: var(--glass); backdrop-filter: blur(15px);
             padding: 25px 10px; border-radius: 20px; border: 1px solid rgba(255,255,255,0.1);
-            cursor: pointer; font-weight: 900; transition: 0.3s;
+            cursor: pointer; font-weight: 900; transition: 0.3s; color: white; font-size: 1.1rem;
         }
-        .cat-btn:hover { background: var(--blue); }
+        .cat-btn:hover { background: var(--blue); transform: translateY(-3px); }
 
-        .map-view { width: 100%; overflow-y: auto; padding: 100px 0; display: flex; flex-direction: column-reverse; align-items: center; gap: 30px; }
-        .lvl-node {
-            width: 70px; height: 70px; border-radius: 50%;
-            background: rgba(0,0,0,0.6); border: 4px solid #444;
-            display: flex; align-items: center; justify-content: center;
-            font-size: 1.5rem; font-weight: 900; cursor: pointer; transition: 0.4s;
+        /* Map */
+        .map-view { 
+            width: 100%; overflow-y: auto; padding: 120px 0; 
+            display: flex; flex-direction: column-reverse; align-items: center; gap: 35px; 
         }
-        .unlocked { border-color: var(--blue); background: rgba(14, 165, 233, 0.2); }
+        .lvl-node {
+            width: 75px; height: 75px; border-radius: 50%;
+            background: rgba(0,0,0,0.7); border: 4px solid #444;
+            display: flex; align-items: center; justify-content: center;
+            font-size: 1.6rem; font-weight: 900; cursor: pointer; transition: 0.4s; color: white;
+            position: relative;
+        }
+        .unlocked { border-color: var(--blue); background: rgba(14, 165, 233, 0.3); }
         .current { border-color: var(--gold); background: var(--gold); color: black; animation: pulse 2s infinite; }
 
-        @keyframes pulse { 0%, 100% { transform: scale(1); } 50% { transform: scale(1.1); box-shadow: 0 0 20px var(--gold); } }
+        @keyframes pulse { 0%, 100% { transform: scale(1); } 50% { transform: scale(1.1); box-shadow: 0 0 25px var(--gold); } }
 
+        /* Quiz UI */
         .quiz-container {
             position: fixed; bottom: -100%; left: 0; width: 100%;
-            background: var(--glass); backdrop-filter: blur(25px);
-            border-radius: 35px 35px 0 0; border-top: 2px solid var(--gold);
-            padding: 40px 25px; box-sizing: border-box; z-index: 2000;
+            background: rgba(15, 15, 15, 0.98); backdrop-filter: blur(30px);
+            border-radius: 35px 35px 0 0; border-top: 3px solid var(--gold);
+            padding: 30px 20px; box-sizing: border-box; z-index: 2000;
             transition: 0.6s cubic-bezier(0.19, 1, 0.22, 1);
+            max-height: 75vh; overflow-y: auto;
         }
         .quiz-container.show { bottom: 0; }
 
-        .ans-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; margin-top: 20px; }
-        .ans-btn { background: rgba(255,255,255,0.05); padding: 18px; border-radius: 15px; cursor: pointer; border: 1px solid rgba(255,255,255,0.1); font-weight: bold; }
-        .correct { background: #10b981 !important; }
+        .ans-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-top: 25px; }
+        .ans-btn { 
+            background: rgba(255,255,255,0.07); padding: 18px; border-radius: 15px; 
+            cursor: pointer; border: 1px solid rgba(255,255,255,0.1); 
+            font-weight: bold; text-align: center; color: white; transition: 0.2s;
+        }
+        .ans-btn.removed { visibility: hidden; pointer-events: none; }
+        .ans-btn.wrong { background: #ef4444 !important; border-color: #ef4444; }
+        .ans-btn.correct { background: #10b981 !important; border-color: #10b981; }
+        .disabled { opacity: 0.6; pointer-events: none; }
+
+        .gold-btn { background: var(--gold); border: none; padding: 15px 30px; border-radius: 12px; font-weight: 900; cursor: pointer; color: black; transition: 0.3s; }
+        .gold-btn:active { transform: scale(0.95); }
+        .glass-btn { background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.1); padding: 12px 15px; border-radius: 12px; cursor: pointer; color: white; }
+
+        /* Ad Modal */
+        .ad-modal {
+            position: fixed; inset: 0; display: none; align-items: center; justify-content: center;
+            background: rgba(0,0,0,0.9); z-index: 3000;
+        }
+        .ad-box {
+            background: #222; padding: 35px; border-radius: 25px; width: 85%; max-width: 400px; 
+            text-align: center; border: 2px solid var(--gold);
+        }
+
+        .hearts-txt { display: inline-flex; gap: 6px; align-items: center; font-weight: 900; color: #ff4d4d; }
     </style>
 </head>
 <body>
 
-    <div class="overlay"></div>
+<audio id="bg-audio" src="./jazz-music-466491.mp3" loop></audio>
+<div class="overlay"></div>
 
-    <div id="top-bar" class="top-bar">
-        <span>🏆 <span id="score-val">0</span></span>
-        <span>❤️ <span id="hearts-val">3</span></span>
-        <span onclick="location.reload()" style="cursor:pointer">🏠</span>
+<div id="top-bar" class="top-bar">
+    <div class="top-left">
+        <div>🏆 <span id="score-val">0</span></div>
+        <div class="hearts-txt">❤️ <span id="hearts-val">8</span></div>
     </div>
+    <div class="top-right">
+        <button onclick="showAdModal()" class="icon-btn">📺 شحن</button>
+        <button id="mute-btn" class="icon-btn">🔊</button>
+        <button onclick="location.reload()" class="icon-btn">🏠</button>
+    </div>
+</div>
 
-    <div id="scr-start" class="screen active">
-        <h1 style="font-size: 4rem; color: var(--gold); font-weight: 900;">IQ ثقافة</h1>
-        <div style="background: var(--glass); padding: 20px; border-radius: 20px; margin: 20px; max-width: 350px;">
-            <p id="fact-txt">تحميل معلومة اليوم...</p>
+<div id="scr-start" class="screen active">
+    <h1 style="font-size: 4rem; color: var(--gold); font-weight: 900; margin-bottom: 5px;">IQ ثقافة</h1>
+    <div style="background: var(--glass); padding: 25px; border-radius: 25px; margin: 20px; max-width: 400px; border: 1px solid rgba(255,255,255,0.1);">
+        <p id="fact-txt" style="font-size: 1.1rem; line-height: 1.6;">جاري تحميل معلومة اليوم...</p>
+    </div>
+    <button onclick="showCats()" class="gold-btn" style="padding: 20px 100px; border-radius: 60px; font-size: 1.4rem;">استمرار</button>
+</div>
+
+<div id="scr-cats" class="screen">
+    <h2 style="margin-bottom: 30px; font-size: 2rem;">اختر التصنيف</h2>
+    <div class="cat-grid">
+        <div class="cat-btn" onclick="startCat('11216236', 'history')">⏳ التاريخ</div>
+        <div class="cat-btn" onclick="startCat('99625756', 'geo')">🌍 الجغرافيا</div>
+        <div class="cat-btn" onclick="startCat('1843208636', 'science')">🧬 العلوم</div>
+        <div class="cat-btn" onclick="startCat('564130158', 'general')">💡 ثقافة عامة</div>
+        <div class="cat-btn" onclick="startCat('0', 'sports')" style="grid-column: span 2;">⚽ الرياضة</div>
+    </div>
+</div>
+
+<div id="scr-map" class="screen" style="padding:0; justify-content: flex-start;">
+    <div class="map-view" id="map-cont"></div>
+</div>
+
+<div class="quiz-container" id="quiz-ui">
+    <div id="q-text" style="font-size: 1.4rem; font-weight: bold; line-height: 1.5;"></div>
+    <div class="ans-grid" id="ans-box"></div>
+    <div class="controls-row" style="margin-top:25px; display:flex; justify-content:center;">
+        <button id="remove-two-btn" class="glass-btn">حذف خيارين (50 نقطة)</button>
+    </div>
+</div>
+
+<div class="ad-modal" id="ad-modal">
+    <div class="ad-box">
+        <h3 style="color:var(--gold); font-size: 1.5rem;">انتهت القلوب!</h3>
+        <p>شاهد إعلان قصير للحصول على 8 قلوب جديدة ومواصلة اللعب.</p>
+        <div id="ad-timer" style="display:none; font-size: 2rem; color: var(--gold); font-weight: bold; margin: 15px 0;">5</div>
+        <div style="margin-top:25px; display: flex; flex-direction: column; gap: 10px;">
+            <button id="watch-ad-btn" class="gold-btn">مشاهدة الإعلان</button>
+            <button onclick="closeAdModal()" class="glass-btn">ربما لاحقاً</button>
         </div>
-        <button onclick="showCats()" style="background: var(--gold); border: none; padding: 18px 80px; border-radius: 50px; font-weight: 900; cursor: pointer; font-size: 1.2rem;">استمرار</button>
     </div>
+</div>
 
-    <div id="scr-cats" class="screen">
-        <h2 style="margin-bottom: 30px;">اختر التصنيف</h2>
-        <div class="cat-grid">
-            <div class="cat-btn" onclick="startCat('11216236', 'history')">⏳ التاريخ</div>
-            <div class="cat-btn" onclick="startCat('99625756', 'geo')">🌍 الجغرافيا</div>
-            <div class="cat-btn" onclick="startCat('1843208636', 'science')">🧬 العلوم</div>
-            <div class="cat-btn" onclick="startCat('564130158', 'general')">💡 ثقافة عامة</div>
-            <div class="cat-btn" onclick="startCat('0', 'sports')" style="grid-column: span 2;">⚽ الرياضة</div>
-        </div>
-    </div>
+<script>
+    const CSV = "https://docs.google.com/spreadsheets/d/e/2PACX-1vSJ4RCU1_iXMqLS3ApB1g8SjSrL2hbIAv-1VniqdMElnalov--mSDTpe9rjMxaWGCuP6gpxWV7OZDe1/pub?output=csv";
 
-    <div id="scr-map" class="screen" style="padding:0">
-        <div class="map-view" id="map-cont"></div>
-    </div>
+    let gameState = {
+        score: parseInt(localStorage.getItem('iq_score')) || 0,
+        progress: JSON.parse(localStorage.getItem('iq_prog')) || { history: 1, geo: 1, science: 1, general: 1, sports: 1 },
+        currentCat: '',
+        questions: [],
+        activeIdx: 0,
+        hearts: parseInt(localStorage.getItem('iq_hearts')) || 8,
+        muted: (localStorage.getItem('iq_muted') === 'true') || false,
+        usedRemove: JSON.parse(localStorage.getItem('iq_rem_used') || '{}')
+    };
 
-    <div class="quiz-container" id="quiz-ui">
-        <div id="q-text" style="font-size: 1.3rem; font-weight: bold; margin-bottom: 10px;"></div>
-        <div class="ans-grid" id="ans-box"></div>
-    </div>
+    const audioEl = document.getElementById('bg-audio');
+    const muteBtn = document.getElementById('mute-btn');
 
-    <script>
-        const CSV = "https://docs.google.com/spreadsheets/d/e/2PACX-1vSJ4RCU1_iXMqLS3ApB1g8SjSrL2hbIAv-1VniqdMElnalov--mSDTpe9rjMxaWGCuP6gpxWV7OZDe1/pub?output=csv";
-        
-        let gameState = {
-            score: parseInt(localStorage.getItem('iq_total_score')) || 0,
-            progress: JSON.parse(localStorage.getItem('iq_cat_progress')) || { history: 1, geo: 1, science: 1, general: 1, sports: 1 },
-            currentCat: '',
-            questions: [],
-            activeIdx: 0
-        };
+    function init() {
+        // Load Daily Fact
+        fetch(CSV + "&gid=605574246").then(r => r.text()).then(d => {
+            const lines = d.split('\n').slice(1);
+            if (lines.length) document.getElementById('fact-txt').innerText = lines[Math.floor(Math.random()*lines.length)].split(',')[0].replace(/"/g, '');
+        }).catch(() => document.getElementById('fact-txt').innerText = "هل تعلم أن القراءة تزيد من مرونة عقلك؟");
 
-        async function init() {
-            try {
-                const r = await fetch(CSV + "&gid=605574246");
-                const d = await r.text();
-                const lines = d.split('\n').slice(1);
-                document.getElementById('fact-txt').innerText = lines[Math.floor(Math.random()*lines.length)].split(',')[0].replace(/"/g, '');
-            } catch(e) {}
+        updateUI();
+        muteBtn.onclick = toggleMute;
+        document.getElementById('remove-two-btn').onclick = useRemoveTwo;
+        document.getElementById('watch-ad-btn').onclick = startAd;
+    }
+
+    function save() {
+        localStorage.setItem('iq_score', gameState.score);
+        localStorage.setItem('iq_prog', JSON.stringify(gameState.progress));
+        localStorage.setItem('iq_hearts', gameState.hearts);
+        localStorage.setItem('iq_muted', gameState.muted);
+        localStorage.setItem('iq_rem_used', JSON.stringify(gameState.usedRemove));
+    }
+
+    function updateUI() {
+        document.getElementById('score-val').innerText = gameState.score;
+        document.getElementById('hearts-val').innerText = gameState.hearts;
+        muteBtn.innerText = gameState.muted ? '🔇' : '🔊';
+    }
+
+    function toggleMute() {
+        gameState.muted = !gameState.muted;
+        gameState.muted ? audioEl.pause() : audioEl.play();
+        save(); updateUI();
+    }
+
+    function showCats() {
+        document.getElementById('top-bar').style.display = 'flex';
+        if(!gameState.muted) audioEl.play().catch(()=>{});
+        switchScreen('scr-cats');
+    }
+
+    function switchScreen(id) {
+        document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
+        document.getElementById(id).classList.add('active');
+    }
+
+    async function startCat(gid, name) {
+        gameState.currentCat = name;
+        switchScreen('scr-map');
+        const r = await fetch(CSV + "&gid=" + gid);
+        const d = await r.text();
+        gameState.questions = d.split('\n').slice(1).map(row => {
+            const c = row.split(',').map(x => x.trim().replace(/"/g, ''));
+            return { q: c[0], opts: [c[1], c[2], c[3], c[4]], a: c[5] };
+        }).filter(q => q.q);
+        renderMap();
+    }
+
+    function renderMap() {
+        const cont = document.getElementById('map-cont');
+        cont.innerHTML = '';
+        const unlocked = gameState.progress[gameState.currentCat] || 1;
+        gameState.questions.forEach((_, i) => {
+            const node = document.createElement('div');
+            node.className = `lvl-node ${i+1 <= unlocked ? 'unlocked' : ''} ${i+1 === unlocked ? 'current' : ''}`;
+            node.innerText = i + 1;
+            if (i+1 <= unlocked) node.onclick = () => openQuiz(i);
+            cont.appendChild(node);
+        });
+    }
+
+    function openQuiz(idx) {
+        if(gameState.hearts <= 0) { showAdModal(); return; }
+        gameState.activeIdx = idx;
+        const q = gameState.questions[idx];
+        document.getElementById('q-text').innerText = q.q;
+        const box = document.getElementById('ans-box');
+        box.innerHTML = '';
+
+        const usedKey = `${gameState.currentCat}-${idx}`;
+        document.getElementById('remove-two-btn').style.display = (gameState.score >= 50 && !gameState.usedRemove[usedKey]) ? 'block' : 'none';
+
+        q.opts.forEach(o => {
+            const b = document.createElement('div');
+            b.className = 'ans-btn';
+            b.innerText = o;
+            b.onclick = () => checkAns(b, o, q.a);
+            box.appendChild(b);
+        });
+        document.getElementById('quiz-ui').classList.add('show');
+    }
+
+    function checkAns(btn, sel, cor) {
+        document.querySelectorAll('.ans-btn').forEach(b => b.classList.add('disabled'));
+        if(sel === cor) {
+            btn.classList.add('correct');
+            gameState.score += 10;
+            if(gameState.activeIdx + 1 === gameState.progress[gameState.currentCat]) gameState.progress[gameState.currentCat]++;
+        } else {
+            btn.classList.add('wrong');
+            gameState.hearts--;
+            document.querySelectorAll('.ans-btn').forEach(b => { if(b.innerText === cor) b.classList.add('correct'); });
         }
-
-        function showCats() {
-            document.getElementById('top-bar').style.display = 'flex';
-            document.getElementById('score-val').innerText = gameState.score;
-            switchScreen('scr-cats');
-        }
-
-        async function startCat(gid, catName) {
-            gameState.currentCat = catName;
-            switchScreen('scr-map');
-            const r = await fetch(CSV + "&gid=" + gid);
-            const d = await r.text();
-            gameState.questions = d.split('\n').slice(1).map(row => {
-                const c = row.split(',').map(x => x.trim().replace(/"/g, ''));
-                return { q: c[0], opts: [c[1], c[2], c[3], c[4]], a: c[5] };
-            }).filter(q => q.q);
+        save(); updateUI();
+        setTimeout(() => {
+            document.getElementById('quiz-ui').classList.remove('show');
             renderMap();
-        }
+            if(gameState.hearts <= 0) showAdModal();
+        }, 1500);
+    }
 
-        function renderMap() {
-            const cont = document.getElementById('map-cont');
-            cont.innerHTML = '';
-            const unlocked = gameState.progress[gameState.currentCat] || 1;
-            gameState.questions.forEach((_, i) => {
-                const node = document.createElement('div');
-                node.className = `lvl-node ${i+1 <= unlocked ? 'unlocked' : ''} ${i+1 === unlocked ? 'current' : ''}`;
-                node.innerText = i + 1;
-                if(i+1 <= unlocked) node.onclick = () => openQuiz(i);
-                cont.appendChild(node);
-            });
+    function useRemoveTwo() {
+        const q = gameState.questions[gameState.activeIdx];
+        const btns = Array.from(document.querySelectorAll('.ans-btn')).filter(b => b.innerText !== q.a);
+        for(let i=0; i<2; i++) {
+            const r = Math.floor(Math.random()*btns.length);
+            btns[r].classList.add('removed');
+            btns.splice(r,1);
         }
+        gameState.score -= 50;
+        gameState.usedRemove[`${gameState.currentCat}-${gameState.activeIdx}`] = true;
+        document.getElementById('remove-two-btn').style.display = 'none';
+        save(); updateUI();
+    }
 
-        function openQuiz(idx) {
-            gameState.activeIdx = idx;
-            const q = gameState.questions[idx];
-            document.getElementById('q-text').innerText = q.q;
-            const box = document.getElementById('ans-box');
-            box.innerHTML = '';
-            q.opts.forEach(o => {
-                const b = document.createElement('div');
-                b.className = 'ans-btn';
-                b.innerText = o;
-                b.onclick = () => {
-                    if(o === q.a) {
-                        b.classList.add('correct');
-                        gameState.score += 10;
-                        if(idx + 1 === gameState.progress[gameState.currentCat]) {
-                            gameState.progress[gameState.currentCat]++;
-                        }
-                        save();
-                        setTimeout(() => {
-                            document.getElementById('quiz-ui').classList.remove('show');
-                            renderMap();
-                        }, 600);
-                    } else { b.style.background = "#ef4444"; }
-                };
-                box.appendChild(b);
-            });
-            document.getElementById('quiz-ui').classList.add('show');
-        }
+    function showAdModal() { document.getElementById('ad-modal').style.display = 'flex'; }
+    function closeAdModal() { document.getElementById('ad-modal').style.display = 'none'; }
 
-        function save() {
-            localStorage.setItem('iq_total_score', gameState.score);
-            localStorage.setItem('iq_cat_progress', JSON.stringify(gameState.progress));
-            document.getElementById('score-val').innerText = gameState.score;
-        }
+    function startAd() {
+        let sec = 5;
+        const btn = document.getElementById('watch-ad-btn');
+        const tmr = document.getElementById('ad-timer');
+        btn.style.display = 'none';
+        tmr.style.display = 'block';
+        const inter = setInterval(() => {
+            tmr.innerText = sec;
+            sec--;
+            if(sec < 0) {
+                clearInterval(inter);
+                gameState.hearts = 8;
+                save(); updateUI();
+                closeAdModal();
+                btn.style.display = 'block';
+                tmr.style.display = 'none';
+            }
+        }, 1000);
+    }
 
-        function switchScreen(id) {
-            document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
-            document.getElementById(id).classList.add('active');
-        }
-
-        init();
-    </script>
+    window.onload = init;
+</script>
 </body>
 </html>
