@@ -3,209 +3,199 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>كنز الثقافة - مغامرة الجبال</title>
+    <title>مغامرة المعرفة - الإصدار الذهبي</title>
     <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;700;900&display=swap" rel="stylesheet">
     <style>
         :root {
-            --gold: #f59e0b;
-            --glass: rgba(15, 23, 42, 0.75);
-            --glass-border: rgba(255, 255, 255, 0.2);
-            --text: #ffffff;
+            --gold: #ffbd39;
+            --soft-blue: #0ea5e9;
+            --danger: #ff4d4d;
+            --glass-bg: rgba(15, 23, 42, 0.85);
+            --border-light: rgba(255, 255, 255, 0.15);
         }
 
         body, html {
-            margin: 0;
-            padding: 0;
-            height: 100%;
+            margin: 0; padding: 0; height: 100%; width: 100%;
             font-family: 'Cairo', sans-serif;
-            color: var(--text);
-            overflow: hidden;
+            color: white; overflow: hidden;
+            background: #020617;
         }
 
-        /* الخلفية الحية (الجبال) */
-        .game-wrapper {
-            background: url('https://images.unsplash.com/photo-1464822759023-fed622ff2c3b?auto=format&fit=crop&q=80&w=1000') no-repeat center center fixed;
-            background-size: cover;
+        /* الخلفية السينمائية */
+        .main-container {
+            position: relative;
             height: 100vh;
+            width: 100%;
+            background: linear-gradient(rgba(2, 6, 23, 0.4), rgba(2, 6, 23, 0.7)), 
+                        url('https://images.unsplash.com/photo-1464822759023-fed622ff2c3b?auto=format&fit=crop&q=80&w=1600');
+            background-size: cover;
+            background-position: center;
             display: flex;
             flex-direction: column;
-            position: relative;
         }
 
-        /* البار العلوي */
-        .top-stats {
+        /* شريط المعلومات العلوي */
+        .top-navbar {
             display: flex;
-            justify-content: space-around;
-            padding: 15px;
-            background: rgba(0, 0, 0, 0.4);
-            backdrop-filter: blur(5px);
+            justify-content: space-between;
+            align-items: center;
+            padding: 20px 30px;
+            background: linear-gradient(to bottom, rgba(0,0,0,0.8), transparent);
+            z-index: 10;
         }
 
-        .stat-item {
+        .stat-badge {
             background: rgba(255, 255, 255, 0.1);
-            padding: 5px 20px;
-            border-radius: 20px;
-            border: 1px solid var(--glass-border);
+            backdrop-filter: blur(10px);
+            padding: 8px 18px;
+            border-radius: 30px;
+            border: 1px solid var(--border-light);
             display: flex;
             align-items: center;
             gap: 10px;
-            font-weight: bold;
+            font-weight: 700;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.3);
         }
 
-        /* خريطة المستويات المضيئة */
-        .levels-map {
-            flex-grow: 1;
+        /* خريطة المستويات المتعرجة */
+        .map-section {
+            flex: 1;
             display: flex;
             flex-direction: column-reverse;
             align-items: center;
-            gap: 30px;
-            padding: 40px 0;
+            gap: 40px;
+            padding: 60px 0;
             overflow-y: auto;
+            mask-image: linear-gradient(to bottom, transparent, black 15%, black 85%, transparent);
         }
 
-        .level-circle {
-            width: 70px;
-            height: 70px;
+        .level-point {
+            width: 80px; height: 80px;
             border-radius: 50%;
-            background: rgba(255,255,255,0.1);
-            border: 4px solid #64748b;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-weight: 900;
-            font-size: 1.4rem;
-            cursor: not-allowed;
-            transition: 0.3s;
-            box-shadow: 0 0 10px rgba(0,0,0,0.5);
+            background: rgba(255,255,255,0.05);
+            border: 3px solid #475569;
+            display: flex; align-items: center; justify-content: center;
+            font-size: 1.8rem; font-weight: 900;
+            position: relative; cursor: not-allowed;
+            transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
         }
 
-        .level-circle.unlocked {
-            border-color: var(--gold);
-            background: rgba(245, 158, 11, 0.2);
+        .level-point.unlocked {
+            background: linear-gradient(135deg, var(--soft-blue), #0369a1);
+            border-color: #7dd3fc;
             cursor: pointer;
-            box-shadow: 0 0 20px rgba(245, 158, 11, 0.5);
+            box-shadow: 0 0 25px rgba(14, 165, 233, 0.5);
         }
 
-        .level-circle.active {
-            transform: scale(1.2);
-            background: var(--gold);
+        .level-point.active {
+            animation: pulse-gold 2s infinite;
+            border-color: var(--gold);
+            background: linear-gradient(135deg, var(--gold), #d97706);
             color: #000;
         }
 
-        /* نافذة الأسئلة (مثل الصورة) */
-        .quiz-overlay {
-            display: none;
-            position: absolute;
-            bottom: 0;
-            width: 100%;
-            background: var(--glass);
-            backdrop-filter: blur(15px);
+        @keyframes pulse-gold {
+            0% { box-shadow: 0 0 0 0 rgba(255, 189, 57, 0.7); }
+            70% { box-shadow: 0 0 0 20px rgba(255, 189, 57, 0); }
+            100% { box-shadow: 0 0 0 0 rgba(255, 189, 57, 0); }
+        }
+
+        /* نافذة الأسئلة الاحترافية (Glass UI) */
+        .quiz-panel {
+            position: fixed;
+            bottom: -100%;
+            left: 0; width: 100%;
+            background: var(--glass-bg);
+            backdrop-filter: blur(25px);
             border-radius: 40px 40px 0 0;
-            border-top: 2px solid var(--glass-border);
-            padding: 30px 20px;
+            border-top: 1px solid var(--border-light);
+            padding: 40px 25px;
             box-sizing: border-box;
-            animation: slideUp 0.5s ease-out;
+            transition: bottom 0.6s cubic-bezier(0.22, 1, 0.36, 1);
             z-index: 100;
         }
 
-        @keyframes slideUp { from { transform: translateY(100%); } to { transform: translateY(0); } }
+        .quiz-panel.show { bottom: 0; }
 
-        .question-title {
-            font-size: 1.8rem;
-            font-weight: 900;
-            margin-bottom: 10px;
-            color: var(--text);
+        .question-header {
+            text-align: center; margin-bottom: 30px;
         }
 
         .question-text {
-            font-size: 1.1rem;
-            margin-bottom: 25px;
-            color: #cbd5e1;
-            line-height: 1.6;
+            font-size: 1.5rem; font-weight: 700; line-height: 1.5;
+            color: #f1f5f9; text-shadow: 0 2px 4px rgba(0,0,0,0.5);
         }
 
-        /* شبكة الخيارات - عمودين */
         .options-grid {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 15px;
+            display: grid; grid-template-columns: 1fr 1fr; gap: 15px;
+            max-width: 600px; margin: 0 auto;
         }
 
-        .opt-btn {
+        .option-card {
             background: rgba(255, 255, 255, 0.05);
-            border: 1px solid var(--glass-border);
-            padding: 15px;
-            border-radius: 20px;
-            text-align: center;
-            cursor: pointer;
-            transition: 0.2s;
-            font-weight: bold;
+            border: 1px solid var(--border-light);
+            padding: 20px; border-radius: 20px;
+            text-align: center; cursor: pointer;
+            transition: 0.3s; font-weight: 700;
+            font-size: 1.1rem;
         }
 
-        .opt-btn:hover { background: rgba(255, 255, 255, 0.15); }
-        .correct { background: #10b981 !important; border-color: #10b981; }
-        .wrong { background: #ef4444 !important; border-color: #ef4444; }
+        .option-card:hover { 
+            background: rgba(255, 255, 255, 0.12);
+            transform: translateY(-3px);
+            border-color: var(--soft-blue);
+        }
 
-        /* زر 50:50 */
-        .hint-50 {
-            position: absolute;
-            top: -20px;
-            right: 20px;
-            background: var(--gold);
-            color: #000;
-            padding: 8px 20px;
-            border-radius: 20px;
-            font-weight: 900;
-            border: none;
-            cursor: pointer;
-            box-shadow: 0 4px 15px rgba(245, 158, 11, 0.4);
+        .correct { background: #10b981 !important; border-color: #34d399; }
+        .wrong { background: var(--danger) !important; border-color: #f87171; }
+
+        /* الأزرار العائمة */
+        .helper-btn {
+            position: absolute; top: -25px; left: 50%;
+            transform: translateX(-50%);
+            background: var(--gold); color: #000;
+            padding: 10px 25px; border-radius: 30px;
+            font-weight: 900; border: none; cursor: pointer;
+            box-shadow: 0 10px 20px rgba(255, 189, 57, 0.4);
         }
 
         /* شاشة البداية */
         #splash {
-            position: fixed;
-            inset: 0;
-            background: #0f172a;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-            z-index: 1000;
+            position: fixed; inset: 0; background: #020617;
+            display: flex; flex-direction: column; align-items: center;
+            justify-content: center; z-index: 2000;
         }
 
-        .btn-start {
-            background: var(--gold);
-            color: #000;
-            padding: 15px 50px;
-            border-radius: 50px;
-            font-weight: 900;
-            border: none;
-            font-size: 1.3rem;
-            cursor: pointer;
+        .glow-text {
+            font-size: 4rem; font-weight: 900; color: var(--gold);
+            text-shadow: 0 0 30px rgba(255, 189, 57, 0.5);
+            margin-bottom: 40px;
         }
     </style>
 </head>
 <body>
 
     <div id="splash">
-        <h1 style="color:white; font-size: 3rem;">💎 كنز الجبال</h1>
-        <button class="btn-start" onclick="initGame()">ابدأ المغامرة</button>
+        <div class="glow-text">LEGEND QUIZ</div>
+        <button class="option-card" style="padding: 20px 60px; background: var(--gold); color: black;" onclick="startGame()">دخول المغامرة</button>
     </div>
 
-    <div class="game-wrapper" id="game-ui" style="display:none;">
-        <div class="top-stats">
-            <div class="stat-item">❤️ <span id="hearts">3</span></div>
-            <div class="stat-item">🏆 <span id="score">0</span></div>
-            <div class="stat-item" onclick="location.reload()" style="cursor:pointer;">🏠</div>
+    <div class="main-container">
+        <div class="top-navbar">
+            <div class="stat-badge" id="hearts-ui">❤️❤️❤️</div>
+            <div class="stat-badge">🏆 <span id="score-text">0</span></div>
+            <div class="stat-badge" onclick="location.reload()" style="cursor:pointer;">🏠</div>
         </div>
 
-        <div class="levels-map" id="map"></div>
+        <div class="map-section" id="levels-map"></div>
 
-        <div class="quiz-overlay" id="quiz-window">
-            <button class="hint-50" onclick="use5050()">50:50</button>
-            <div class="question-title">سؤال ؟</div>
-            <div class="question-text" id="q-text">جاري تحميل السؤال...</div>
-            <div class="options-grid" id="opts-grid"></div>
+        <div class="quiz-panel" id="quiz-ui">
+            <button class="helper-btn" onclick="useHint()">50:50 | 50- نقطة</button>
+            <div class="question-header">
+                <span style="color: var(--soft-blue); font-weight: 900; letter-spacing: 2px;">مستوى <span id="lvl-num">1</span></span>
+                <div class="question-text" id="q-text">جاري تحميل التحدي...</div>
+            </div>
+            <div class="options-grid" id="options-container"></div>
         </div>
     </div>
 
@@ -213,21 +203,20 @@
 
     <script>
         const CSV_URL = "https://docs.google.com/spreadsheets/d/e/2PACX-1vSJ4RCU1_iXMqLS3ApB1g8SjSrL2hbIAv-1VniqdMElnalov--mSDTpe9rjMxaWGCuP6gpxWV7OZDe1/pub?output=csv";
-        let state = { score: 0, unlocked: 1, questions: [], currentIdx: 0, hearts: 3 };
+        let game = { score: 0, unlocked: 1, questions: [], activeIdx: 0, hearts: 3 };
 
-        function initGame() {
-            document.getElementById('bg-music').volume = 0.1;
+        function startGame() {
+            document.getElementById('bg-music').volume = 0.15;
             document.getElementById('bg-music').play();
             document.getElementById('splash').style.display = 'none';
-            document.getElementById('game-ui').style.display = 'flex';
-            loadData('564130158'); // تحميل تصنيف الثقافة العامة افتراضياً
+            loadQuizData('564130158'); // تحميل افتراضي
         }
 
-        async function loadData(gid) {
+        async function loadQuizData(gid) {
             const res = await fetch(`${CSV_URL}&gid=${gid}`);
             const text = await res.text();
             const rows = text.split('\n').slice(1);
-            state.questions = rows.map(r => {
+            game.questions = rows.map(r => {
                 const c = r.split(',').map(x => x.trim().replace(/"/g, ''));
                 return { q: c[0], opts: [c[1], c[2], c[3], c[4]], a: c[5] };
             }).filter(q => q.q);
@@ -235,76 +224,81 @@
         }
 
         function renderMap() {
-            const map = document.getElementById('map');
+            const map = document.getElementById('levels-map');
             map.innerHTML = '';
-            state.questions.forEach((_, i) => {
-                const lvl = i + 1;
+            game.questions.forEach((_, i) => {
+                const num = i + 1;
                 const node = document.createElement('div');
-                node.className = `level-circle ${lvl <= state.unlocked ? 'unlocked' : ''} ${lvl === state.unlocked ? 'active' : ''}`;
-                node.innerText = lvl;
-                if(lvl <= state.unlocked) node.onclick = () => openQuiz(i);
+                node.className = `level-point ${num <= game.unlocked ? 'unlocked' : ''} ${num === game.unlocked ? 'active' : ''}`;
+                node.innerText = num;
+                if(num <= game.unlocked) node.onclick = () => openLevel(i);
                 map.appendChild(node);
             });
         }
 
-        function openQuiz(idx) {
-            state.currentIdx = idx;
-            state.hearts = 3;
-            document.getElementById('hearts').innerText = state.hearts;
-            document.getElementById('quiz-window').style.display = 'block';
+        function openLevel(idx) {
+            game.activeIdx = idx;
+            game.hearts = 3;
+            updateHeartsUI();
+            document.getElementById('lvl-num').innerText = idx + 1;
+            document.getElementById('quiz-ui').classList.add('show');
             renderQuestion();
         }
 
         function renderQuestion() {
-            const q = state.questions[state.currentIdx];
+            const q = game.questions[game.activeIdx];
             document.getElementById('q-text').innerText = q.q;
-            const grid = document.getElementById('opts-grid');
-            grid.innerHTML = '';
+            const container = document.getElementById('options-container');
+            container.innerHTML = '';
             q.opts.forEach(opt => {
-                const btn = document.createElement('div');
-                btn.className = 'opt-item';
-                btn.innerText = opt;
-                btn.onclick = () => checkAns(opt, q.a, btn);
-                grid.appendChild(btn);
+                const card = document.createElement('div');
+                card.className = 'option-card';
+                card.innerText = opt;
+                card.onclick = () => handleChoice(opt, q.a, card);
+                container.appendChild(card);
             });
         }
 
-        function checkAns(selected, correct, btn) {
+        function handleChoice(selected, correct, card) {
             if (selected === correct) {
-                btn.classList.add('correct');
-                state.score += 20;
-                document.getElementById('score').innerText = state.score;
+                card.classList.add('correct');
+                game.score += 20;
+                document.getElementById('score-text').innerText = game.score;
                 setTimeout(() => {
-                    if (state.currentIdx + 1 === state.unlocked) state.unlocked++;
+                    if (game.activeIdx + 1 === game.unlocked) game.unlocked++;
                     closeQuiz();
                 }, 1000);
             } else {
-                btn.classList.add('wrong');
-                state.hearts--;
-                document.getElementById('hearts').innerText = state.hearts;
-                if (state.hearts <= 0) {
-                    setTimeout(() => { alert("انتهت المحاولات!"); closeQuiz(); }, 500);
+                card.classList.add('wrong');
+                game.hearts--;
+                updateHeartsUI();
+                if (game.hearts <= 0) {
+                    setTimeout(() => { alert("انتهت القلوب! أعد المحاولة."); closeQuiz(); }, 500);
                 }
             }
         }
 
-        function use5050() {
-            if (state.score < 50) return alert("رصيدك لا يكفي!");
-            state.score -= 50;
-            document.getElementById('score').innerText = state.score;
-            const correct = state.questions[state.currentIdx].a;
-            const btns = Array.from(document.querySelectorAll('.opt-item'));
+        function useHint() {
+            if (game.score < 50) return alert("نقاطك لا تكفي!");
+            game.score -= 50;
+            document.getElementById('score-text').innerText = game.score;
+            const correct = game.questions[game.activeIdx].a;
+            const cards = Array.from(document.querySelectorAll('.option-card'));
             let count = 0;
-            btns.forEach(b => {
-                if (b.innerText !== correct && count < 2) {
-                    b.style.visibility = 'hidden';
+            cards.forEach(c => {
+                if (c.innerText !== correct && count < 2) {
+                    c.style.visibility = 'hidden';
                     count++;
                 }
             });
         }
 
+        function updateHeartsUI() {
+            document.getElementById('hearts-ui').innerText = "❤️".repeat(game.hearts);
+        }
+
         function closeQuiz() {
-            document.getElementById('quiz-window').style.display = 'none';
+            document.getElementById('quiz-ui').classList.remove('show');
             renderMap();
         }
     </script>
