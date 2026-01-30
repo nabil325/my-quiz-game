@@ -3,162 +3,196 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>IQ ثقافة - النسخة الاحترافية</title>
+    <title>IQ ثقافة - الإصدار السينمائي</title>
     <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;700;900&display=swap" rel="stylesheet">
     <style>
         :root {
-            --primary: #0ea5e9;
-            --gold: #f59e0b;
-            --glass: rgba(0, 0, 0, 0.6);
-            --border: rgba(255, 255, 255, 0.3);
+            --gold-gradient: linear-gradient(180deg, #ffbd39 0%, #ba8b02 100%);
+            --glass: rgba(0, 0, 0, 0.4);
+            --glass-border: rgba(255, 255, 255, 0.15);
         }
 
         body, html {
             margin: 0; padding: 0; height: 100%; width: 100%;
-            font-family: 'Cairo', sans-serif; color: white;
-            background: #020617; overflow: hidden;
+            font-family: 'Cairo', sans-serif; color: white; overflow: hidden;
         }
 
-        /* الخلفية بصورة حقيقية واحترافية */
-        .master-bg {
+        /* الخلفية الجبلية (طبق الأصل) */
+        .main-bg {
             position: fixed; inset: 0;
-            background: linear-gradient(rgba(0,0,0,0.5), rgba(0,0,0,0.5)), 
-                        url('https://images.unsplash.com/photo-1464822759023-fed622ff2c3b?auto=format&fit=crop&q=80&w=1600');
+            background: url('https://r4.wallpaperflare.com/wallpaper/321/181/37/mountains-sky-snow-peak-wallpaper-8940889da1da3d5bc64778ef2011059f.jpg') no-repeat center center;
             background-size: cover;
-            background-position: center;
             z-index: -1;
         }
 
+        /* الطبقة الشفافة فوق الخلفية لتعزيز التباين */
+        .overlay {
+            position: fixed; inset: 0;
+            background: linear-gradient(180deg, rgba(0,0,0,0.3) 0%, rgba(0,0,0,0.7) 100%);
+            z-index: 0;
+        }
+
+        /* شريط الحالة العلوي */
+        .status-header {
+            position: absolute; top: 20px; width: 100%;
+            display: flex; justify-content: space-evenly; z-index: 100;
+        }
+
+        .stat-pill {
+            background: rgba(255,255,255,0.1);
+            backdrop-filter: blur(10px);
+            padding: 8px 15px; border-radius: 20px;
+            border: 1px solid var(--glass-border);
+            font-size: 0.9rem; font-weight: bold;
+        }
+
+        /* شاشة البداية والتصنيفات */
         .screen {
-            position: absolute; inset: 0; display: none;
-            flex-direction: column; align-items: center; justify-content: center;
-            padding: 20px; text-align: center; z-index: 10;
+            position: relative; z-index: 10; height: 100vh;
+            display: none; flex-direction: column; align-items: center; justify-content: center;
+        }
+        .active { display: flex; }
+
+        .logo-text {
+            font-size: 4rem; font-weight: 900;
+            background: var(--gold-gradient);
+            -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+            margin-bottom: 5px;
         }
 
-        .active-screen { display: flex !important; }
-
-        /* شاشة البداية */
-        .game-title { font-size: 3.5rem; font-weight: 900; color: var(--gold); text-shadow: 0 5px 15px rgba(0,0,0,0.5); }
-        .fact-card {
-            background: var(--glass); backdrop-filter: blur(10px);
-            padding: 20px; border-radius: 20px; border: 1px solid var(--border);
-            max-width: 400px; margin: 20px 0;
+        /* بطاقة المعلومة العشوائية */
+        .fact-box {
+            background: var(--glass); backdrop-filter: blur(15px);
+            border: 1px solid var(--glass-border);
+            padding: 20px; border-radius: 25px;
+            width: 80%; max-width: 400px; margin: 20px 0;
+            text-align: right;
         }
 
-        /* شاشة التصنيفات - إصلاح الظهور */
-        .cat-grid {
+        /* شبكة التصنيفات */
+        .categories-container {
             display: grid; grid-template-columns: 1fr 1fr; gap: 15px;
-            width: 100%; max-width: 450px; margin-top: 20px;
+            width: 90%; max-width: 500px;
         }
 
-        .cat-card {
-            background: rgba(255, 255, 255, 0.15);
-            backdrop-filter: blur(15px);
-            border: 2px solid var(--border);
-            padding: 25px 10px; border-radius: 20px;
-            cursor: pointer; transition: 0.3s;
-            font-weight: 900; font-size: 1.1rem;
-            box-shadow: 0 4px 15px rgba(0,0,0,0.2);
+        .category-item {
+            background: var(--glass); border: 1px solid var(--glass-border);
+            padding: 25px; border-radius: 20px; cursor: pointer;
+            font-weight: bold; transition: 0.3s;
+        }
+        .category-item:hover { transform: scale(1.05); background: rgba(255,255,255,0.1); }
+
+        /* خريطة المستويات */
+        .map-grid {
+            display: flex; flex-direction: column-reverse; gap: 30px;
+            padding: 100px 0; overflow-y: auto; height: 100vh; width: 100%;
+            align-items: center;
         }
 
-        .cat-card:hover { background: var(--primary); transform: scale(1.05); }
-
-        /* المستويات */
-        .level-map { width: 100%; overflow-y: auto; padding: 100px 0; display: flex; flex-direction: column-reverse; align-items: center; gap: 30px; }
-        .level-circle {
+        .level-node {
             width: 70px; height: 70px; border-radius: 50%;
-            background: var(--glass); border: 3px solid #64748b;
+            background: rgba(255,255,255,0.1); border: 3px solid #555;
             display: flex; align-items: center; justify-content: center;
-            font-size: 1.5rem; font-weight: 900; cursor: pointer; transition: 0.3s;
+            font-size: 1.5rem; font-weight: 900; cursor: not-allowed;
         }
-        .unlocked { background: var(--primary); border-color: white; box-shadow: 0 0 15px var(--primary); }
-        .current { background: var(--gold); border-color: white; color: black; animation: pulse 1.5s infinite; }
+        .unlocked { border-color: #0ea5e9; background: rgba(14, 165, 233, 0.2); cursor: pointer; }
+        .active-lvl { border-color: #ffbd39; background: var(--gold-gradient); color: black; box-shadow: 0 0 20px #ffbd39; }
 
-        @keyframes pulse { 0% { transform: scale(1); } 50% { transform: scale(1.1); } 100% { transform: scale(1); } }
-
-        /* نافذة الأسئلة */
-        .quiz-panel {
-            position: fixed; bottom: -100%; left: 0; width: 100%;
-            background: rgba(15, 23, 42, 0.95); backdrop-filter: blur(20px);
-            border-radius: 30px 30px 0 0; padding: 40px 20px;
-            transition: 0.5s; z-index: 100;
+        /* لوحة الأسئلة (المكان المصلح طبقاً للصورة) */
+        .quiz-board {
+            position: fixed; bottom: 30px; left: 50%; transform: translateX(-50%);
+            width: 90%; max-width: 500px;
+            background: rgba(20, 20, 20, 0.8); backdrop-filter: blur(25px);
+            border: 1px solid var(--glass-border);
+            border-radius: 35px; padding: 30px 20px;
+            z-index: 1000; display: none;
         }
-        .quiz-panel.open { bottom: 0; }
-        .opt-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-top: 20px; }
-        .opt-item { background: rgba(255,255,255,0.1); padding: 15px; border-radius: 15px; cursor: pointer; border: 1px solid var(--border); }
-        .opt-item:hover { background: var(--primary); }
 
-        /* بار الحالة */
-        .status-bar { position: fixed; top: 0; width: 100%; padding: 15px; display: flex; justify-content: space-around; z-index: 100; background: rgba(0,0,0,0.3); }
+        .question-txt { font-size: 1.3rem; font-weight: bold; margin-bottom: 25px; text-align: center; }
+
+        .answers-grid {
+            display: grid; grid-template-columns: 1fr 1fr; gap: 12px;
+        }
+
+        .answer-btn {
+            background: rgba(255,255,255,0.05); border: 1px solid var(--glass-border);
+            padding: 18px; border-radius: 15px; cursor: pointer;
+            font-weight: bold; transition: 0.2s; text-align: center;
+        }
+        .answer-btn:hover { background: rgba(255,255,255,0.1); }
+
+        .hint-pill {
+            background: #ffbd39; color: black; border: none;
+            padding: 8px 15px; border-radius: 15px; font-weight: 900;
+            margin-bottom: 15px; cursor: pointer;
+        }
     </style>
 </head>
 <body>
 
-    <div class="master-bg"></div>
+    <div class="main-bg"></div>
+    <div class="overlay"></div>
 
-    <div id="status" class="status-bar" style="display: none;">
-        <span>❤️ <span id="h-val">3</span></span>
-        <span>💎 <span id="s-val">0</span></span>
-        <span onclick="location.reload()" style="cursor:pointer">🏠</span>
+    <div class="status-header" id="game-stats" style="display: none;">
+        <div class="stat-pill">❤️ <span id="hearts">3</span></div>
+        <div class="stat-pill">💎 <span id="score">0</span></div>
+        <div class="stat-pill" onclick="location.reload()">🏠</div>
     </div>
 
-    <div id="screen-start" class="screen active-screen">
-        <div class="game-title">IQ ثقافة</div>
-        <div class="fact-card">
-            <small style="color: var(--gold)">معلومة سريعة</small>
-            <p id="fact-text">جاري التحميل...</p>
+    <div id="start-screen" class="screen active">
+        <h1 class="logo-text">IQ ثقافة</h1>
+        <div class="fact-box">
+            <div style="color: #ffbd39; font-weight: 900; font-size: 0.8rem;">Fact | معلومة</div>
+            <p id="fact-display">جاري جلب العلم...</p>
         </div>
-        <button onclick="showCats()" style="background: var(--gold); border: none; padding: 15px 50px; border-radius: 50px; font-weight: 900; font-size: 1.2rem; cursor: pointer;">ابدأ اللعب</button>
+        <button class="category-item" style="background: var(--gold-gradient); color: black; width: 200px;" onclick="goToCats()">دخول</button>
     </div>
 
-    <div id="screen-cats" class="screen">
-        <h2 style="margin-bottom: 20px;">اختر التصنيف</h2>
-        <div class="cat-grid">
-            <div class="cat-card" onclick="loadCat('11216236')">⏳ التاريخ</div>
-            <div class="cat-card" onclick="loadCat('99625756')">🌍 الجغرافيا</div>
-            <div class="cat-card" onclick="loadCat('1843208636')">🧬 العلوم</div>
-            <div class="cat-card" onclick="loadCat('564130158')">💡 ثقافة عامة</div>
-            <div class="cat-card" onclick="loadCat('0')">⚽ الرياضة</div>
+    <div id="cat-screen" class="screen">
+        <h2 style="margin-bottom: 30px;">اختر المسار</h2>
+        <div class="categories-container">
+            <div class="category-item" onclick="loadMap('11216236')">⏳ التاريخ</div>
+            <div class="category-item" onclick="loadMap('99625756')">🌍 الجغرافيا</div>
+            <div class="category-item" onclick="loadMap('1843208636')">🧬 العلوم</div>
+            <div class="category-item" onclick="loadMap('564130158')">💡 ثقافة عامة</div>
         </div>
     </div>
 
-    <div id="screen-map" class="screen" style="padding:0">
-        <div class="level-map" id="map-box"></div>
+    <div id="map-screen" class="screen" style="display: none;">
+        <div class="map-grid" id="map-container"></div>
     </div>
 
-    <div class="quiz-panel" id="quiz-ui">
-        <button onclick="use50()" style="background:var(--gold); border:none; padding:5px 15px; border-radius:10px; margin-bottom:10px; font-weight:bold">50:50 (-50 نقطة)</button>
-        <div id="q-text" style="font-weight: bold; font-size: 1.2rem;"></div>
-        <div class="opt-grid" id="opt-box"></div>
+    <div class="quiz-board" id="quiz-ui">
+        <button class="hint-pill" onclick="hint50()">50:50</button>
+        <div class="question-txt" id="q-txt">ما هو عاصمة المغرب؟</div>
+        <div class="answers-grid" id="ans-grid"></div>
     </div>
 
     <audio id="bg-music" loop src="https://www.soundhelix.com/examples/mp3/SoundHelix-Song-8.mp3"></audio>
 
     <script>
-        const CSV = "https://docs.google.com/spreadsheets/d/e/2PACX-1vSJ4RCU1_iXMqLS3ApB1g8SjSrL2hbIAv-1VniqdMElnalov--mSDTpe9rjMxaWGCuP6gpxWV7OZDe1/pub?output=csv";
-        let state = { score: 0, hearts: 3, unlocked: 1, questions: [], currentIdx: 0 };
+        const DATA_URL = "https://docs.google.com/spreadsheets/d/e/2PACX-1vSJ4RCU1_iXMqLS3ApB1g8SjSrL2hbIAv-1VniqdMElnalov--mSDTpe9rjMxaWGCuP6gpxWV7OZDe1/pub?output=csv";
+        let state = { score: 0, hearts: 3, unlocked: 1, questions: [], activeIdx: 0 };
 
-        async function getFact() {
+        async function fetchFact() {
             try {
-                const r = await fetch(CSV + "&gid=605574246");
+                const r = await fetch(DATA_URL + "&gid=605574246");
                 const d = await r.text();
-                const rows = d.split('\n').slice(1);
-                document.getElementById('fact-text').innerText = rows[Math.floor(Math.random()*rows.length)].split(',')[0].replace(/"/g, '');
-            } catch(e) { document.getElementById('fact-text').innerText = "كن مستعداً للتحدي!"; }
+                const lines = d.split('\n').slice(1);
+                document.getElementById('fact-display').innerText = lines[Math.floor(Math.random()*lines.length)].split(',')[0].replace(/"/g, '');
+            } catch(e) {}
         }
 
-        function showCats() {
-            document.getElementById('bg-music').volume = 0.2;
+        function goToCats() {
+            document.getElementById('bg-music').volume = 0.1;
             document.getElementById('bg-music').play();
-            document.querySelectorAll('.screen').forEach(s => s.classList.remove('active-screen'));
-            document.getElementById('screen-cats').classList.add('active-screen');
-            document.getElementById('status').style.display = 'flex';
+            switchScreen('cat-screen');
+            document.getElementById('game-stats').style.display = 'flex';
         }
 
-        async function loadCat(gid) {
-            document.querySelectorAll('.screen').forEach(s => s.classList.remove('active-screen'));
-            document.getElementById('screen-map').classList.add('active-screen');
-            const r = await fetch(CSV + "&gid=" + gid);
+        async function loadMap(gid) {
+            switchScreen('map-screen');
+            const r = await fetch(DATA_URL + "&gid=" + gid);
             const d = await r.text();
             state.questions = d.split('\n').slice(1).map(row => {
                 const c = row.split(',').map(x => x.trim().replace(/"/g, ''));
@@ -168,61 +202,66 @@
         }
 
         function renderMap() {
-            const box = document.getElementById('map-box');
-            box.innerHTML = '';
+            const container = document.getElementById('map-container');
+            container.innerHTML = '';
             state.questions.forEach((_, i) => {
                 const node = document.createElement('div');
-                node.className = `level-circle ${i+1 <= state.unlocked ? 'unlocked' : ''} ${i+1 === state.unlocked ? 'current' : ''}`;
+                node.className = `level-node ${i+1 <= state.unlocked ? 'unlocked' : ''} ${i+1 === state.unlocked ? 'active-lvl' : ''}`;
                 node.innerText = i + 1;
-                if(i+1 <= state.unlocked) node.onclick = () => openQ(i);
-                box.appendChild(node);
+                if(i+1 <= state.unlocked) node.onclick = () => showQuiz(i);
+                container.appendChild(node);
             });
         }
 
-        function openQ(idx) {
-            state.currentIdx = idx; state.hearts = 3;
-            document.getElementById('h-val').innerText = 3;
-            document.getElementById('quiz-ui').classList.add('open');
+        function showQuiz(idx) {
+            state.activeIdx = idx; state.hearts = 3;
+            document.getElementById('hearts').innerText = 3;
             const q = state.questions[idx];
-            document.getElementById('q-text').innerText = q.q;
-            const obox = document.getElementById('opt-box');
-            obox.innerHTML = '';
+            document.getElementById('q-txt').innerText = q.q;
+            const grid = document.getElementById('ans-grid');
+            grid.innerHTML = '';
             q.opts.forEach(o => {
-                const div = document.createElement('div');
-                div.className = 'opt-item';
-                div.innerText = o;
-                div.onclick = () => {
+                const b = document.createElement('div');
+                b.className = 'answer-btn';
+                b.innerText = o;
+                b.onclick = () => {
                     if(o === q.a) {
-                        div.style.background = "#10b981";
+                        b.style.background = "#10b981";
                         state.score += 10;
-                        document.getElementById('s-val').innerText = state.score;
-                        setTimeout(() => { 
-                            if(state.currentIdx + 1 === state.unlocked) state.unlocked++;
-                            document.getElementById('quiz-ui').classList.remove('open');
+                        document.getElementById('score').innerText = state.score;
+                        setTimeout(() => {
+                            if(state.activeIdx+1 === state.unlocked) state.unlocked++;
+                            document.getElementById('quiz-ui').style.display = 'none';
                             renderMap();
                         }, 800);
                     } else {
-                        div.style.background = "#ef4444";
+                        b.style.background = "#ef4444";
                         state.hearts--;
-                        document.getElementById('h-val').innerText = state.hearts;
-                        if(state.hearts <= 0) { alert("انتهت القلوب!"); document.getElementById('quiz-ui').classList.remove('open'); }
+                        document.getElementById('hearts').innerText = state.hearts;
+                        if(state.hearts <= 0) { alert("انتهت المحاولات!"); document.getElementById('quiz-ui').style.display = 'none'; }
                     }
                 };
-                obox.appendChild(div);
+                grid.appendChild(b);
+            });
+            document.getElementById('quiz-ui').style.display = 'block';
+        }
+
+        function hint50() {
+            if(state.score < 50) return alert("النقاط غير كافية");
+            state.score -= 50; document.getElementById('score').innerText = state.score;
+            const correct = state.questions[state.activeIdx].a;
+            let count = 0;
+            document.querySelectorAll('.answer-btn').forEach(btn => {
+                if(btn.innerText !== correct && count < 2) { btn.style.visibility = 'hidden'; count++; }
             });
         }
 
-        function use50() {
-            if(state.score < 50) return alert("نقاطك لا تكفي");
-            state.score -= 50; document.getElementById('s-val').innerText = state.score;
-            const correct = state.questions[state.currentIdx].a;
-            let hidden = 0;
-            document.querySelectorAll('.opt-item').forEach(it => {
-                if(it.innerText !== correct && hidden < 2) { it.style.visibility = 'hidden'; hidden++; }
-            });
+        function switchScreen(id) {
+            document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
+            document.getElementById(id).classList.add('active');
         }
 
-        getFact();
+        fetchFact();
     </script>
 </body>
 </html>
