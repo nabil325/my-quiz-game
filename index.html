@@ -27,7 +27,6 @@
             overflow-x: hidden;
         }
 
-        /* التحكم في الصوت */
         .audio-control {
             position: absolute;
             top: 20px;
@@ -39,9 +38,9 @@
             border-radius: 50%;
             cursor: pointer;
             backdrop-filter: blur(10px);
+            font-size: 1.2rem;
         }
 
-        /* شاشة البداية */
         #splash-screen {
             display: flex;
             flex-direction: column;
@@ -52,18 +51,12 @@
             width: 100%;
         }
 
-        .logo-container {
-            position: relative;
-            margin-bottom: 30px;
-        }
-
         .logo {
             font-size: 3.5rem;
             font-weight: 800;
             background: linear-gradient(to bottom, #fff 30%, #f59e0b 100%);
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
-            filter: drop-shadow(0 0 15px rgba(245, 158, 11, 0.3));
             animation: float 3s ease-in-out infinite;
         }
 
@@ -77,10 +70,8 @@
             border: 1px solid var(--glass-border);
             max-width: 450px;
             margin: 20px;
-            box-shadow: 0 20px 40px rgba(0,0,0,0.3);
         }
 
-        /* واجهة اللعبة */
         .header { display: none; width: 100%; max-width: 500px; margin-bottom: 30px; }
         .top-bar {
             display: flex;
@@ -108,20 +99,15 @@
             font-size: 1.2rem;
             color: white;
             cursor: pointer;
-            transition: 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            transition: 0.3s;
             display: flex;
             flex-direction: column;
             align-items: center;
             gap: 10px;
         }
 
-        .cat-btn:hover {
-            background: var(--primary);
-            transform: translateY(-5px);
-            box-shadow: 0 10px 20px rgba(99, 102, 241, 0.3);
-        }
+        .cat-btn:hover { background: var(--primary); transform: translateY(-5px); }
 
-        /* الأسئلة */
         .quiz-container { display: none; width: 100%; max-width: 500px; }
         .question-card {
             background: var(--glass);
@@ -129,7 +115,7 @@
             border-radius: 30px;
             margin-bottom: 25px;
             text-align: center;
-            font-size: 1.5rem;
+            font-size: 1.4rem;
             font-weight: 600;
             border: 1px solid var(--glass-border);
         }
@@ -138,14 +124,11 @@
         .opt-item {
             background: rgba(255,255,255,0.03);
             border: 1px solid var(--glass-border);
-            padding: 20px;
+            padding: 18px;
             border-radius: 18px;
             text-align: right;
-            font-size: 1.1rem;
             cursor: pointer;
             transition: 0.2s;
-            display: flex;
-            align-items: center;
         }
 
         .opt-item:hover { background: rgba(255,255,255,0.08); }
@@ -155,14 +138,13 @@
         .start-action {
             background: var(--secondary);
             color: #000;
-            padding: 20px 50px;
+            padding: 18px 45px;
             border-radius: 50px;
-            font-size: 1.4rem;
+            font-size: 1.3rem;
             font-weight: bold;
             border: none;
             cursor: pointer;
             margin-top: 30px;
-            box-shadow: 0 10px 25px rgba(245, 158, 11, 0.4);
         }
     </style>
 </head>
@@ -171,12 +153,10 @@
     <div class="audio-control" onclick="toggleMusic()" id="music-toggle">🔊</div>
 
     <div id="splash-screen">
-        <div class="logo-container">
-            <div class="logo">💎 كنز الثقافة</div>
-        </div>
+        <div class="logo">💎 كنز الثقافة</div>
         <div class="fact-card">
-            <span style="color: var(--secondary); font-weight: bold; letter-spacing: 1px;">هل تعلم؟</span>
-            <p id="fact-text" style="font-size: 1.1rem; line-height: 1.6; margin-top: 10px;">جاري تحميل الجواهر...</p>
+            <span style="color: var(--secondary); font-weight: bold;">هل تعلم؟</span>
+            <p id="fact-text">استعد للرحلة...</p>
         </div>
         <button class="start-action" onclick="initGame()">ابدأ المغامرة</button>
     </div>
@@ -184,17 +164,17 @@
     <div class="header" id="game-header">
         <div class="top-bar">
             <span>🏆 <span id="score">0</span></span>
-            <span id="hearts-ui" style="letter-spacing: 5px;">❤️❤️❤️</span>
+            <span id="hearts-ui">❤️❤️❤️</span>
         </div>
     </div>
 
     <div id="main-menu" class="categories">
-        <div class="cat-btn" onclick="startQuiz('0')"><span>⚽</span> الرياضة</div>
-        <div class="cat-btn" onclick="startQuiz('11216236')"><span>⏳</span> التاريخ</div>
-        <div class="cat-btn" onclick="startQuiz('99625756')"><span>🌍</span> الجغرافيا</div>
-        <div class="cat-btn" onclick="startQuiz('1843208636')"><span>🧬</span> العلوم</div>
-        <div class="cat-btn" onclick="startQuiz('564130158')"><span>💡</span> ثقافة عامة</div>
-        <div class="cat-btn" onclick="location.reload()" style="background: rgba(239, 68, 68, 0.1);"><span>🏠</span> خروج</div>
+        <div class="cat-btn" onclick="startQuiz('0')">⚽ الرياضة</div>
+        <div class="cat-btn" onclick="startQuiz('11216236')">⏳ التاريخ</div>
+        <div class="cat-btn" onclick="startQuiz('99625756')">🌍 الجغرافيا</div>
+        <div class="cat-btn" onclick="startQuiz('1843208636')">🧬 العلوم</div>
+        <div class="cat-btn" onclick="startQuiz('564130158')">💡 ثقافة عامة</div>
+        <div class="cat-btn" onclick="location.reload()" style="background: rgba(239, 68, 68, 0.1);">🏠 خروج</div>
     </div>
 
     <div id="quiz-container" class="quiz-container">
@@ -202,16 +182,15 @@
         <div class="options-grid" id="options"></div>
     </div>
 
-    <audio id="bg-music" loop src="https://www.soundhelix.com/examples/mp3/SoundHelix-Song-17.mp3"></audio>
-    <audio id="correct-snd" src="https://assets.mixkit.co/active_storage/sfx/2000/2000-preview.mp3"></audio>
-    <audio id="wrong-snd" src="https://assets.mixkit.co/active_storage/sfx/2959/2959-preview.mp3"></audio>
+    <audio id="bg-music" loop src="https://www.soundhelix.com/examples/mp3/SoundHelix-Song-8.mp3"></audio>
+    <audio id="correct-snd" src="https://assets.mixkit.co/active_storage/sfx/2571/2571-preview.mp3"></audio>
+    <audio id="wrong-snd" src="https://assets.mixkit.co/active_storage/sfx/2572/2572-preview.mp3"></audio>
 
     <script>
         const CSV_URL = "https://docs.google.com/spreadsheets/d/e/2PACX-1vSJ4RCU1_iXMqLS3ApB1g8SjSrL2hbIAv-1VniqdMElnalov--mSDTpe9rjMxaWGCuP6gpxWV7OZDe1/pub?output=csv";
         let state = { score: 0, hearts: 3, questions: [], currentIdx: 0, isMuted: false };
-
         const bgMusic = document.getElementById('bg-music');
-        
+
         function toggleMusic() {
             state.isMuted = !state.isMuted;
             bgMusic.muted = state.isMuted;
@@ -224,15 +203,14 @@
                 const text = await res.text();
                 const rows = text.split(/\r?\n/).filter(r => r.trim() !== "");
                 if (rows.length > 1) {
-                    const facts = rows.slice(1);
-                    const randomFact = facts[Math.floor(Math.random() * facts.length)].split(',')[0].replace(/^"|"$/g, '');
+                    const randomFact = rows.slice(1)[Math.floor(Math.random() * (rows.length-1))].split(',')[0].replace(/^"|"$/g, '');
                     document.getElementById('fact-text').innerText = randomFact;
                 }
-            } catch (e) { document.getElementById('fact-text').innerText = "استعد لرحلة معرفية فريدة!"; }
+            } catch (e) { document.getElementById('fact-text').innerText = "كنز الثقافة في انتظارك!"; }
         }
 
         function initGame() {
-            bgMusic.volume = 0.2;
+            bgMusic.volume = 0.15;
             bgMusic.play();
             document.getElementById('splash-screen').style.display = 'none';
             document.getElementById('game-header').style.display = 'block';
@@ -242,7 +220,6 @@
         async function startQuiz(gid) {
             document.getElementById('main-menu').style.display = 'none';
             document.getElementById('quiz-container').style.display = 'block';
-            document.getElementById('question').innerText = "جاري استخراج الأسئلة...";
             try {
                 const res = await fetch(`${CSV_URL}&gid=${gid}`);
                 const text = await res.text();
@@ -253,12 +230,12 @@
                 }).filter(item => item.q);
                 state.currentIdx = 0;
                 showQuestion();
-            } catch (e) { alert("خطأ في الاتصال بالبيانات!"); }
+            } catch (e) { alert("فشل في تحميل الأسئلة!"); }
         }
 
         function showQuestion() {
             if (state.currentIdx >= state.questions.length) {
-                alert("رائع! لقد أتممت المهمة بنجاح.");
+                alert("تم اجتياز التحدي بنجاح!");
                 location.reload();
                 return;
             }
@@ -266,7 +243,6 @@
             document.getElementById('question').innerText = q.q;
             const optionsDiv = document.getElementById('options');
             optionsDiv.innerHTML = '';
-            
             q.options.forEach((opt) => {
                 const div = document.createElement('div');
                 div.className = 'opt-item';
@@ -277,13 +253,13 @@
                         div.classList.add('correct');
                         state.score += 10;
                         document.getElementById('score').innerText = state.score;
-                        setTimeout(() => { state.currentIdx++; showQuestion(); }, 700);
+                        setTimeout(() => { state.currentIdx++; showQuestion(); }, 600);
                     } else {
                         document.getElementById('wrong-snd').play();
                         div.classList.add('wrong');
                         state.hearts--;
                         document.getElementById('hearts-ui').innerText = "❤️".repeat(Math.max(0, state.hearts));
-                        if (state.hearts <= 0) { alert("نهاية الرحلة! نقاطك: " + state.score); location.reload(); }
+                        if (state.hearts <= 0) { alert("انتهت المحاولات!"); location.reload(); }
                     }
                 };
                 optionsDiv.appendChild(div);
