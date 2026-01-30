@@ -3,240 +3,198 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>كنز الثقافة - نظام المستويات</title>
+    <title>IQ ثقافة - التحدي الأكبر</title>
+    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;700;900&display=swap" rel="stylesheet">
     <style>
         :root {
-            --bg: #f0f9ff;
-            --primary-gradient: linear-gradient(135deg, #3b82f6 0%, #2563eb 100%);
-            --secondary: #f59e0b;
-            --white: #ffffff;
-            --text-main: #1e293b;
-            --glass: rgba(255, 255, 255, 0.9);
-            --border: #e2e8f0;
+            --primary: #0ea5e9;
+            --gold: #f59e0b;
+            --glass: rgba(255, 255, 255, 0.1);
+            --glass-heavy: rgba(15, 23, 42, 0.85);
+            --border: rgba(255, 255, 255, 0.2);
         }
 
-        body {
-            background-color: var(--bg);
-            color: var(--text-main);
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            margin: 0;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            min-height: 100vh;
-            overflow-x: hidden;
+        body, html {
+            margin: 0; padding: 0; height: 100%; width: 100%;
+            font-family: 'Cairo', sans-serif; color: white; overflow: hidden;
+            background: #020617;
         }
 
-        /* التحكم في الصوت */
-        .audio-control {
-            position: fixed;
-            top: 15px;
-            left: 15px;
+        /* الخلفية الحية الشاملة */
+        .master-bg {
+            position: fixed; inset: 0;
+            background: linear-gradient(rgba(2, 6, 23, 0.5), rgba(2, 6, 23, 0.8)), 
+                        url('https://images.unsplash.com/photo-1464822759023-fed622ff2c3b?auto=format&fit=crop&q=80&w=1600');
+            background-size: cover; background-position: center; z-index: -1;
+            transition: 1s filter ease;
+        }
+
+        /* 1. شاشة البداية */
+        .screen {
+            position: absolute; inset: 0; display: none;
+            flex-direction: column; align-items: center; justify-content: center;
+            padding: 20px; text-align: center;
+        }
+
+        .active-screen { display: flex; }
+
+        .game-title {
+            font-size: 4.5rem; font-weight: 900; color: var(--gold);
+            text-shadow: 0 0 30px rgba(245, 158, 11, 0.5); margin-bottom: 10px;
+        }
+
+        .fact-card {
+            background: var(--glass); backdrop-filter: blur(15px);
+            border: 1px solid var(--border); padding: 25px;
+            border-radius: 30px; max-width: 450px; margin: 20px 0;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+        }
+
+        /* 2. شاشة التصنيفات */
+        .cat-grid {
+            display: grid; grid-template-columns: 1fr 1fr; gap: 20px;
+            width: 100%; max-width: 500px;
+        }
+
+        .cat-card {
+            background: var(--glass); border: 1px solid var(--border);
+            padding: 30px 15px; border-radius: 25px; cursor: pointer;
+            transition: 0.3s; backdrop-filter: blur(10px); font-weight: 700;
+        }
+
+        .cat-card:hover { transform: translateY(-10px); background: var(--primary); border-color: white; }
+
+        /* 3. شاشة المستويات (المجال الجذاب) */
+        .level-map {
+            width: 100%; height: 100%; overflow-y: auto; padding: 100px 0;
+            display: flex; flex-direction: column-reverse; align-items: center; gap: 40px;
+        }
+
+        .level-circle {
+            width: 80px; height: 80px; border-radius: 50%;
+            background: rgba(255,255,255,0.05); border: 4px solid #475569;
+            display: flex; align-items: center; justify-content: center;
+            font-size: 1.8rem; font-weight: 900; cursor: not-allowed;
+            position: relative; transition: 0.4s;
+        }
+
+        .level-circle.unlocked {
+            background: var(--primary); border-color: white; cursor: pointer;
+            box-shadow: 0 0 20px var(--primary);
+        }
+
+        .level-circle.current { animation: pulse 2s infinite; background: var(--gold); border-color: white; color: black; }
+
+        @keyframes pulse { 0% { transform: scale(1); } 50% { transform: scale(1.15); box-shadow: 0 0 40px var(--gold); } 100% { transform: scale(1); } }
+
+        /* شاشة الأسئلة (احترافية عالمية) */
+        .quiz-panel {
+            position: fixed; bottom: -100%; left: 0; width: 100%;
+            background: var(--glass-heavy); backdrop-filter: blur(30px);
+            border-radius: 50px 50px 0 0; border-top: 1px solid var(--border);
+            padding: 50px 30px; box-sizing: border-box; transition: 0.6s cubic-bezier(0.19, 1, 0.22, 1);
+        }
+
+        .quiz-panel.open { bottom: 0; }
+
+        .opt-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; margin-top: 30px; }
+
+        .opt-item {
+            background: rgba(255,255,255,0.05); border: 1px solid var(--border);
+            padding: 20px; border-radius: 20px; cursor: pointer; transition: 0.2s;
+            font-weight: 700; text-align: center;
+        }
+
+        .opt-item:hover { background: var(--primary); }
+        .correct { background: #10b981 !important; }
+        .wrong { background: #ef4444 !important; }
+
+        .help-btn {
+            background: var(--gold); color: black; border: none;
+            padding: 10px 25px; border-radius: 50px; font-weight: 900;
+            cursor: pointer; margin-bottom: 20px;
+        }
+
+        /* شريط الحالة */
+        .status-bar {
+            position: fixed; top: 0; width: 100%; padding: 20px 40px;
+            display: flex; justify-content: space-between; box-sizing: border-box;
             z-index: 100;
-            background: var(--white);
-            border: 1px solid var(--border);
-            padding: 10px;
-            border-radius: 50%;
-            cursor: pointer;
-            box-shadow: 0 4px 6px rgba(0,0,0,0.05);
         }
 
-        /* شاشات اللعبة */
-        .screen { display: none; width: 100%; max-width: 500px; padding: 20px; box-sizing: border-box; text-align: center; }
-        #splash-screen { display: flex; flex-direction: column; justify-content: center; height: 100vh; }
-
-        .logo {
-            font-size: 3rem;
-            font-weight: 800;
-            background: var(--primary-gradient);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            margin-bottom: 20px;
-        }
-
-        /* خريطة المستويات */
-        .levels-map {
-            display: flex;
-            flex-direction: column-reverse;
-            align-items: center;
-            gap: 20px;
-            padding: 40px 0;
-        }
-
-        .level-node {
-            width: 70px;
-            height: 70px;
-            background: #cbd5e1;
-            border-radius: 50%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-weight: bold;
-            font-size: 1.2rem;
-            color: white;
-            border: 4px solid #94a3b8;
-            cursor: not-allowed;
-            transition: 0.3s;
-            position: relative;
-        }
-
-        .level-node.unlocked {
-            background: var(--primary-gradient);
-            border-color: #93c5fd;
-            cursor: pointer;
-            box-shadow: 0 8px 15px rgba(59, 130, 246, 0.3);
-        }
-
-        .level-node.completed { background: #10b981; border-color: #6ee7b7; }
-
-        /* شاشة السؤال */
-        .quiz-card {
-            background: var(--white);
-            border-radius: 30px;
-            padding: 30px 20px;
-            box-shadow: 0 15px 35px rgba(0,0,0,0.05);
-            border: 1px solid var(--border);
-        }
-
-        .question-box { font-size: 1.4rem; font-weight: 700; margin-bottom: 25px; line-height: 1.4; }
-
-        .option-item {
-            background: #f8fafc;
-            border: 2px solid var(--border);
-            padding: 18px;
-            border-radius: 20px;
-            margin-bottom: 12px;
-            cursor: pointer;
-            transition: 0.2s;
-            font-weight: 600;
-        }
-
-        .option-item:hover { border-color: #3b82f6; background: #eff6ff; }
-        .correct { background: #10b981 !important; color: white; border: none; }
-        .wrong { background: #ef4444 !important; color: white; border: none; }
-
-        /* الأزرار والمساعدات */
-        .btn-main {
-            background: var(--primary-gradient);
-            color: white;
-            padding: 15px 40px;
-            border-radius: 50px;
-            border: none;
-            font-size: 1.2rem;
-            font-weight: bold;
-            cursor: pointer;
-            box-shadow: 0 10px 20px rgba(59, 130, 246, 0.2);
-        }
-
-        .hint-btn {
-            background: var(--secondary);
-            color: white;
-            padding: 10px 20px;
-            border-radius: 12px;
-            border: none;
-            font-weight: bold;
-            margin-top: 20px;
-            cursor: pointer;
-        }
-
-        .top-stats {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            background: var(--white);
-            padding: 12px 20px;
-            border-radius: 20px;
-            margin-bottom: 20px;
-            box-shadow: var(--shadow);
-        }
+        .badge { background: var(--glass); padding: 8px 20px; border-radius: 30px; border: 1px solid var(--border); font-weight: bold; }
     </style>
 </head>
 <body>
 
-    <div class="audio-control" onclick="toggleMusic()" id="music-toggle">🔊</div>
+    <div class="master-bg"></div>
 
-    <div id="splash-screen" class="screen" style="display: flex;">
-        <div class="logo">💎 كنز الثقافة</div>
-        <div style="background: white; padding: 20px; border-radius: 20px; margin-bottom: 30px; border: 1px solid var(--border);">
-            <p id="fact-text">استعد لاختبار ذكائك...</p>
-        </div>
-        <button class="btn-main" onclick="showCategories()">دخول اللعبة</button>
+    <div id="status" class="status-bar" style="display: none;">
+        <div class="badge">❤️ <span id="hearts-val">3</span></div>
+        <div class="badge">💎 <span id="score-val">0</span></div>
+        <div class="badge" onclick="goHome()" style="cursor:pointer;">🏠</div>
     </div>
 
-    <div id="category-screen" class="screen">
-        <h2 style="color: #3b82f6;">اختر التصنيف</h2>
-        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 15px; margin-top: 20px;">
-            <div class="option-item" onclick="loadLevels('0')">⚽ الرياضة</div>
-            <div class="option-item" onclick="loadLevels('11216236')">⏳ التاريخ</div>
-            <div class="option-item" onclick="loadLevels('99625756')">🌍 الجغرافيا</div>
-            <div class="option-item" onclick="loadLevels('1843208636')">🧬 العلوم</div>
-            <div class="option-item" onclick="loadLevels('564130158')">💡 ثقافة عامة</div>
-            <div class="option-item" onclick="location.reload()" style="background: #fee2e2;">🏠 رجوع</div>
+    <div id="screen-start" class="screen active-screen">
+        <div class="game-title">IQ ثقافة</div>
+        <div class="fact-card">
+            <div style="color: var(--gold); font-weight: 900; margin-bottom: 10px;">هل تعلم؟</div>
+            <div id="fact-content">جاري جلب المعلومات...</div>
+        </div>
+        <button onclick="startJourney()" style="background: var(--gold); color: black; padding: 20px 60px; border-radius: 50px; border: none; font-size: 1.5rem; font-weight: 900; cursor: pointer;">ابدأ التحدي</button>
+    </div>
+
+    <div id="screen-cats" class="screen">
+        <h1 style="margin-bottom: 40px;">اختر مسارك</h1>
+        <div class="cat-grid">
+            <div class="cat-card" onclick="loadCategory('11216236')">⏳ التاريخ</div>
+            <div class="cat-card" onclick="loadCategory('99625756')">🌍 الجغرافيا</div>
+            <div class="cat-card" onclick="loadCategory('1843208636')">🧬 العلوم</div>
+            <div class="cat-card" onclick="loadCategory('564130158')">💡 ثقافة عامة</div>
+            <div class="cat-card" onclick="loadCategory('0')">⚽ الرياضة</div>
         </div>
     </div>
 
-    <div id="map-screen" class="screen">
-        <div class="top-stats">
-            <span>🏆 النقاط: <span id="total-score">0</span></span>
-            <span onclick="goToCategories()" style="cursor:pointer;">🔙</span>
-        </div>
-        <div class="levels-map" id="levels-container"></div>
+    <div id="screen-map" class="screen" style="padding: 0;">
+        <div class="level-map" id="map-container"></div>
     </div>
 
-    <div id="quiz-screen" class="screen">
-        <div class="top-stats">
-            <span id="hearts-ui">❤️❤️❤️</span>
-            <span>مستوى <span id="current-lvl-num">1</span></span>
-        </div>
-        <div class="quiz-card">
-            <div class="question-box" id="q-text">جاري التحميل...</div>
-            <div id="options-box"></div>
-            <button class="hint-btn" id="hint-50" onclick="useHint50()">50:50 (خصم 50 نقطة)</button>
-        </div>
+    <div class="quiz-panel" id="quiz-ui">
+        <button class="help-btn" onclick="useHint50()">حذف إجابتين (50- نقطة)</button>
+        <div id="q-text" style="font-size: 1.5rem; font-weight: bold; line-height: 1.4;">السؤال يظهر هنا...</div>
+        <div class="opt-grid" id="options-box"></div>
     </div>
 
     <audio id="bg-music" loop src="https://www.soundhelix.com/examples/mp3/SoundHelix-Song-8.mp3"></audio>
 
     <script>
-        const CSV_URL = "https://docs.google.com/spreadsheets/d/e/2PACX-1vSJ4RCU1_iXMqLS3ApB1g8SjSrL2hbIAv-1VniqdMElnalov--mSDTpe9rjMxaWGCuP6gpxWV7OZDe1/pub?output=csv";
-        
-        let gameState = {
-            totalScore: 0,
-            unlockedLevel: 1,
-            questions: [],
-            currentQIdx: 0,
-            hearts: 3,
-            isMuted: false
-        };
+        const CSV_BASE = "https://docs.google.com/spreadsheets/d/e/2PACX-1vSJ4RCU1_iXMqLS3ApB1g8SjSrL2hbIAv-1VniqdMElnalov--mSDTpe9rjMxaWGCuP6gpxWV7OZDe1/pub?output=csv";
+        let state = { score: 0, hearts: 3, questions: [], currentIdx: 0, unlocked: 1 };
 
+        // جلب حقيقة عشوائية عند التشغيل
         async function fetchFact() {
             try {
-                const res = await fetch(`${CSV_URL}&gid=605574246`);
-                const text = await res.text();
-                const rows = text.split('\n').slice(1);
-                document.getElementById('fact-text').innerText = rows[Math.floor(Math.random()*rows.length)].split(',')[0].replace(/"/g, '');
-            } catch (e) {}
+                const res = await fetch(`${CSV_BASE}&gid=605574246`);
+                const data = await res.text();
+                const lines = data.split('\n').slice(1);
+                const randomFact = lines[Math.floor(Math.random() * lines.length)].split(',')[0];
+                document.getElementById('fact-content').innerText = randomFact.replace(/"/g, '');
+            } catch (e) { document.getElementById('fact-content').innerText = "المعرفة هي القوة الحقيقية."; }
         }
 
-        function toggleMusic() {
-            const m = document.getElementById('bg-music');
-            gameState.isMuted = !gameState.isMuted;
-            m.muted = gameState.isMuted;
-            document.getElementById('music-toggle').innerText = gameState.isMuted ? "🔇" : "🔊";
-        }
-
-        function showCategories() {
-            document.getElementById('bg-music').volume = 0.1;
+        function startJourney() {
+            document.getElementById('bg-music').volume = 0.2;
             document.getElementById('bg-music').play();
-            showScreen('category-screen');
+            switchScreen('screen-cats');
+            document.getElementById('status').style.display = 'flex';
         }
 
-        async function loadLevels(gid) {
-            showScreen('map-screen');
-            const res = await fetch(`${CSV_URL}&gid=${gid}`);
-            const text = await res.text();
-            const rows = text.split('\n').slice(1);
-            gameState.questions = rows.map(r => {
+        async function loadCategory(gid) {
+            switchScreen('screen-map');
+            const res = await fetch(`${CSV_BASE}&gid=${gid}`);
+            const data = await res.text();
+            const rows = data.split('\n').slice(1);
+            state.questions = rows.map(r => {
                 const c = r.split(',').map(x => x.trim().replace(/"/g, ''));
                 return { q: c[0], opts: [c[1], c[2], c[3], c[4]], a: c[5] };
             }).filter(q => q.q);
@@ -244,85 +202,92 @@
         }
 
         function renderMap() {
-            const container = document.getElementById('levels-container');
+            const container = document.getElementById('map-container');
             container.innerHTML = '';
-            gameState.questions.forEach((_, i) => {
-                const num = i + 1;
+            state.questions.forEach((_, i) => {
+                const lvl = i + 1;
                 const node = document.createElement('div');
-                node.className = `level-node ${num <= gameState.unlockedLevel ? 'unlocked' : ''} ${num < gameState.unlockedLevel ? 'completed' : ''}`;
-                node.innerText = num;
-                if(num <= gameState.unlockedLevel) node.onclick = () => startQuiz(i);
+                node.className = `level-circle ${lvl <= state.unlocked ? 'unlocked' : ''} ${lvl === state.unlocked ? 'current' : ''}`;
+                node.innerText = lvl;
+                if(lvl <= state.unlocked) node.onclick = () => openLevel(i);
                 container.appendChild(node);
             });
         }
 
-        function startQuiz(idx) {
-            gameState.currentQIdx = idx;
-            gameState.hearts = 3;
-            document.getElementById('current-lvl-num').innerText = idx + 1;
-            document.getElementById('hearts-ui').innerText = "❤️❤️❤️";
-            showScreen('quiz-screen');
+        function openLevel(idx) {
+            state.currentIdx = idx;
+            state.hearts = 3;
+            updateStatus();
+            document.getElementById('quiz-ui').classList.add('open');
             renderQuestion();
         }
 
         function renderQuestion() {
-            const q = gameState.questions[gameState.currentQIdx];
+            const q = state.questions[state.currentIdx];
             document.getElementById('q-text').innerText = q.q;
             const box = document.getElementById('options-box');
             box.innerHTML = '';
             q.opts.forEach(opt => {
                 const div = document.createElement('div');
-                div.className = 'option-item';
+                div.className = 'opt-item';
                 div.innerText = opt;
                 div.onclick = () => checkAnswer(opt, div);
                 box.appendChild(div);
             });
         }
 
-        function checkAnswer(selected, element) {
-            const correct = gameState.questions[gameState.currentQIdx].a;
-            if (selected === correct) {
-                element.classList.add('correct');
-                gameState.totalScore += 20;
-                document.getElementById('total-score').innerText = gameState.totalScore;
+        function checkAnswer(ans, el) {
+            const correct = state.questions[state.currentIdx].a;
+            if(ans === correct) {
+                el.classList.add('correct');
+                state.score += 10;
+                updateStatus();
                 setTimeout(() => {
-                    if (gameState.currentQIdx + 1 === gameState.unlockedLevel) gameState.unlockedLevel++;
-                    showScreen('map-screen');
-                    renderMap();
+                    if(state.currentIdx + 1 === state.unlocked) state.unlocked++;
+                    closeQuiz();
                 }, 1000);
             } else {
-                element.classList.add('wrong');
-                gameState.hearts--;
-                document.getElementById('hearts-ui').innerText = "❤️".repeat(gameState.hearts);
-                if (gameState.hearts === 0) {
-                    setTimeout(() => { alert("انتهت المحاولات! حاول مرة أخرى."); showScreen('map-screen'); }, 500);
+                el.classList.add('wrong');
+                state.hearts--;
+                updateStatus();
+                if(state.hearts === 0) {
+                    setTimeout(() => { alert("انتهت القلوب! أعد المحاولة."); closeQuiz(); }, 500);
                 }
             }
         }
 
         function useHint50() {
-            if (gameState.totalScore < 50) return alert("نقاطك لا تكفي!");
-            gameState.totalScore -= 50;
-            document.getElementById('total-score').innerText = gameState.totalScore;
-            
-            const correct = gameState.questions[gameState.currentQIdx].a;
-            const items = Array.from(document.querySelectorAll('.option-item'));
+            if(state.score < 50) return alert("نقاطك لا تكفي!");
+            state.score -= 50; updateStatus();
+            const correct = state.questions[state.currentIdx].a;
+            const items = Array.from(document.querySelectorAll('.opt-item'));
             let removed = 0;
-            items.forEach(item => {
-                if(item.innerText !== correct && removed < 2) {
-                    item.style.visibility = 'hidden';
+            items.forEach(it => {
+                if(it.innerText !== correct && removed < 2) {
+                    it.style.visibility = 'hidden';
                     removed++;
                 }
             });
         }
 
-        function showScreen(id) {
-            document.querySelectorAll('.screen').forEach(s => s.style.display = 'none');
-            document.getElementById(id).style.display = 'block';
-            if(id === 'map-screen') document.getElementById(id).style.display = 'block';
+        function updateStatus() {
+            document.getElementById('score-val').innerText = state.score;
+            document.getElementById('hearts-val').innerText = state.hearts;
         }
 
-        function goToCategories() { showScreen('category-screen'); }
+        function closeQuiz() {
+            document.getElementById('quiz-ui').classList.remove('open');
+            renderMap();
+        }
+
+        function switchScreen(id) {
+            document.querySelectorAll('.screen').forEach(s => s.classList.remove('active-screen'));
+            document.getElementById(id).classList.add('active-screen');
+        }
+
+        function goHome() {
+            location.reload();
+        }
 
         fetchFact();
     </script>
