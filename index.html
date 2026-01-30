@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>IQ Quiz Pro - الإصدار النهائي</title>
+    <title>IQ Quiz Pro - الإصدار الاحترافي</title>
     <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;700;900&display=swap" rel="stylesheet">
     <style>
         :root {
@@ -14,20 +14,18 @@
 
         body, html {
             margin: 0; padding: 0; height: 100%; width: 100%;
-            font-family: 'Cairo', sans-serif; color: white; overflow: hidden;
+            font-family: 'Cairo', sans-serif; color: white;
+            overflow: hidden;
+            /* ربط ملف الصورة الخاص بك بالخلفية */
+            background: url('Warface Wallpaper.jpeg') no-repeat center center;
+            background-size: cover;
+            background-attachment: fixed;
         }
 
-        /* إضافة صورتك كخلفية أساسية */
-        .master-bg {
-            position: fixed; inset: 0;
-            background: url('1000001256.jpg') no-repeat center center;
-            background-size: cover; z-index: -2;
-        }
-
-        /* تعتيم خفيف لضمان وضوح الأزرار */
         .overlay {
             position: fixed; inset: 0;
-            background: rgba(0, 0, 0, 0.4); z-index: -1;
+            background: rgba(0, 0, 0, 0.5);
+            z-index: -1;
         }
 
         .top-bar {
@@ -43,7 +41,6 @@
         }
         .active { display: flex; }
 
-        /* التصنيفات */
         .cat-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; width: 100%; max-width: 450px; }
         .cat-btn {
             background: var(--glass); backdrop-filter: blur(15px);
@@ -52,7 +49,6 @@
         }
         .cat-btn:hover { background: var(--blue); }
 
-        /* خريطة المستويات */
         .map-view { width: 100%; overflow-y: auto; padding: 100px 0; display: flex; flex-direction: column-reverse; align-items: center; gap: 30px; }
         .lvl-node {
             width: 70px; height: 70px; border-radius: 50%;
@@ -65,7 +61,6 @@
 
         @keyframes pulse { 0%, 100% { transform: scale(1); } 50% { transform: scale(1.1); box-shadow: 0 0 20px var(--gold); } }
 
-        /* نافذة الأسئلة السفلية */
         .quiz-container {
             position: fixed; bottom: -100%; left: 0; width: 100%;
             background: var(--glass); backdrop-filter: blur(25px);
@@ -82,7 +77,6 @@
 </head>
 <body>
 
-    <div class="master-bg"></div>
     <div class="overlay"></div>
 
     <div id="top-bar" class="top-bar">
@@ -124,7 +118,6 @@
         
         let gameState = {
             score: parseInt(localStorage.getItem('iq_total_score')) || 0,
-            // حفظ التقدم لكل تصنيف بشكل منفصل
             progress: JSON.parse(localStorage.getItem('iq_cat_progress')) || { history: 1, geo: 1, science: 1, general: 1, sports: 1 },
             currentCat: '',
             questions: [],
@@ -185,7 +178,6 @@
                     if(o === q.a) {
                         b.classList.add('correct');
                         gameState.score += 10;
-                        // تحديث التقدم للتصنيف الحالي فقط
                         if(idx + 1 === gameState.progress[gameState.currentCat]) {
                             gameState.progress[gameState.currentCat]++;
                         }
