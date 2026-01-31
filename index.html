@@ -51,6 +51,27 @@
         }
         .active { display: flex; }
 
+        /* تعديل زر استمرار للون الأصفر الاحترافي */
+        .gold-btn {
+            background: var(--gold);
+            color: black;
+            border: none;
+            padding: 20px 100px;
+            border-radius: 60px;
+            font-size: 1.4rem;
+            font-weight: 900;
+            cursor: pointer;
+            transition: 0.3s;
+            box-shadow: 0 0 20px rgba(255, 215, 0, 0.3);
+            animation: btnPulse 2s infinite;
+        }
+        @keyframes btnPulse {
+            0% { transform: scale(1); box-shadow: 0 0 20px rgba(255, 215, 0, 0.3); }
+            50% { transform: scale(1.05); box-shadow: 0 0 30px rgba(255, 215, 0, 0.5); }
+            100% { transform: scale(1); box-shadow: 0 0 20px rgba(255, 215, 0, 0.3); }
+        }
+        .gold-btn:active { transform: scale(0.95); }
+
         .lang-toggle-container {
             margin-bottom: 25px;
             display: flex;
@@ -129,6 +150,11 @@
             text-align: center; border: 2px solid var(--gold);
         }
         .hearts-txt { display: inline-flex; gap: 6px; align-items: center; font-weight: 900; color: #ff4d4d; }
+        
+        .glass-btn {
+            background: rgba(255,255,255,0.1); border: 1px solid rgba(255,255,255,0.2);
+            color: white; padding: 12px 25px; border-radius: 15px; cursor: pointer;
+        }
     </style>
 </head>
 <body>
@@ -153,7 +179,7 @@
     <div style="background: var(--glass); padding: 25px; border-radius: 25px; margin: 20px; max-width: 400px; border: 1px solid rgba(255,255,255,0.1);">
         <p id="fact-txt" style="font-size: 1.1rem; line-height: 1.6;">...</p>
     </div>
-    <button id="btn-start" onclick="showCats()" class="gold-btn" style="padding: 20px 100px; border-radius: 60px; font-size: 1.4rem;">استمرار</button>
+    <button id="btn-start" onclick="showCats()" class="gold-btn">استمرار</button>
 </div>
 
 <div id="scr-cats" class="screen">
@@ -187,14 +213,13 @@
         <p id="txt-ad-desc"></p>
         <div id="ad-timer" style="display:none; font-size: 2rem; color: var(--gold); font-weight: bold; margin: 15px 0;">5</div>
         <div style="margin-top:25px; display: flex; flex-direction: column; gap: 10px;">
-            <button id="watch-ad-btn" class="gold-btn">📺</button>
+            <button id="watch-ad-btn" class="gold-btn" style="padding: 15px;">📺 مشاهدة الإعلان</button>
             <button onclick="closeAdModal()" class="glass-btn" id="txt-later"></button>
         </div>
     </div>
 </div>
 
 <script>
-    // الرابط المصحح لـ Google Sheets
     const CSV = "https://docs.google.com/spreadsheets/d/e/2PACX-1vSJ4RCU1_iXMqLS3ApB1g8SjSrL2hbIAv-1VniqdMElnalov--mSDTpe9rjMxaWGCuP6gpxWV7OZDe1/pub?output=csv";
 
     const langConfig = {
