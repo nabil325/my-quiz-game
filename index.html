@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>IQ ثقافة - الإصدار الكامل</title>
-    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;700;900&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;700;900&family=Poppins:wght@400;700;900&display=swap" rel="stylesheet">
     <style>
         :root {
             --gold: #ffd700;
@@ -52,6 +52,30 @@
             text-align: center; padding: 20px; box-sizing: border-box;
         }
         .active { display: flex; }
+
+        /* Language Toggle */
+        .lang-toggle-container {
+            margin-bottom: 25px;
+            display: flex;
+            justify-content: center;
+            gap: 10px;
+        }
+        .lang-btn {
+            background: var(--glass);
+            border: 1px solid rgba(255,255,255,0.2);
+            color: white;
+            padding: 10px 25px;
+            border-radius: 15px;
+            cursor: pointer;
+            font-weight: 900;
+            transition: 0.3s;
+            backdrop-filter: blur(5px);
+        }
+        .lang-btn.active-lang {
+            background: var(--blue);
+            border-color: var(--blue);
+            box-shadow: 0 0 15px rgba(14, 165, 233, 0.4);
+        }
 
         /* Categories */
         .cat-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; width: 100%; max-width: 450px; }
@@ -129,29 +153,30 @@
         <div class="hearts-txt">❤️ <span id="hearts-val">8</span></div>
     </div>
     <div class="top-right">
-        <button onclick="showAdModal()" class="icon-btn">📺 شحن</button>
+        <button onclick="showAdModal()" class="icon-btn" id="txt-recharge">📺 شحن</button>
         <button id="mute-btn" class="icon-btn">🔊</button>
         <button onclick="location.reload()" class="icon-btn">🏠</button>
     </div>
 </div>
 
 <div id="scr-start" class="screen active">
-    <h1 style="font-size: 4rem; color: var(--gold); font-weight: 900; margin-bottom: 5px;">IQ ثقافة</h1>
+    <h1 id="main-logo" style="font-size: 4rem; color: var(--gold); font-weight: 900; margin-bottom: 5px;">IQ ثقافة</h1>
     <div style="background: var(--glass); padding: 25px; border-radius: 25px; margin: 20px; max-width: 400px; border: 1px solid rgba(255,255,255,0.1);">
         <p id="fact-txt" style="font-size: 1.1rem; line-height: 1.6;">جاري تحميل معلومة اليوم...</p>
     </div>
-    <button onclick="showCats()" class="gold-btn" style="padding: 20px 100px; border-radius: 60px; font-size: 1.4rem;">استمرار</button>
+    <button id="btn-start" onclick="showCats()" class="gold-btn" style="padding: 20px 100px; border-radius: 60px; font-size: 1.4rem;">استمرار</button>
 </div>
 
 <div id="scr-cats" class="screen">
-    <h2 style="margin-bottom: 30px; font-size: 2rem;">اختر التصنيف</h2>
-    <div class="cat-grid">
-        <div class="cat-btn" onclick="startCat('11216236', 'history')">⏳ التاريخ</div>
-        <div class="cat-btn" onclick="startCat('99625756', 'geo')">🌍 الجغرافيا</div>
-        <div class="cat-btn" onclick="startCat('1843208636', 'science')">🧬 العلوم</div>
-        <div class="cat-btn" onclick="startCat('564130158', 'general')">💡 ثقافة عامة</div>
-        <div class="cat-btn" onclick="startCat('0', 'sports')" style="grid-column: span 2;">⚽ الرياضة</div>
+    <h2 id="txt-select-cat" style="margin-bottom: 20px; font-size: 2rem;">اختر التصنيف</h2>
+    
+    <div class="lang-toggle-container">
+        <button id="btn-lang-ar" class="lang-btn" onclick="setLanguage('ar')">العربية 🇸🇦</button>
+        <button id="btn-lang-en" class="lang-btn" onclick="setLanguage('en')">English 🇺🇸</button>
     </div>
+
+    <div class="cat-grid" id="cat-grid-container">
+        </div>
 </div>
 
 <div id="scr-map" class="screen" style="padding:0; justify-content: flex-start;">
@@ -168,18 +193,48 @@
 
 <div class="ad-modal" id="ad-modal">
     <div class="ad-box">
-        <h3 style="color:var(--gold); font-size: 1.5rem;">انتهت القلوب!</h3>
-        <p>شاهد إعلان قصير للحصول على 8 قلوب جديدة ومواصلة اللعب.</p>
+        <h3 id="txt-no-hearts" style="color:var(--gold); font-size: 1.5rem;">انتهت القلوب!</h3>
+        <p id="txt-ad-desc">شاهد إعلان قصير للحصول على 8 قلوب جديدة ومواصلة اللعب.</p>
         <div id="ad-timer" style="display:none; font-size: 2rem; color: var(--gold); font-weight: bold; margin: 15px 0;">5</div>
         <div style="margin-top:25px; display: flex; flex-direction: column; gap: 10px;">
             <button id="watch-ad-btn" class="gold-btn">مشاهدة الإعلان</button>
-            <button onclick="closeAdModal()" class="glass-btn">ربما لاحقاً</button>
+            <button onclick="closeAdModal()" class="glass-btn" id="txt-later">ربما لاحقاً</button>
         </div>
     </div>
 </div>
 
 <script>
     const CSV = "https://docs.google.com/spreadsheets/d/e/2PACX-1vSJ4RCU1_iXMqLS3ApB1g8SjSrL2hbIAv-1VniqdMElnalov--mSDTpe9rjMxaWGCuP6gpxWV7OZDe1/pub?output=csv";
+
+    // إعدادات اللغتين والـ GIDs
+    const langConfig = {
+        ar: {
+            dir: "rtl", font: "'Cairo', sans-serif", logo: "IQ ثقافة", start: "استمرار", select: "اختر التصنيف",
+            recharge: "📺 شحن", noHearts: "انتهت القلوب!", adDesc: "شاهد إعلان للحصول على قلوب.", later: "ربما لاحقاً",
+            removeBtn: "حذف خيارين (50 نقطة)", factLoading: "جاري التحميل...",
+            factsGid: "605574246",
+            cats: [
+                { name: "⏳ التاريخ", gid: "11216236", key: "history" },
+                { name: "🌍 الجغرافيا", gid: "99625756", key: "geo" },
+                { name: "🧬 العلوم", gid: "1843208636", key: "science" },
+                { name: "💡 ثقافة عامة", gid: "564130158", key: "general" },
+                { name: "⚽ الرياضة", gid: "0", key: "sports" }
+            ]
+        },
+        en: {
+            dir: "ltr", font: "'Poppins', sans-serif", logo: "IQ Culture", start: "Continue", select: "Select Category",
+            recharge: "📺 Refill", noHearts: "No Hearts!", adDesc: "Watch ad to get 8 hearts.", later: "Maybe later",
+            removeBtn: "Remove 2 (50 pts)", factLoading: "Loading fact...",
+            factsGid: "259198059",
+            cats: [
+                { name: "⏳ History", gid: "1950805065", key: "history" },
+                { name: "🌍 Geography", gid: "1899297807", key: "geo" },
+                { name: "🧬 Science", gid: "407039200", key: "science" },
+                { name: "💡 General", gid: "1044248022", key: "general" },
+                { name: "⚽ Sports", gid: "1559005659", key: "sports" }
+            ]
+        }
+    };
 
     let gameState = {
         score: parseInt(localStorage.getItem('iq_score')) || 0,
@@ -189,23 +244,75 @@
         activeIdx: 0,
         hearts: parseInt(localStorage.getItem('iq_hearts')) || 8,
         muted: (localStorage.getItem('iq_muted') === 'true') || false,
-        usedRemove: JSON.parse(localStorage.getItem('iq_rem_used') || '{}')
+        usedRemove: JSON.parse(localStorage.getItem('iq_rem_used') || '{}'),
+        lang: localStorage.getItem('iq_lang') || 'ar'
     };
 
     const audioEl = document.getElementById('bg-audio');
     const muteBtn = document.getElementById('mute-btn');
 
     function init() {
-        // Load Daily Fact
-        fetch(CSV + "&gid=605574246").then(r => r.text()).then(d => {
-            const lines = d.split('\n').slice(1);
-            if (lines.length) document.getElementById('fact-txt').innerText = lines[Math.floor(Math.random()*lines.length)].split(',')[0].replace(/"/g, '');
-        }).catch(() => document.getElementById('fact-txt').innerText = "هل تعلم أن القراءة تزيد من مرونة عقلك؟");
-
+        applyLanguage();
         updateUI();
         muteBtn.onclick = toggleMute;
         document.getElementById('remove-two-btn').onclick = useRemoveTwo;
         document.getElementById('watch-ad-btn').onclick = startAd;
+    }
+
+    function setLanguage(l) {
+        gameState.lang = l;
+        localStorage.setItem('iq_lang', l);
+        applyLanguage();
+    }
+
+    function applyLanguage() {
+        const conf = langConfig[gameState.lang];
+        document.documentElement.dir = conf.dir;
+        document.documentElement.lang = gameState.lang;
+        document.body.style.fontFamily = conf.font;
+        
+        // تحديث نصوص الواجهة
+        document.getElementById('main-logo').innerText = conf.logo;
+        document.getElementById('btn-start').innerText = conf.start;
+        document.getElementById('txt-select-cat').innerText = conf.select;
+        document.getElementById('txt-recharge').innerText = conf.recharge;
+        document.getElementById('txt-no-hearts').innerText = conf.noHearts;
+        document.getElementById('txt-ad-desc').innerText = conf.adDesc;
+        document.getElementById('txt-later').innerText = conf.later;
+        document.getElementById('remove-two-btn').innerText = conf.removeBtn;
+        
+        // تحديث أزرار اللغة
+        document.getElementById('btn-lang-ar').className = `lang-btn ${gameState.lang==='ar'?'active-lang':''}`;
+        document.getElementById('btn-lang-en').className = `lang-btn ${gameState.lang==='en'?'active-lang':''}`;
+
+        // تحميل حقيقة جديدة وحقن التصنيفات
+        loadFact();
+        renderCats();
+    }
+
+    function loadFact() {
+        const conf = langConfig[gameState.lang];
+        document.getElementById('fact-txt').innerText = conf.factLoading;
+        fetch(CSV + "&gid=" + conf.factsGid).then(r => r.text()).then(d => {
+            const lines = d.split('\n').slice(1);
+            if (lines.length) {
+                const fact = lines[Math.floor(Math.random()*lines.length)].split(',')[0].replace(/"/g, '');
+                document.getElementById('fact-txt').innerText = fact;
+            }
+        }).catch(() => document.getElementById('fact-txt').innerText = "...");
+    }
+
+    function renderCats() {
+        const container = document.getElementById('cat-grid-container');
+        container.innerHTML = '';
+        langConfig[gameState.lang].cats.forEach(c => {
+            const btn = document.createElement('div');
+            btn.className = 'cat-btn';
+            if(c.key === 'sports') btn.style.gridColumn = 'span 2';
+            btn.innerText = c.name;
+            btn.onclick = () => startCat(c.gid, c.key);
+            container.appendChild(btn);
+        });
     }
 
     function save() {
@@ -246,6 +353,7 @@
         const d = await r.text();
         gameState.questions = d.split('\n').slice(1).map(row => {
             const c = row.split(',').map(x => x.trim().replace(/"/g, ''));
+            // question(A), optiona(B), optionb(C), optionc(D), optiond(E), answer(F)
             return { q: c[0], opts: [c[1], c[2], c[3], c[4]], a: c[5] };
         }).filter(q => q.q);
         renderMap();
