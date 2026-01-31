@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>IQ ثقافة - الإصدار الكامل</title>
+    <title>IQ ثقافة - الإصدار العالمي</title>
     <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;700;900&family=Poppins:wght@400;700;900&display=swap" rel="stylesheet">
     <style>
         :root {
@@ -175,8 +175,7 @@
         <button id="btn-lang-en" class="lang-btn" onclick="setLanguage('en')">English 🇺🇸</button>
     </div>
 
-    <div class="cat-grid" id="cat-grid-container">
-        </div>
+    <div class="cat-grid" id="cat-grid-container"></div>
 </div>
 
 <div id="scr-map" class="screen" style="padding:0; justify-content: flex-start;">
@@ -206,7 +205,6 @@
 <script>
     const CSV = "https://docs.google.com/spreadsheets/d/e/2PACX-1vSJ4RCU1_iXMqLS3ApB1g8SjSrL2hbIAv-1VniqdMElnalov--mSDTpe9rjMxaWGCuP6gpxWV7OZDe1/pub?output=csv";
 
-    // إعدادات اللغتين والـ GIDs
     const langConfig = {
         ar: {
             dir: "rtl", font: "'Cairo', sans-serif", logo: "IQ ثقافة", start: "استمرار", select: "اختر التصنيف",
@@ -238,7 +236,7 @@
 
     let gameState = {
         score: parseInt(localStorage.getItem('iq_score')) || 0,
-        progress: JSON.parse(localStorage.getItem('iq_prog')) || { history: 1, geo: 1, science: 1, general: 1, sports: 1 },
+        progress: JSON.parse(localStorage.getItem('iq_prog')) || {}, 
         currentCat: '',
         questions: [],
         activeIdx: 0,
@@ -270,8 +268,6 @@
         document.documentElement.dir = conf.dir;
         document.documentElement.lang = gameState.lang;
         document.body.style.fontFamily = conf.font;
-        
-        // تحديث نصوص الواجهة
         document.getElementById('main-logo').innerText = conf.logo;
         document.getElementById('btn-start').innerText = conf.start;
         document.getElementById('txt-select-cat').innerText = conf.select;
@@ -280,12 +276,8 @@
         document.getElementById('txt-ad-desc').innerText = conf.adDesc;
         document.getElementById('txt-later').innerText = conf.later;
         document.getElementById('remove-two-btn').innerText = conf.removeBtn;
-        
-        // تحديث أزرار اللغة
         document.getElementById('btn-lang-ar').className = `lang-btn ${gameState.lang==='ar'?'active-lang':''}`;
         document.getElementById('btn-lang-en').className = `lang-btn ${gameState.lang==='en'?'active-lang':''}`;
-
-        // تحميل حقيقة جديدة وحقن التصنيفات
         loadFact();
         renderCats();
     }
@@ -353,7 +345,6 @@
         const d = await r.text();
         gameState.questions = d.split('\n').slice(1).map(row => {
             const c = row.split(',').map(x => x.trim().replace(/"/g, ''));
-            // question(A), optiona(B), optionb(C), optionc(D), optiond(E), answer(F)
             return { q: c[0], opts: [c[1], c[2], c[3], c[4]], a: c[5] };
         }).filter(q => q.q);
         renderMap();
@@ -362,7 +353,8 @@
     function renderMap() {
         const cont = document.getElementById('map-cont');
         cont.innerHTML = '';
-        const unlocked = gameState.progress[gameState.currentCat] || 1;
+        const progKey = `${gameState.lang}_${gameState.currentCat}`;
+        const unlocked = gameState.progress[progKey] || 1;
         gameState.questions.forEach((_, i) => {
             const node = document.createElement('div');
             node.className = `lvl-node ${i+1 <= unlocked ? 'unlocked' : ''} ${i+1 === unlocked ? 'current' : ''}`;
@@ -379,10 +371,8 @@
         document.getElementById('q-text').innerText = q.q;
         const box = document.getElementById('ans-box');
         box.innerHTML = '';
-
-        const usedKey = `${gameState.currentCat}-${idx}`;
+        const usedKey = `${gameState.lang}_${gameState.currentCat}_${idx}`;
         document.getElementById('remove-two-btn').style.display = (gameState.score >= 50 && !gameState.usedRemove[usedKey]) ? 'block' : 'none';
-
         q.opts.forEach(o => {
             const b = document.createElement('div');
             b.className = 'ans-btn';
@@ -395,10 +385,13 @@
 
     function checkAns(btn, sel, cor) {
         document.querySelectorAll('.ans-btn').forEach(b => b.classList.add('disabled'));
+        const progKey = `${gameState.lang}_${gameState.currentCat}`;
         if(sel === cor) {
             btn.classList.add('correct');
             gameState.score += 10;
-            if(gameState.activeIdx + 1 === gameState.progress[gameState.currentCat]) gameState.progress[gameState.currentCat]++;
+            if(gameState.activeIdx + 1 === (gameState.progress[progKey] || 1)) {
+                gameState.progress[progKey] = (gameState.progress[progKey] || 1) + 1;
+            }
         } else {
             btn.classList.add('wrong');
             gameState.hearts--;
@@ -421,7 +414,8 @@
             btns.splice(r,1);
         }
         gameState.score -= 50;
-        gameState.usedRemove[`${gameState.currentCat}-${gameState.activeIdx}`] = true;
+        const usedKey = `${gameState.lang}_${gameState.currentCat}_${gameState.activeIdx}`;
+        gameState.usedRemove[usedKey] = true;
         document.getElementById('remove-two-btn').style.display = 'none';
         save(); updateUI();
     }
@@ -448,7 +442,6 @@
             }
         }, 1000);
     }
-
     window.onload = init;
 </script>
 </body>
