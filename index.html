@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>IQ ثقافة - نظام تحدي القلوب</title>
+    <title>IQ ثقافة - النسخة العالمية</title>
     <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;700;900&family=Poppins:wght@400;700;900&display=swap" rel="stylesheet">
     <style>
         :root {
@@ -55,13 +55,14 @@
             margin-bottom: 25px;
             display: flex;
             justify-content: center;
+            flex-wrap: wrap;
             gap: 10px;
         }
         .lang-btn {
             background: var(--glass);
             border: 1px solid rgba(255,255,255,0.2);
             color: white;
-            padding: 10px 25px;
+            padding: 10px 20px;
             border-radius: 15px;
             cursor: pointer;
             font-weight: 900;
@@ -172,6 +173,7 @@
     <div class="lang-toggle-container">
         <button id="btn-lang-ar" class="lang-btn" onclick="setLanguage('ar')">العربية 🇸🇦</button>
         <button id="btn-lang-en" class="lang-btn" onclick="setLanguage('en')">English 🇺🇸</button>
+        <button id="btn-lang-es" class="lang-btn" onclick="setLanguage('es')">Español 🇪🇸</button>
     </div>
 
     <div class="cat-grid" id="cat-grid-container"></div>
@@ -230,6 +232,19 @@
                 { name: "💡 General", gid: "1044248022", key: "general" },
                 { name: "⚽ Sports", gid: "1559005659", key: "sports" }
             ]
+        },
+        es: {
+            dir: "ltr", font: "'Poppins', sans-serif", logo: "IQ Cultura", start: "Continuar", select: "Seleccionar Categoría",
+            recharge: "📺 Recargar", noHearts: "¡Sin Corazones!", adDesc: "Mira un anuncio para obtener 8 corazones.", later: "Más tarde",
+            removeBtn: "Eliminar 2 (50 pts)", factLoading: "Cargando...",
+            factsGid: "1911794502",
+            cats: [
+                { name: "⏳ Historia", gid: "948777647", key: "history" },
+                { name: "🌍 Geografía", gid: "1233201488", key: "geo" },
+                { name: "🧬 Ciencia", gid: "2028449800", key: "science" },
+                { name: "💡 Cultura General", gid: "1662832315", key: "general" },
+                { name: "⚽ Deportes", gid: "1795176380", key: "sports" }
+            ]
         }
     };
 
@@ -275,8 +290,12 @@
         document.getElementById('txt-ad-desc').innerText = conf.adDesc;
         document.getElementById('txt-later').innerText = conf.later;
         document.getElementById('remove-two-btn').innerText = conf.removeBtn;
+        
+        // تحديث حالة أزرار اللغات
         document.getElementById('btn-lang-ar').className = `lang-btn ${gameState.lang==='ar'?'active-lang':''}`;
         document.getElementById('btn-lang-en').className = `lang-btn ${gameState.lang==='en'?'active-lang':''}`;
+        document.getElementById('btn-lang-es').className = `lang-btn ${gameState.lang==='es'?'active-lang':''}`;
+        
         loadFact();
         renderCats();
     }
@@ -382,12 +401,10 @@
         document.getElementById('quiz-ui').classList.add('show');
     }
 
-    // المنطق الجديد: إعادة المحاولة عند الخطأ وخسارة قلب
     function checkAns(btn, sel, cor) {
         const progKey = `${gameState.lang}_${gameState.currentCat}`;
         
         if(sel === cor) {
-            // إجابة صحيحة: نغلق السؤال وننتقل
             document.querySelectorAll('.ans-btn').forEach(b => b.classList.add('disabled'));
             btn.classList.add('correct');
             gameState.score += 10;
@@ -400,13 +417,11 @@
                 renderMap();
             }, 1000);
         } else {
-            // إجابة خاطئة: يخسر قلب ويمكنه المحاولة مرة أخرى فوراً
             btn.classList.add('wrong');
-            btn.classList.add('disabled'); // تعطيل الزر الخاطئ فقط
+            btn.classList.add('disabled');
             gameState.hearts--;
             save(); updateUI();
             
-            // إذا نفدت القلوب أثناء المحاولة
             if(gameState.hearts <= 0) {
                 setTimeout(() => {
                     document.getElementById('quiz-ui').classList.remove('show');
