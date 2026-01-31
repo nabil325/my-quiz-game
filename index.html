@@ -22,11 +22,7 @@
             background-attachment: fixed;
         }
 
-        .overlay {
-            position: fixed; inset: 0;
-            background: rgba(0, 0, 0, 0.55);
-            z-index: 1;
-        }
+        .overlay { position: fixed; inset: 0; background: rgba(0, 0, 0, 0.55); z-index: 1; }
 
         .top-bar {
             position: fixed; top: 0; width: 100%; padding: 10px 15px;
@@ -35,13 +31,9 @@
             box-sizing: border-box; border-bottom: 1px solid rgba(255,255,255,0.1);
         }
 
-        .top-left, .top-right { display: flex; gap: 12px; align-items: center; }
-
         .icon-btn {
-            background: rgba(255,255,255,0.05);
-            border: 1px solid rgba(255,255,255,0.1);
-            padding: 8px 12px; border-radius: 12px; cursor: pointer; 
-            font-weight: 700; color: white; transition: 0.2s;
+            background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.1);
+            padding: 8px 12px; border-radius: 12px; cursor: pointer; color: white; font-weight: 700;
         }
 
         .screen {
@@ -51,121 +43,95 @@
         }
         .active { display: flex; }
 
-        .lang-toggle-container {
-            margin-bottom: 25px;
-            display: flex;
-            justify-content: center;
-            flex-wrap: wrap;
-            gap: 10px;
-        }
+        /* لغات الأزرار */
         .lang-btn {
-            background: var(--glass);
-            border: 1px solid rgba(255,255,255,0.2);
-            color: white;
-            padding: 10px 15px;
-            border-radius: 15px;
-            cursor: pointer;
-            font-weight: 900;
-            transition: 0.3s;
-            backdrop-filter: blur(5px);
+            background: var(--glass); border: 1px solid rgba(255,255,255,0.2);
+            color: white; padding: 10px 15px; border-radius: 15px; cursor: pointer; font-weight: 900;
         }
-        .lang-btn.active-lang {
-            background: var(--blue);
-            border-color: var(--blue);
-            box-shadow: 0 0 15px rgba(14, 165, 233, 0.4);
-        }
+        .lang-btn.active-lang { background: var(--blue); box-shadow: 0 0 15px var(--blue); }
 
         .cat-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; width: 100%; max-width: 450px; }
         .cat-btn {
-            background: var(--glass); backdrop-filter: blur(15px);
-            padding: 25px 10px; border-radius: 20px; border: 1px solid rgba(255,255,255,0.1);
-            cursor: pointer; font-weight: 900; transition: 0.3s; color: white; font-size: 1.1rem;
+            background: var(--glass); padding: 25px 10px; border-radius: 20px; border: 1px solid rgba(255,255,255,0.1);
+            cursor: pointer; font-weight: 900; color: white; font-size: 1.1rem;
         }
-        .cat-btn:hover { background: var(--blue); transform: translateY(-3px); }
 
-        .map-view { 
-            width: 100%; overflow-y: auto; padding: 120px 0; 
-            display: flex; flex-direction: column-reverse; align-items: center; gap: 35px; 
-        }
+        .map-view { width: 100%; overflow-y: auto; padding: 120px 0; display: flex; flex-direction: column-reverse; align-items: center; gap: 35px; }
         .lvl-node {
-            width: 75px; height: 75px; border-radius: 50%;
-            background: rgba(0,0,0,0.7); border: 4px solid #444;
-            display: flex; align-items: center; justify-content: center;
-            font-size: 1.6rem; font-weight: 900; cursor: pointer; transition: 0.4s; color: white;
-            position: relative;
+            width: 70px; height: 70px; border-radius: 50%; background: rgba(0,0,0,0.7); border: 4px solid #444;
+            display: flex; align-items: center; justify-content: center; font-size: 1.5rem; font-weight: 900; cursor: pointer;
         }
         .unlocked { border-color: var(--blue); background: rgba(14, 165, 233, 0.3); }
         .current { border-color: var(--gold); background: var(--gold); color: black; animation: pulse 2s infinite; }
 
-        @keyframes pulse { 0%, 100% { transform: scale(1); } 50% { transform: scale(1.1); box-shadow: 0 0 25px var(--gold); } }
+        @keyframes pulse { 0%, 100% { transform: scale(1); } 50% { transform: scale(1.1); box-shadow: 0 0 20px var(--gold); } }
 
         .quiz-container {
-            position: fixed; bottom: -100%; left: 0; width: 100%;
-            background: rgba(15, 15, 15, 0.98); backdrop-filter: blur(30px);
-            border-radius: 35px 35px 0 0; border-top: 3px solid var(--gold);
-            padding: 30px 20px; box-sizing: border-box; z-index: 2000;
-            transition: 0.6s cubic-bezier(0.19, 1, 0.22, 1);
-            max-height: 75vh; overflow-y: auto;
+            position: fixed; bottom: -100%; left: 0; width: 100%; background: rgba(15,15,15,0.98);
+            border-radius: 35px 35px 0 0; padding: 30px 20px; z-index: 2000; transition: 0.6s; max-height: 75vh;
         }
         .quiz-container.show { bottom: 0; }
 
-        .ans-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-top: 25px; }
-        .ans-btn { 
-            background: rgba(255,255,255,0.07); padding: 18px; border-radius: 15px; 
-            cursor: pointer; border: 1px solid rgba(255,255,255,0.1); 
-            font-weight: bold; text-align: center; color: white; transition: 0.2s;
-        }
-        .ans-btn.removed { visibility: hidden; pointer-events: none; }
-        .ans-btn.wrong { background: #ef4444 !important; border-color: #ef4444; animation: shake 0.4s; }
-        .ans-btn.correct { background: #10b981 !important; border-color: #10b981; }
-        .disabled { opacity: 0.6; pointer-events: none; }
+        .ans-btn { background: rgba(255,255,255,0.07); padding: 18px; border-radius: 15px; border: 1px solid rgba(255,255,255,0.1); cursor: pointer; color: white; margin-bottom: 10px; }
+        .ans-btn.correct { background: #10b981 !important; }
+        .ans-btn.wrong { background: #ef4444 !important; }
 
-        .ad-modal {
-            position: fixed; inset: 0; display: none; align-items: center; justify-content: center;
-            background: rgba(0,0,0,0.9); z-index: 3000;
+        /* التنبيه البصري (Feedback) */
+        .feedback-overlay {
+            position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%) scale(0.5);
+            padding: 20px 40px; border-radius: 25px; font-size: 2rem; font-weight: 900;
+            z-index: 5000; opacity: 0; pointer-events: none; transition: 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            backdrop-filter: blur(10px); display: flex; flex-direction: column; align-items: center;
         }
-        .ad-box {
-            background: #222; padding: 35px; border-radius: 25px; width: 85%; max-width: 400px; 
-            text-align: center; border: 2px solid var(--gold);
-        }
-        .hearts-txt { display: inline-flex; gap: 6px; align-items: center; font-weight: 900; color: #ff4d4d; }
+        .feedback-overlay.show { opacity: 1; transform: translate(-50%, -50%) scale(1); }
+        .fb-correct { background: rgba(16, 185, 129, 0.9); border: 2px solid #10b981; }
+        .fb-wrong { background: rgba(239, 68, 68, 0.9); border: 2px solid #ef4444; }
+
+        .ad-modal { position: fixed; inset: 0; display: none; align-items: center; justify-content: center; background: rgba(0,0,0,0.9); z-index: 3000; }
+        .gold-btn { background: var(--gold); border: none; padding: 15px 30px; border-radius: 12px; font-weight: 900; cursor: pointer; }
     </style>
 </head>
 <body>
 
 <audio id="bg-audio" src="./jazz-music-466491.mp3" loop></audio>
+<audio id="snd-correct" src="https://www.soundjay.com/buttons/sounds/button-37a.mp3"></audio>
+<audio id="snd-wrong" src="https://www.soundjay.com/buttons/sounds/button-10.mp3"></audio>
+
 <div class="overlay"></div>
 
+<div id="feedback-ui" class="feedback-overlay">
+    <div id="fb-icon" style="font-size: 3rem; margin-bottom: 10px;"></div>
+    <div id="fb-text"></div>
+</div>
+
 <div id="top-bar" class="top-bar">
-    <div class="top-left">
-        <div>🏆 <span id="score-val">0</span></div>
-        <div class="hearts-txt">❤️ <span id="hearts-val">8</span></div>
+    <div style="display:flex; gap:15px;">
+        <span>🏆 <span id="score-val">0</span></span>
+        <span style="color:#ff4d4d">❤️ <span id="hearts-val">8</span></span>
     </div>
-    <div class="top-right">
-        <button onclick="showAdModal()" class="icon-btn" id="txt-recharge">📺 شحن</button>
+    <div style="display:flex; gap:10px;">
+        <button onclick="showAdModal()" class="icon-btn" id="txt-recharge">📺</button>
         <button id="mute-btn" class="icon-btn">🔊</button>
         <button onclick="location.reload()" class="icon-btn">🏠</button>
     </div>
 </div>
 
 <div id="scr-start" class="screen active">
-    <h1 id="main-logo" style="font-size: 3.5rem; color: var(--gold); font-weight: 900; margin-bottom: 5px;">IQ ثقافة</h1>
-    <div style="background: var(--glass); padding: 25px; border-radius: 25px; margin: 20px; max-width: 400px; border: 1px solid rgba(255,255,255,0.1);">
-        <p id="fact-txt" style="font-size: 1.1rem; line-height: 1.6;">...</p>
+    <h1 id="main-logo" style="font-size: 3.5rem; color: var(--gold); font-weight: 900;">IQ ثقافة</h1>
+    <div style="background: var(--glass); padding: 20px; border-radius: 20px; margin: 20px; max-width: 350px;">
+        <p id="fact-txt">...</p>
     </div>
-    <button id="btn-start" onclick="showCats()" class="gold-btn" style="padding: 20px 100px; border-radius: 60px; font-size: 1.4rem;">استمرار</button>
+    <button id="btn-start" onclick="showCats()" class="gold-btn" style="padding: 20px 80px; font-size: 1.4rem; border-radius: 50px;">استمرار</button>
 </div>
 
 <div id="scr-cats" class="screen">
-    <h2 id="txt-select-cat" style="margin-bottom: 20px; font-size: 1.8rem;">اختر التصنيف</h2>
-    
-    <div class="lang-toggle-container">
+    <h2 id="txt-select-cat" style="margin-bottom: 25px;">اختر التصنيف</h2>
+    <div style="display:flex; gap:10px; margin-bottom: 25px;">
         <button id="btn-lang-ar" class="lang-btn" onclick="setLanguage('ar')">Ar 🇸🇦</button>
         <button id="btn-lang-en" class="lang-btn" onclick="setLanguage('en')">En 🇺🇸</button>
         <button id="btn-lang-es" class="lang-btn" onclick="setLanguage('es')">Es 🇪🇸</button>
         <button id="btn-lang-fr" class="lang-btn" onclick="setLanguage('fr')">Fr 🇫🇷</button>
     </div>
-
     <div class="cat-grid" id="cat-grid-container"></div>
 </div>
 
@@ -174,306 +140,151 @@
 </div>
 
 <div class="quiz-container" id="quiz-ui">
-    <div id="q-text" style="font-size: 1.4rem; font-weight: bold; line-height: 1.5;"></div>
-    <div class="ans-grid" id="ans-box"></div>
-    <div class="controls-row" style="margin-top:25px; display:flex; justify-content:center;">
-        <button id="remove-two-btn" class="glass-btn"></button>
+    <div id="q-text" style="font-size: 1.3rem; font-weight: bold; margin-bottom: 20px;"></div>
+    <div id="ans-box" style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px;"></div>
+    <div style="text-align: center; margin-top: 20px;">
+        <button id="remove-two-btn" class="icon-btn" style="background:rgba(255,255,255,0.1); width: 100%;"></button>
     </div>
 </div>
 
 <div class="ad-modal" id="ad-modal">
-    <div class="ad-box">
-        <h3 id="txt-no-hearts" style="color:var(--gold); font-size: 1.5rem;"></h3>
+    <div style="background:#222; padding:30px; border-radius:20px; text-align:center; border:2px solid var(--gold); width:80%;">
+        <h3 id="txt-no-hearts" style="color:var(--gold)"></h3>
         <p id="txt-ad-desc"></p>
-        <div id="ad-timer" style="display:none; font-size: 2rem; color: var(--gold); font-weight: bold; margin: 15px 0;">5</div>
-        <div style="margin-top:25px; display: flex; flex-direction: column; gap: 10px;">
-            <button id="watch-ad-btn" class="gold-btn">📺</button>
-            <button onclick="closeAdModal()" class="glass-btn" id="txt-later"></button>
-        </div>
+        <div id="ad-timer" style="display:none; font-size: 2rem; color:var(--gold); margin:15px;">5</div>
+        <button id="watch-ad-btn" class="gold-btn">مشاهدة الإعلان</button>
+        <button onclick="closeAdModal()" style="background:none; border:none; color:gray; margin-top:15px; cursor:pointer;" id="txt-later"></button>
     </div>
 </div>
 
 <script>
-    // الرابط المصحح لـ Google Sheets
     const CSV = "https://docs.google.com/spreadsheets/d/e/2PACX-1vSJ4RCU1_iXMqLS3ApB1g8SjSrL2hbIAv-1VniqdMElnalov--mSDTpe9rjMxaWGCuP6gpxWV7OZDe1/pub?output=csv";
 
     const langConfig = {
-        ar: {
-            dir: "rtl", font: "'Cairo', sans-serif", logo: "IQ ثقافة", start: "استمرار", select: "اختر التصنيف",
-            recharge: "📺 شحن", noHearts: "انتهت القلوب!", adDesc: "شاهد إعلان للحصول على قلوب.", later: "ربما لاحقاً",
-            removeBtn: "حذف خيارين (50 نقطة)", factLoading: "جاري التحميل...",
-            factsGid: "605574246",
-            cats: [
-                { name: "⏳ التاريخ", gid: "11216236", key: "history" },
-                { name: "🌍 الجغرافيا", gid: "99625756", key: "geo" },
-                { name: "🧬 العلوم", gid: "1843208636", key: "science" },
-                { name: "💡 ثقافة عامة", gid: "564130158", key: "general" },
-                { name: "⚽ الرياضة", gid: "0", key: "sports" }
-            ]
-        },
-        en: {
-            dir: "ltr", font: "'Poppins', sans-serif", logo: "IQ Culture", start: "Continue", select: "Select Category",
-            recharge: "📺 Refill", noHearts: "No Hearts!", adDesc: "Watch ad to get 8 hearts.", later: "Maybe later",
-            removeBtn: "Remove 2 (50 pts)", factLoading: "Loading fact...",
-            factsGid: "259198059",
-            cats: [
-                { name: "⏳ History", gid: "1950805065", key: "history" },
-                { name: "🌍 Geography", gid: "1899297807", key: "geo" },
-                { name: "🧬 Science", gid: "407039200", key: "science" },
-                { name: "💡 General", gid: "1044248022", key: "general" },
-                { name: "⚽ Sports", gid: "1559005659", key: "sports" }
-            ]
-        },
-        es: {
-            dir: "ltr", font: "'Poppins', sans-serif", logo: "IQ Cultura", start: "Continuar", select: "Seleccionar Categoría",
-            recharge: "📺 Recargar", noHearts: "¡Sin Corazones!", adDesc: "Mira un anuncio para obtener 8 corazones.", later: "Más tarde",
-            removeBtn: "Eliminar 2 (50 pts)", factLoading: "Cargando...",
-            factsGid: "1911794502",
-            cats: [
-                { name: "⏳ Historia", gid: "948777647", key: "history" },
-                { name: "🌍 Geografía", gid: "1233201488", key: "geo" },
-                { name: "🧬 Ciencia", gid: "2028449800", key: "science" },
-                { name: "💡 Cultura General", gid: "1662832315", key: "general" },
-                { name: "⚽ Deportes", gid: "1795176380", key: "sports" }
-            ]
-        },
-        fr: {
-            dir: "ltr", font: "'Poppins', sans-serif", logo: "QI Culture", start: "Continuer", select: "Choisir la Catégorie",
-            recharge: "📺 Recharge", noHearts: "Plus de cœurs !", adDesc: "Regardez une pub pour 8 cœurs.", later: "Plus tard",
-            removeBtn: "Supprimer 2 (50 pts)", factLoading: "Chargement...",
-            factsGid: "1356278776",
-            cats: [
-                { name: "⏳ Histoire", gid: "1692460075", key: "history" },
-                { name: "🌍 Géographie", gid: "1888258036", key: "geo" },
-                { name: "🧬 Sciences", gid: "1043839601", key: "science" },
-                { name: "💡 Culture Générale", gid: "1000789609", key: "general" },
-                { name: "⚽ Sports", gid: "942675202", key: "sports" }
-            ]
-        }
+        ar: { dir:"rtl", logo:"IQ ثقافة", start:"استمرار", select:"اختر التصنيف", recharge:"📺 شحن", noHearts:"انتهت القلوب!", adDesc:"شاهد إعلان لزيادة القلوب", later:"لاحقاً", removeBtn:"حذف خيارين (50)", factLoading:"تحميل...", factsGid:"605574246", ok:"رائع!", no:"خاطئ!", cats:[{name:"⏳ التاريخ", gid:"11216236", key:"history"}, {name:"🌍 الجغرافيا", gid:"99625756", key:"geo"}, {name:"🧬 العلوم", gid:"1843208636", key:"science"}, {name:"💡 ثقافة عامة", gid:"564130158", key:"general"}, {name:"⚽ الرياضة", gid:"0", key:"sports"}] },
+        en: { dir:"ltr", logo:"IQ Culture", start:"Continue", select:"Select Category", recharge:"📺 Refill", noHearts:"No Hearts!", adDesc:"Watch ad for 8 hearts", later:"Later", removeBtn:"Remove 2 (50)", factLoading:"Loading...", factsGid:"259198059", ok:"Great!", no:"Wrong!", cats:[{name:"⏳ History", gid:"1950805065", key:"history"}, {name:"🌍 Geography", gid:"1899297807", key:"geo"}, {name:"🧬 Science", gid:"407039200", key:"science"}, {name:"💡 General", gid:"1044248022", key:"general"}, {name:"⚽ Sports", gid:"1559005659", key:"sports"}] },
+        es: { dir:"ltr", logo:"IQ Cultura", start:"Continuar", select:"Seleccionar", recharge:"📺 Recargar", noHearts:"¡Sin vidas!", adDesc:"Mira un anuncio", later:"Luego", removeBtn:"Eliminar 2 (50)", factLoading:"Cargando...", factsGid:"1911794502", ok:"¡Bien!", no:"¡Mal!", cats:[{name:"⏳ Historia", gid:"948777647", key:"history"}, {name:"🌍 Geografía", gid:"1233201488", key:"geo"}, {name:"🧬 Ciencia", gid:"2028449800", key:"science"}, {name:"💡 Cultura", gid:"1662832315", key:"general"}, {name:"⚽ Deportes", gid:"1795176380", key:"sports"}] },
+        fr: { dir:"ltr", logo:"QI Culture", start:"Continuer", select:"Catégorie", recharge:"📺 Recharge", noHearts:"Plus de cœurs!", adDesc:"Regarder une vidéo", later:"Plus tard", removeBtn:"Supprimer 2 (50)", factLoading:"Chargement...", factsGid:"1356278776", ok:"Bravo!", no:"Faux!", cats:[{name:"⏳ Histoire", gid:"1692460075", key:"history"}, {name:"🌍 Géographie", gid:"1888258036", key:"geo"}, {name:"🧬 Sciences", gid:"1043839601", key:"science"}, {name:"💡 Culture", gid:"1000789609", key:"general"}, {name:"⚽ Sports", gid:"942675202", key:"sports"}] }
     };
 
-    let gameState = {
-        score: parseInt(localStorage.getItem('iq_score')) || 0,
-        progress: JSON.parse(localStorage.getItem('iq_prog')) || {}, 
-        currentCat: '',
-        questions: [],
-        activeIdx: 0,
-        hearts: parseInt(localStorage.getItem('iq_hearts')) || 8,
-        muted: (localStorage.getItem('iq_muted') === 'true') || false,
-        usedRemove: JSON.parse(localStorage.getItem('iq_rem_used') || '{}'),
-        lang: localStorage.getItem('iq_lang') || 'ar'
-    };
-
-    const audioEl = document.getElementById('bg-audio');
-    const muteBtn = document.getElementById('mute-btn');
+    let gameState = { score: parseInt(localStorage.getItem('iq_score')) || 0, progress: JSON.parse(localStorage.getItem('iq_prog')) || {}, hearts: 8, muted: false, lang: 'ar' };
 
     function init() {
-        applyLanguage();
-        updateUI();
-        muteBtn.onclick = toggleMute;
-        document.getElementById('remove-two-btn').onclick = useRemoveTwo;
+        applyLanguage(); updateUI();
+        document.getElementById('mute-btn').onclick = () => { gameState.muted = !gameState.muted; gameState.muted?document.getElementById('bg-audio').pause():document.getElementById('bg-audio').play(); updateUI(); };
         document.getElementById('watch-ad-btn').onclick = startAd;
+        document.getElementById('remove-two-btn').onclick = useRemoveTwo;
     }
 
-    function setLanguage(l) {
-        gameState.lang = l;
-        localStorage.setItem('iq_lang', l);
-        applyLanguage();
-    }
+    function setLanguage(l) { gameState.lang = l; applyLanguage(); }
 
     function applyLanguage() {
-        const conf = langConfig[gameState.lang];
-        document.documentElement.dir = conf.dir;
-        document.documentElement.lang = gameState.lang;
-        document.body.style.fontFamily = conf.font;
-        document.getElementById('main-logo').innerText = conf.logo;
-        document.getElementById('btn-start').innerText = conf.start;
-        document.getElementById('txt-select-cat').innerText = conf.select;
-        document.getElementById('txt-recharge').innerText = conf.recharge;
-        document.getElementById('txt-no-hearts').innerText = conf.noHearts;
-        document.getElementById('txt-ad-desc').innerText = conf.adDesc;
-        document.getElementById('txt-later').innerText = conf.later;
-        document.getElementById('remove-two-btn').innerText = conf.removeBtn;
-        
-        document.querySelectorAll('.lang-btn').forEach(b => b.classList.remove('active-lang'));
-        document.getElementById(`btn-lang-${gameState.lang}`).classList.add('active-lang');
-        
-        loadFact();
-        renderCats();
+        const c = langConfig[gameState.lang];
+        document.documentElement.dir = c.dir;
+        document.getElementById('main-logo').innerText = c.logo;
+        document.getElementById('btn-start').innerText = c.start;
+        document.getElementById('txt-select-cat').innerText = c.select;
+        document.getElementById('remove-two-btn').innerText = c.removeBtn;
+        document.getElementById('txt-no-hearts').innerText = c.noHearts;
+        document.getElementById('txt-ad-desc').innerText = c.adDesc;
+        document.getElementById('txt-later').innerText = c.later;
+        loadFact(); renderCats();
     }
 
     function loadFact() {
-        const conf = langConfig[gameState.lang];
-        document.getElementById('fact-txt').innerText = conf.factLoading;
-        fetch(CSV + "&gid=" + conf.factsGid)
-        .then(r => r.text())
-        .then(d => {
-            const lines = d.split(/\r?\n/).slice(1);
-            if (lines.length > 0) {
-                const fact = lines[Math.floor(Math.random()*lines.length)].split(',')[0].replace(/"/g, '');
-                document.getElementById('fact-txt').innerText = fact;
-            }
-        }).catch(() => document.getElementById('fact-txt').innerText = "...");
-    }
-
-    function renderCats() {
-        const container = document.getElementById('cat-grid-container');
-        container.innerHTML = '';
-        langConfig[gameState.lang].cats.forEach(c => {
-            const btn = document.createElement('div');
-            btn.className = 'cat-btn';
-            if(c.key === 'sports') btn.style.gridColumn = 'span 2';
-            btn.innerText = c.name;
-            btn.onclick = () => startCat(c.gid, c.key);
-            container.appendChild(btn);
+        fetch(CSV + "&gid=" + langConfig[gameState.lang].factsGid).then(r => r.text()).then(d => {
+            const l = d.split(/\r?\n/).slice(1);
+            if(l.length) document.getElementById('fact-txt').innerText = l[Math.floor(Math.random()*l.length)].split(',')[0].replace(/"/g, '');
         });
     }
 
-    function save() {
-        localStorage.setItem('iq_score', gameState.score);
-        localStorage.setItem('iq_prog', JSON.stringify(gameState.progress));
-        localStorage.setItem('iq_hearts', gameState.hearts);
-        localStorage.setItem('iq_muted', gameState.muted);
-        localStorage.setItem('iq_rem_used', JSON.stringify(gameState.usedRemove));
+    function renderCats() {
+        const cont = document.getElementById('cat-grid-container'); cont.innerHTML = '';
+        langConfig[gameState.lang].cats.forEach(c => {
+            const b = document.createElement('div'); b.className = 'cat-btn'; b.innerText = c.name;
+            if(c.key==='sports') b.style.gridColumn = 'span 2';
+            b.onclick = () => startCat(c.gid, c.key); cont.appendChild(b);
+        });
     }
 
-    function updateUI() {
-        document.getElementById('score-val').innerText = gameState.score;
-        document.getElementById('hearts-val').innerText = gameState.hearts;
-        muteBtn.innerText = gameState.muted ? '🔇' : '🔊';
-    }
-
-    function toggleMute() {
-        gameState.muted = !gameState.muted;
-        gameState.muted ? audioEl.pause() : audioEl.play();
-        save(); updateUI();
-    }
-
-    function showCats() {
-        document.getElementById('top-bar').style.display = 'flex';
-        if(!gameState.muted) audioEl.play().catch(()=>{});
-        switchScreen('scr-cats');
-    }
-
-    function switchScreen(id) {
-        document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
-        document.getElementById(id).classList.add('active');
-    }
-
-    async function startCat(gid, name) {
-        gameState.currentCat = name;
-        switchScreen('scr-map');
-        try {
-            const r = await fetch(CSV + "&gid=" + gid);
-            const d = await r.text();
-            gameState.questions = d.split(/\r?\n/).slice(1).map(row => {
-                const c = row.split(',').map(x => x.trim().replace(/"/g, ''));
-                return { q: c[0], opts: [c[1], c[2], c[3], c[4]], a: c[5] };
-            }).filter(q => q.q);
-            renderMap();
-        } catch(e) { console.error("Error loading questions", e); }
+    async function startCat(gid, key) {
+        gameState.currentCat = key; switchScreen('scr-map');
+        const r = await fetch(CSV + "&gid=" + gid); const d = await r.text();
+        gameState.questions = d.split(/\r?\n/).slice(1).map(row => {
+            const c = row.split(',').map(x => x.trim().replace(/"/g, ''));
+            return { q: c[0], opts: [c[1], c[2], c[3], c[4]], a: c[5] };
+        }).filter(q => q.q); renderMap();
     }
 
     function renderMap() {
-        const cont = document.getElementById('map-cont');
-        cont.innerHTML = '';
-        const progKey = `${gameState.lang}_${gameState.currentCat}`;
-        const unlocked = gameState.progress[progKey] || 1;
+        const cont = document.getElementById('map-cont'); cont.innerHTML = '';
+        const unlocked = gameState.progress[`${gameState.lang}_${gameState.currentCat}`] || 1;
         gameState.questions.forEach((_, i) => {
-            const node = document.createElement('div');
-            node.className = `lvl-node ${i+1 <= unlocked ? 'unlocked' : ''} ${i+1 === unlocked ? 'current' : ''}`;
-            node.innerText = i + 1;
-            if (i+1 <= unlocked) node.onclick = () => openQuiz(i);
-            cont.appendChild(node);
+            const n = document.createElement('div'); n.className = `lvl-node ${i+1 <= unlocked ? 'unlocked' : ''} ${i+1 === unlocked ? 'current' : ''}`;
+            n.innerText = i + 1; if(i+1 <= unlocked) n.onclick = () => openQuiz(i); cont.appendChild(n);
         });
     }
 
     function openQuiz(idx) {
         if(gameState.hearts <= 0) { showAdModal(); return; }
-        gameState.activeIdx = idx;
-        const q = gameState.questions[idx];
+        gameState.activeIdx = idx; const q = gameState.questions[idx];
         document.getElementById('q-text').innerText = q.q;
-        const box = document.getElementById('ans-box');
-        box.innerHTML = '';
-        const usedKey = `${gameState.lang}_${gameState.currentCat}_${idx}`;
-        document.getElementById('remove-two-btn').style.display = (gameState.score >= 50 && !gameState.usedRemove[usedKey]) ? 'block' : 'none';
+        const box = document.getElementById('ans-box'); box.innerHTML = '';
         q.opts.forEach(o => {
-            const b = document.createElement('div');
-            b.className = 'ans-btn';
-            b.innerText = o;
-            b.onclick = () => checkAns(b, o, q.a);
-            box.appendChild(b);
+            const b = document.createElement('div'); b.className = 'ans-btn'; b.innerText = o;
+            b.onclick = () => checkAns(b, o, q.a); box.appendChild(b);
         });
         document.getElementById('quiz-ui').classList.add('show');
     }
 
     function checkAns(btn, sel, cor) {
-        const progKey = `${gameState.lang}_${gameState.currentCat}`;
+        const fb = document.getElementById('feedback-ui');
+        const c = langConfig[gameState.lang];
         if(sel === cor) {
-            document.querySelectorAll('.ans-btn').forEach(b => b.classList.add('disabled'));
-            btn.classList.add('correct');
-            gameState.score += 10;
-            if(gameState.activeIdx + 1 === (gameState.progress[progKey] || 1)) {
-                gameState.progress[progKey] = (gameState.progress[progKey] || 1) + 1;
-            }
+            if(!gameState.muted) document.getElementById('snd-correct').play();
+            fb.className = 'feedback-overlay show fb-correct';
+            document.getElementById('fb-icon').innerText = '✔️';
+            document.getElementById('fb-text').innerText = c.ok;
+            btn.classList.add('correct'); gameState.score += 10;
+            const key = `${gameState.lang}_${gameState.currentCat}`;
+            if(gameState.activeIdx+1 === (gameState.progress[key]||1)) gameState.progress[key] = (gameState.progress[key]||1)+1;
             save(); updateUI();
-            setTimeout(() => {
-                document.getElementById('quiz-ui').classList.remove('show');
-                renderMap();
-            }, 1000);
+            setTimeout(() => { fb.classList.remove('show'); document.getElementById('quiz-ui').classList.remove('show'); renderMap(); }, 1200);
         } else {
-            btn.classList.add('wrong');
-            btn.classList.add('disabled');
-            gameState.hearts--;
-            save(); updateUI();
-            if(gameState.hearts <= 0) {
-                setTimeout(() => {
-                    document.getElementById('quiz-ui').classList.remove('show');
-                    showAdModal();
-                }, 500);
-            }
+            if(!gameState.muted) document.getElementById('snd-wrong').play();
+            fb.className = 'feedback-overlay show fb-wrong';
+            document.getElementById('fb-icon').innerText = '❌';
+            document.getElementById('fb-text').innerText = c.no;
+            btn.classList.add('wrong'); gameState.hearts--; save(); updateUI();
+            setTimeout(() => fb.classList.remove('show'), 1000);
+            if(gameState.hearts <= 0) setTimeout(() => { document.getElementById('quiz-ui').classList.remove('show'); showAdModal(); }, 1200);
         }
     }
 
     function useRemoveTwo() {
+        if(gameState.score < 50) return;
         const q = gameState.questions[gameState.activeIdx];
-        const btns = Array.from(document.querySelectorAll('.ans-btn')).filter(b => b.innerText !== q.a && !b.classList.contains('removed'));
+        const btns = Array.from(document.querySelectorAll('.ans-btn')).filter(b => b.innerText !== q.a);
         for(let i=0; i<2; i++) {
-            if(btns.length > 0) {
-                const r = Math.floor(Math.random()*btns.length);
-                btns[r].classList.add('removed');
-                btns.splice(r,1);
-            }
+            const r = Math.floor(Math.random()*btns.length);
+            btns[r].style.visibility = 'hidden'; btns.splice(r,1);
         }
-        gameState.score -= 50;
-        const usedKey = `${gameState.lang}_${gameState.currentCat}_${gameState.activeIdx}`;
-        gameState.usedRemove[usedKey] = true;
-        document.getElementById('remove-two-btn').style.display = 'none';
-        save(); updateUI();
+        gameState.score -= 50; save(); updateUI();
     }
 
+    function startAd() {
+        let s = 5; const b = document.getElementById('watch-ad-btn'); const t = document.getElementById('ad-timer');
+        b.style.display = 'none'; t.style.display = 'block';
+        const i = setInterval(() => { t.innerText = s; s--; if(s < 0) { clearInterval(i); gameState.hearts = 8; save(); updateUI(); closeAdModal(); b.style.display = 'block'; t.style.display = 'none'; }}, 1000);
+    }
+
+    function save() { localStorage.setItem('iq_score', gameState.score); localStorage.setItem('iq_prog', JSON.stringify(gameState.progress)); }
+    function updateUI() { document.getElementById('score-val').innerText = gameState.score; document.getElementById('hearts-val').innerText = gameState.hearts; document.getElementById('mute-btn').innerText = gameState.muted ? '🔇' : '🔊'; }
+    function showCats() { document.getElementById('top-bar').style.display = 'flex'; if(!gameState.muted) document.getElementById('bg-audio').play().catch(()=>{}); switchScreen('scr-cats'); }
+    function switchScreen(id) { document.querySelectorAll('.screen').forEach(s => s.classList.remove('active')); document.getElementById(id).classList.add('active'); }
     function showAdModal() { document.getElementById('ad-modal').style.display = 'flex'; }
     function closeAdModal() { document.getElementById('ad-modal').style.display = 'none'; }
 
-    function startAd() {
-        let sec = 5;
-        const btn = document.getElementById('watch-ad-btn');
-        const tmr = document.getElementById('ad-timer');
-        btn.style.display = 'none';
-        tmr.style.display = 'block';
-        const inter = setInterval(() => {
-            tmr.innerText = sec;
-            sec--;
-            if(sec < 0) {
-                clearInterval(inter);
-                gameState.hearts = 8;
-                save(); updateUI();
-                closeAdModal();
-                btn.style.display = 'block';
-                tmr.style.display = 'none';
-            }
-        }, 1000);
-    }
     window.onload = init;
 </script>
 </body>
