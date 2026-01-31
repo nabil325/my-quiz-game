@@ -43,23 +43,23 @@
         }
         .active { display: flex; }
 
+        /* لغات الأزرار */
         .lang-btn {
             background: var(--glass); border: 1px solid rgba(255,255,255,0.2);
-            color: white; padding: 10px 15px; border-radius: 15px; cursor: pointer; font-weight: 900; transition: 0.3s;
+            color: white; padding: 10px 15px; border-radius: 15px; cursor: pointer; font-weight: 900;
         }
-        .lang-btn.active-lang { background: var(--blue); box-shadow: 0 0 15px var(--blue); border-color: var(--blue); }
+        .lang-btn.active-lang { background: var(--blue); box-shadow: 0 0 15px var(--blue); }
 
         .cat-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; width: 100%; max-width: 450px; }
         .cat-btn {
             background: var(--glass); padding: 25px 10px; border-radius: 20px; border: 1px solid rgba(255,255,255,0.1);
-            cursor: pointer; font-weight: 900; color: white; font-size: 1.1rem; backdrop-filter: blur(10px); transition: 0.3s;
+            cursor: pointer; font-weight: 900; color: white; font-size: 1.1rem;
         }
-        .cat-btn:hover { background: var(--blue); transform: translateY(-3px); }
 
         .map-view { width: 100%; overflow-y: auto; padding: 120px 0; display: flex; flex-direction: column-reverse; align-items: center; gap: 35px; }
         .lvl-node {
             width: 70px; height: 70px; border-radius: 50%; background: rgba(0,0,0,0.7); border: 4px solid #444;
-            display: flex; align-items: center; justify-content: center; font-size: 1.5rem; font-weight: 900; cursor: pointer; transition: 0.4s;
+            display: flex; align-items: center; justify-content: center; font-size: 1.5rem; font-weight: 900; cursor: pointer;
         }
         .unlocked { border-color: var(--blue); background: rgba(14, 165, 233, 0.3); }
         .current { border-color: var(--gold); background: var(--gold); color: black; animation: pulse 2s infinite; }
@@ -68,29 +68,27 @@
 
         .quiz-container {
             position: fixed; bottom: -100%; left: 0; width: 100%; background: rgba(15,15,15,0.98);
-            border-radius: 35px 35px 0 0; padding: 30px 20px; z-index: 2000; transition: 0.6s cubic-bezier(0.19, 1, 0.22, 1); max-height: 75vh; overflow-y: auto;
+            border-radius: 35px 35px 0 0; padding: 30px 20px; z-index: 2000; transition: 0.6s; max-height: 75vh;
         }
         .quiz-container.show { bottom: 0; }
 
-        .ans-btn { background: rgba(255,255,255,0.07); padding: 18px; border-radius: 15px; border: 1px solid rgba(255,255,255,0.1); cursor: pointer; color: white; font-weight: bold; transition: 0.2s; }
-        .ans-btn.correct { background: #10b981 !important; border-color: #10b981; }
-        .ans-btn.wrong { background: #ef4444 !important; border-color: #ef4444; }
-        .disabled { opacity: 0.6; pointer-events: none; }
+        .ans-btn { background: rgba(255,255,255,0.07); padding: 18px; border-radius: 15px; border: 1px solid rgba(255,255,255,0.1); cursor: pointer; color: white; margin-bottom: 10px; }
+        .ans-btn.correct { background: #10b981 !important; }
+        .ans-btn.wrong { background: #ef4444 !important; }
 
         /* التنبيه البصري (Feedback) */
         .feedback-overlay {
             position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%) scale(0.5);
             padding: 20px 40px; border-radius: 25px; font-size: 2rem; font-weight: 900;
             z-index: 5000; opacity: 0; pointer-events: none; transition: 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-            backdrop-filter: blur(15px); display: flex; flex-direction: column; align-items: center;
+            backdrop-filter: blur(10px); display: flex; flex-direction: column; align-items: center;
         }
         .feedback-overlay.show { opacity: 1; transform: translate(-50%, -50%) scale(1); }
-        .fb-correct { background: rgba(16, 185, 129, 0.9); border: 2px solid #10b981; box-shadow: 0 0 30px rgba(16, 185, 129, 0.4); }
-        .fb-wrong { background: rgba(239, 68, 68, 0.9); border: 2px solid #ef4444; box-shadow: 0 0 30px rgba(239, 68, 68, 0.4); }
+        .fb-correct { background: rgba(16, 185, 129, 0.9); border: 2px solid #10b981; }
+        .fb-wrong { background: rgba(239, 68, 68, 0.9); border: 2px solid #ef4444; }
 
         .ad-modal { position: fixed; inset: 0; display: none; align-items: center; justify-content: center; background: rgba(0,0,0,0.9); z-index: 3000; }
-        .gold-btn { background: var(--gold); border: none; padding: 15px 30px; border-radius: 12px; font-weight: 900; cursor: pointer; transition: 0.2s; }
-        .gold-btn:active { transform: scale(0.95); }
+        .gold-btn { background: var(--gold); border: none; padding: 15px 30px; border-radius: 12px; font-weight: 900; cursor: pointer; }
     </style>
 </head>
 <body>
@@ -102,33 +100,33 @@
 <div class="overlay"></div>
 
 <div id="feedback-ui" class="feedback-overlay">
-    <div id="fb-icon" style="font-size: 3.5rem; margin-bottom: 10px;"></div>
+    <div id="fb-icon" style="font-size: 3rem; margin-bottom: 10px;"></div>
     <div id="fb-text"></div>
 </div>
 
 <div id="top-bar" class="top-bar">
-    <div style="display:flex; gap:15px; align-items: center;">
+    <div style="display:flex; gap:15px;">
         <span>🏆 <span id="score-val">0</span></span>
-        <span style="color:#ff4d4d; font-weight: 900;">❤️ <span id="hearts-val">8</span></span>
+        <span style="color:#ff4d4d">❤️ <span id="hearts-val">8</span></span>
     </div>
     <div style="display:flex; gap:10px;">
-        <button onclick="showAdModal()" class="icon-btn" id="txt-recharge">📺 شحن</button>
+        <button onclick="showAdModal()" class="icon-btn" id="txt-recharge">📺</button>
         <button id="mute-btn" class="icon-btn">🔊</button>
         <button onclick="location.reload()" class="icon-btn">🏠</button>
     </div>
 </div>
 
 <div id="scr-start" class="screen active">
-    <h1 id="main-logo" style="font-size: 3.5rem; color: var(--gold); font-weight: 900; margin-bottom: 10px;">IQ ثقافة</h1>
-    <div style="background: var(--glass); padding: 25px; border-radius: 25px; margin: 20px; max-width: 400px; border: 1px solid rgba(255,255,255,0.1); backdrop-filter: blur(10px);">
-        <p id="fact-txt" style="font-size: 1.1rem; line-height: 1.6;">...</p>
+    <h1 id="main-logo" style="font-size: 3.5rem; color: var(--gold); font-weight: 900;">IQ ثقافة</h1>
+    <div style="background: var(--glass); padding: 20px; border-radius: 20px; margin: 20px; max-width: 350px;">
+        <p id="fact-txt">...</p>
     </div>
-    <button id="btn-start" onclick="showCats()" class="gold-btn" style="padding: 20px 100px; font-size: 1.4rem; border-radius: 60px;">استمرار</button>
+    <button id="btn-start" onclick="showCats()" class="gold-btn" style="padding: 20px 80px; font-size: 1.4rem; border-radius: 50px;">استمرار</button>
 </div>
 
 <div id="scr-cats" class="screen">
-    <h2 id="txt-select-cat" style="margin-bottom: 25px; font-size: 1.8rem;">اختر التصنيف</h2>
-    <div style="display:flex; gap:10px; margin-bottom: 30px; flex-wrap: wrap; justify-content: center;">
+    <h2 id="txt-select-cat" style="margin-bottom: 25px;">اختر التصنيف</h2>
+    <div style="display:flex; gap:10px; margin-bottom: 25px;">
         <button id="btn-lang-ar" class="lang-btn" onclick="setLanguage('ar')">Ar 🇸🇦</button>
         <button id="btn-lang-en" class="lang-btn" onclick="setLanguage('en')">En 🇺🇸</button>
         <button id="btn-lang-es" class="lang-btn" onclick="setLanguage('es')">Es 🇪🇸</button>
@@ -142,37 +140,34 @@
 </div>
 
 <div class="quiz-container" id="quiz-ui">
-    <div id="q-text" style="font-size: 1.4rem; font-weight: bold; margin-bottom: 25px; line-height: 1.4;"></div>
-    <div id="ans-box" style="display: grid; grid-template-columns: 1fr 1fr; gap: 12px;"></div>
-    <div style="text-align: center; margin-top: 25px;">
-        <button id="remove-two-btn" class="icon-btn" style="background:rgba(255,255,255,0.1); width: 100%; padding: 15px;"></button>
+    <div id="q-text" style="font-size: 1.3rem; font-weight: bold; margin-bottom: 20px;"></div>
+    <div id="ans-box" style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px;"></div>
+    <div style="text-align: center; margin-top: 20px;">
+        <button id="remove-two-btn" class="icon-btn" style="background:rgba(255,255,255,0.1); width: 100%;"></button>
     </div>
 </div>
 
 <div class="ad-modal" id="ad-modal">
-    <div style="background:#222; padding:35px; border-radius:25px; text-align:center; border:2px solid var(--gold); width:85%; max-width: 400px;">
-        <h3 id="txt-no-hearts" style="color:var(--gold); font-size: 1.5rem;"></h3>
+    <div style="background:#222; padding:30px; border-radius:20px; text-align:center; border:2px solid var(--gold); width:80%;">
+        <h3 id="txt-no-hearts" style="color:var(--gold)"></h3>
         <p id="txt-ad-desc"></p>
-        <div id="ad-timer" style="display:none; font-size: 2.5rem; color:var(--gold); margin:20px; font-weight: 900;">5</div>
-        <div style="display: flex; flex-direction: column; gap: 10px;">
-            <button id="watch-ad-btn" class="gold-btn">📺 مشاهدة إعلان</button>
-            <button onclick="closeAdModal()" style="background:none; border:none; color:gray; cursor:pointer;" id="txt-later"></button>
-        </div>
+        <div id="ad-timer" style="display:none; font-size: 2rem; color:var(--gold); margin:15px;">5</div>
+        <button id="watch-ad-btn" class="gold-btn">مشاهدة الإعلان</button>
+        <button onclick="closeAdModal()" style="background:none; border:none; color:gray; margin-top:15px; cursor:pointer;" id="txt-later"></button>
     </div>
 </div>
 
 <script>
-    // الرابط المصحح والنهائي
     const CSV = "https://docs.google.com/spreadsheets/d/e/2PACX-1vSJ4RCU1_iXMqLS3ApB1g8SjSrL2hbIAv-1VniqdMElnalov--mSDTpe9rjMxaWGCuP6gpxWV7OZDe1/pub?output=csv";
 
     const langConfig = {
-        ar: { dir:"rtl", logo:"IQ ثقافة", start:"استمرار", select:"اختر التصنيف", recharge:"📺 شحن", noHearts:"انتهت القلوب!", adDesc:"شاهد إعلان لزيادة القلوب", later:"ربما لاحقاً", removeBtn:"حذف خيارين (50 نقطة)", factLoading:"جاري التحميل...", factsGid:"605574246", ok:"رائع!", no:"خاطئ!", cats:[{name:"⏳ التاريخ", gid:"11216236", key:"history"}, {name:"🌍 الجغرافيا", gid:"99625756", key:"geo"}, {name:"🧬 العلوم", gid:"1843208636", key:"science"}, {name:"💡 ثقافة عامة", gid:"564130158", key:"general"}, {name:"⚽ الرياضة", gid:"0", key:"sports"}] },
-        en: { dir:"ltr", logo:"IQ Culture", start:"Continue", select:"Select Category", recharge:"📺 Refill", noHearts:"No Hearts!", adDesc:"Watch ad for 8 hearts", later:"Maybe later", removeBtn:"Remove 2 (50 pts)", factLoading:"Loading...", factsGid:"259198059", ok:"Great!", no:"Wrong!", cats:[{name:"⏳ History", gid:"1950805065", key:"history"}, {name:"🌍 Geography", gid:"1899297807", key:"geo"}, {name:"🧬 Science", gid:"407039200", key:"science"}, {name:"💡 General", gid:"1044248022", key:"general"}, {name:"⚽ Sports", gid:"1559005659", key:"sports"}] },
-        es: { dir:"ltr", logo:"IQ Cultura", start:"Continuar", select:"Seleccionar", recharge:"📺 Recargar", noHearts:"¡Sin vidas!", adDesc:"Mira un anuncio para 8 vidas", later:"Más tarde", removeBtn:"Eliminar 2 (50 pts)", factLoading:"Cargando...", factsGid:"1911794502", ok:"¡Bien!", no:"¡Mal!", cats:[{name:"⏳ Historia", gid:"948777647", key:"history"}, {name:"🌍 Geografía", gid:"1233201488", key:"geo"}, {name:"🧬 Ciencia", gid:"2028449800", key:"science"}, {name:"💡 Cultura", gid:"1662832315", key:"general"}, {name:"⚽ Deportes", gid:"1795176380", key:"sports"}] },
-        fr: { dir:"ltr", logo:"QI Culture", start:"Continuer", select:"Catégorie", recharge:"📺 Recharge", noHearts:"Plus de cœurs!", adDesc:"Regarder une vidéo pour 8 cœurs", later:"Plus tard", removeBtn:"Supprimer 2 (50 pts)", factLoading:"Chargement...", factsGid:"1356278776", ok:"Bravo!", no:"Faux!", cats:[{name:"⏳ Histoire", gid:"1692460075", key:"history"}, {name:"🌍 Géographie", gid:"1888258036", key:"geo"}, {name:"🧬 Sciences", gid:"1043839601", key:"science"}, {name:"💡 Culture", gid:"1000789609", key:"general"}, {name:"⚽ Sports", gid:"942675202", key:"sports"}] }
+        ar: { dir:"rtl", logo:"IQ ثقافة", start:"استمرار", select:"اختر التصنيف", recharge:"📺 شحن", noHearts:"انتهت القلوب!", adDesc:"شاهد إعلان لزيادة القلوب", later:"لاحقاً", removeBtn:"حذف خيارين (50)", factLoading:"تحميل...", factsGid:"605574246", ok:"رائع!", no:"خاطئ!", cats:[{name:"⏳ التاريخ", gid:"11216236", key:"history"}, {name:"🌍 الجغرافيا", gid:"99625756", key:"geo"}, {name:"🧬 العلوم", gid:"1843208636", key:"science"}, {name:"💡 ثقافة عامة", gid:"564130158", key:"general"}, {name:"⚽ الرياضة", gid:"0", key:"sports"}] },
+        en: { dir:"ltr", logo:"IQ Culture", start:"Continue", select:"Select Category", recharge:"📺 Refill", noHearts:"No Hearts!", adDesc:"Watch ad for 8 hearts", later:"Later", removeBtn:"Remove 2 (50)", factLoading:"Loading...", factsGid:"259198059", ok:"Great!", no:"Wrong!", cats:[{name:"⏳ History", gid:"1950805065", key:"history"}, {name:"🌍 Geography", gid:"1899297807", key:"geo"}, {name:"🧬 Science", gid:"407039200", key:"science"}, {name:"💡 General", gid:"1044248022", key:"general"}, {name:"⚽ Sports", gid:"1559005659", key:"sports"}] },
+        es: { dir:"ltr", logo:"IQ Cultura", start:"Continuar", select:"Seleccionar", recharge:"📺 Recargar", noHearts:"¡Sin vidas!", adDesc:"Mira un anuncio", later:"Luego", removeBtn:"Eliminar 2 (50)", factLoading:"Cargando...", factsGid:"1911794502", ok:"¡Bien!", no:"¡Mal!", cats:[{name:"⏳ Historia", gid:"948777647", key:"history"}, {name:"🌍 Geografía", gid:"1233201488", key:"geo"}, {name:"🧬 Ciencia", gid:"2028449800", key:"science"}, {name:"💡 Cultura", gid:"1662832315", key:"general"}, {name:"⚽ Deportes", gid:"1795176380", key:"sports"}] },
+        fr: { dir:"ltr", logo:"QI Culture", start:"Continuer", select:"Catégorie", recharge:"📺 Recharge", noHearts:"Plus de cœurs!", adDesc:"Regarder une vidéo", later:"Plus tard", removeBtn:"Supprimer 2 (50)", factLoading:"Chargement...", factsGid:"1356278776", ok:"Bravo!", no:"Faux!", cats:[{name:"⏳ Histoire", gid:"1692460075", key:"history"}, {name:"🌍 Géographie", gid:"1888258036", key:"geo"}, {name:"🧬 Sciences", gid:"1043839601", key:"science"}, {name:"💡 Culture", gid:"1000789609", key:"general"}, {name:"⚽ Sports", gid:"942675202", key:"sports"}] }
     };
 
-    let gameState = { score: parseInt(localStorage.getItem('iq_score')) || 0, progress: JSON.parse(localStorage.getItem('iq_prog')) || {}, hearts: 8, muted: false, lang: 'ar', usedRemove: {} };
+    let gameState = { score: parseInt(localStorage.getItem('iq_score')) || 0, progress: JSON.parse(localStorage.getItem('iq_prog')) || {}, hearts: 8, muted: false, lang: 'ar' };
 
     function init() {
         applyLanguage(); updateUI();
@@ -193,8 +188,6 @@
         document.getElementById('txt-no-hearts').innerText = c.noHearts;
         document.getElementById('txt-ad-desc').innerText = c.adDesc;
         document.getElementById('txt-later').innerText = c.later;
-        document.querySelectorAll('.lang-btn').forEach(b => b.classList.remove('active-lang'));
-        document.getElementById('btn-lang-'+gameState.lang).classList.add('active-lang');
         loadFact(); renderCats();
     }
 
@@ -225,8 +218,7 @@
 
     function renderMap() {
         const cont = document.getElementById('map-cont'); cont.innerHTML = '';
-        const key = `${gameState.lang}_${gameState.currentCat}`;
-        const unlocked = gameState.progress[key] || 1;
+        const unlocked = gameState.progress[`${gameState.lang}_${gameState.currentCat}`] || 1;
         gameState.questions.forEach((_, i) => {
             const n = document.createElement('div'); n.className = `lvl-node ${i+1 <= unlocked ? 'unlocked' : ''} ${i+1 === unlocked ? 'current' : ''}`;
             n.innerText = i + 1; if(i+1 <= unlocked) n.onclick = () => openQuiz(i); cont.appendChild(n);
@@ -238,8 +230,6 @@
         gameState.activeIdx = idx; const q = gameState.questions[idx];
         document.getElementById('q-text').innerText = q.q;
         const box = document.getElementById('ans-box'); box.innerHTML = '';
-        const usedKey = `${gameState.lang}_${gameState.currentCat}_${idx}`;
-        document.getElementById('remove-two-btn').style.display = (gameState.score >= 50 && !gameState.usedRemove[usedKey]) ? 'block' : 'none';
         q.opts.forEach(o => {
             const b = document.createElement('div'); b.className = 'ans-btn'; b.innerText = o;
             b.onclick = () => checkAns(b, o, q.a); box.appendChild(b);
@@ -255,7 +245,6 @@
             fb.className = 'feedback-overlay show fb-correct';
             document.getElementById('fb-icon').innerText = '✔️';
             document.getElementById('fb-text').innerText = c.ok;
-            document.querySelectorAll('.ans-btn').forEach(b => b.classList.add('disabled'));
             btn.classList.add('correct'); gameState.score += 10;
             const key = `${gameState.lang}_${gameState.currentCat}`;
             if(gameState.activeIdx+1 === (gameState.progress[key]||1)) gameState.progress[key] = (gameState.progress[key]||1)+1;
@@ -266,8 +255,7 @@
             fb.className = 'feedback-overlay show fb-wrong';
             document.getElementById('fb-icon').innerText = '❌';
             document.getElementById('fb-text').innerText = c.no;
-            btn.classList.add('wrong'); btn.classList.add('disabled');
-            gameState.hearts--; save(); updateUI();
+            btn.classList.add('wrong'); gameState.hearts--; save(); updateUI();
             setTimeout(() => fb.classList.remove('show'), 1000);
             if(gameState.hearts <= 0) setTimeout(() => { document.getElementById('quiz-ui').classList.remove('show'); showAdModal(); }, 1200);
         }
@@ -278,15 +266,10 @@
         const q = gameState.questions[gameState.activeIdx];
         const btns = Array.from(document.querySelectorAll('.ans-btn')).filter(b => b.innerText !== q.a);
         for(let i=0; i<2; i++) {
-            if(btns.length > 0) {
-                const r = Math.floor(Math.random()*btns.length);
-                btns[r].style.visibility = 'hidden'; btns.splice(r,1);
-            }
+            const r = Math.floor(Math.random()*btns.length);
+            btns[r].style.visibility = 'hidden'; btns.splice(r,1);
         }
-        gameState.score -= 50; 
-        gameState.usedRemove[`${gameState.lang}_${gameState.currentCat}_${gameState.activeIdx}`] = true;
-        document.getElementById('remove-two-btn').style.display = 'none';
-        save(); updateUI();
+        gameState.score -= 50; save(); updateUI();
     }
 
     function startAd() {
