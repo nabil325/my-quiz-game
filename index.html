@@ -62,12 +62,13 @@
             background: var(--glass);
             border: 1px solid rgba(255,255,255,0.2);
             color: white;
-            padding: 10px 20px;
+            padding: 10px 15px;
             border-radius: 15px;
             cursor: pointer;
             font-weight: 900;
             transition: 0.3s;
             backdrop-filter: blur(5px);
+            font-size: 0.9rem;
         }
         .lang-btn.active-lang {
             background: var(--blue);
@@ -120,16 +121,6 @@
         .ans-btn.correct { background: #10b981 !important; border-color: #10b981; }
         .disabled { opacity: 0.6; pointer-events: none; }
 
-        @keyframes shake {
-            0%, 100% { transform: translateX(0); }
-            25% { transform: translateX(-5px); }
-            75% { transform: translateX(5px); }
-        }
-
-        .gold-btn { background: var(--gold); border: none; padding: 15px 30px; border-radius: 12px; font-weight: 900; cursor: pointer; color: black; transition: 0.3s; }
-        .gold-btn:active { transform: scale(0.95); }
-        .glass-btn { background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.1); padding: 12px 15px; border-radius: 12px; cursor: pointer; color: white; }
-
         .ad-modal {
             position: fixed; inset: 0; display: none; align-items: center; justify-content: center;
             background: rgba(0,0,0,0.9); z-index: 3000;
@@ -138,7 +129,6 @@
             background: #222; padding: 35px; border-radius: 25px; width: 85%; max-width: 400px; 
             text-align: center; border: 2px solid var(--gold);
         }
-
         .hearts-txt { display: inline-flex; gap: 6px; align-items: center; font-weight: 900; color: #ff4d4d; }
     </style>
 </head>
@@ -160,20 +150,21 @@
 </div>
 
 <div id="scr-start" class="screen active">
-    <h1 id="main-logo" style="font-size: 4rem; color: var(--gold); font-weight: 900; margin-bottom: 5px;">IQ ثقافة</h1>
+    <h1 id="main-logo" style="font-size: 3.5rem; color: var(--gold); font-weight: 900; margin-bottom: 5px;">IQ ثقافة</h1>
     <div style="background: var(--glass); padding: 25px; border-radius: 25px; margin: 20px; max-width: 400px; border: 1px solid rgba(255,255,255,0.1);">
-        <p id="fact-txt" style="font-size: 1.1rem; line-height: 1.6;">جاري تحميل معلومة اليوم...</p>
+        <p id="fact-txt" style="font-size: 1.1rem; line-height: 1.6;">...</p>
     </div>
     <button id="btn-start" onclick="showCats()" class="gold-btn" style="padding: 20px 100px; border-radius: 60px; font-size: 1.4rem;">استمرار</button>
 </div>
 
 <div id="scr-cats" class="screen">
-    <h2 id="txt-select-cat" style="margin-bottom: 20px; font-size: 2rem;">اختر التصنيف</h2>
+    <h2 id="txt-select-cat" style="margin-bottom: 20px; font-size: 1.8rem;">اختر التصنيف</h2>
     
     <div class="lang-toggle-container">
-        <button id="btn-lang-ar" class="lang-btn" onclick="setLanguage('ar')">العربية 🇸🇦</button>
-        <button id="btn-lang-en" class="lang-btn" onclick="setLanguage('en')">English 🇺🇸</button>
-        <button id="btn-lang-es" class="lang-btn" onclick="setLanguage('es')">Español 🇪🇸</button>
+        <button id="btn-lang-ar" class="lang-btn" onclick="setLanguage('ar')">Ar 🇸🇦</button>
+        <button id="btn-lang-en" class="lang-btn" onclick="setLanguage('en')">En 🇺🇸</button>
+        <button id="btn-lang-es" class="lang-btn" onclick="setLanguage('es')">Es 🇪🇸</button>
+        <button id="btn-lang-fr" class="lang-btn" onclick="setLanguage('fr')">Fr 🇫🇷</button>
     </div>
 
     <div class="cat-grid" id="cat-grid-container"></div>
@@ -187,24 +178,24 @@
     <div id="q-text" style="font-size: 1.4rem; font-weight: bold; line-height: 1.5;"></div>
     <div class="ans-grid" id="ans-box"></div>
     <div class="controls-row" style="margin-top:25px; display:flex; justify-content:center;">
-        <button id="remove-two-btn" class="glass-btn">حذف خيارين (50 نقطة)</button>
+        <button id="remove-two-btn" class="glass-btn"></button>
     </div>
 </div>
 
 <div class="ad-modal" id="ad-modal">
     <div class="ad-box">
-        <h3 id="txt-no-hearts" style="color:var(--gold); font-size: 1.5rem;">انتهت القلوب!</h3>
-        <p id="txt-ad-desc">شاهد إعلان قصير للحصول على 8 قلوب جديدة ومواصلة اللعب.</p>
+        <h3 id="txt-no-hearts" style="color:var(--gold); font-size: 1.5rem;"></h3>
+        <p id="txt-ad-desc"></p>
         <div id="ad-timer" style="display:none; font-size: 2rem; color: var(--gold); font-weight: bold; margin: 15px 0;">5</div>
         <div style="margin-top:25px; display: flex; flex-direction: column; gap: 10px;">
-            <button id="watch-ad-btn" class="gold-btn">مشاهدة الإعلان</button>
-            <button onclick="closeAdModal()" class="glass-btn" id="txt-later">ربما لاحقاً</button>
+            <button id="watch-ad-btn" class="gold-btn">📺</button>
+            <button onclick="closeAdModal()" class="glass-btn" id="txt-later"></button>
         </div>
     </div>
 </div>
 
 <script>
-    const CSV = "https://docs.google.com/spreadsheets/d/e/2PACX-1vSJ4RCU1_iXMqLS3ApB1g8SjSrL2hbIAv-1VniqdMElnalov--mSDTpe9rjMxaWGCuP6gpxWV7OZDe1/pub?output=csv";
+    const CSV = "https://docs.google.com/spreadsheets/d/e/2PACX-1vSJ4RCU1_iXMqLS3ApB1g8SjSrL2hbIAv-1VniqdMElnalov--mSDTpe9rjMxaWGCP6gpxWV7OZDe1/pub?output=csv";
 
     const langConfig = {
         ar: {
@@ -244,6 +235,19 @@
                 { name: "🧬 Ciencia", gid: "2028449800", key: "science" },
                 { name: "💡 Cultura General", gid: "1662832315", key: "general" },
                 { name: "⚽ Deportes", gid: "1795176380", key: "sports" }
+            ]
+        },
+        fr: {
+            dir: "ltr", font: "'Poppins', sans-serif", logo: "QI Culture", start: "Continuer", select: "Choisir la Catégorie",
+            recharge: "📺 Recharge", noHearts: "Plus de cœurs !", adDesc: "Regardez une pub pour 8 cœurs.", later: "Plus tard",
+            removeBtn: "Supprimer 2 (50 pts)", factLoading: "Chargement...",
+            factsGid: "1356278776",
+            cats: [
+                { name: "⏳ Histoire", gid: "1692460075", key: "history" },
+                { name: "🌍 Géographie", gid: "1888258036", key: "geo" },
+                { name: "🧬 Sciences", gid: "1043839601", key: "science" },
+                { name: "💡 Culture Générale", gid: "1000789609", key: "general" },
+                { name: "⚽ Sports", gid: "942675202", key: "sports" }
             ]
         }
     };
@@ -291,10 +295,8 @@
         document.getElementById('txt-later').innerText = conf.later;
         document.getElementById('remove-two-btn').innerText = conf.removeBtn;
         
-        // تحديث حالة أزرار اللغات
-        document.getElementById('btn-lang-ar').className = `lang-btn ${gameState.lang==='ar'?'active-lang':''}`;
-        document.getElementById('btn-lang-en').className = `lang-btn ${gameState.lang==='en'?'active-lang':''}`;
-        document.getElementById('btn-lang-es').className = `lang-btn ${gameState.lang==='es'?'active-lang':''}`;
+        document.querySelectorAll('.lang-btn').forEach(b => b.classList.remove('active-lang'));
+        document.getElementById(`btn-lang-${gameState.lang}`).classList.add('active-lang');
         
         loadFact();
         renderCats();
@@ -403,7 +405,6 @@
 
     function checkAns(btn, sel, cor) {
         const progKey = `${gameState.lang}_${gameState.currentCat}`;
-        
         if(sel === cor) {
             document.querySelectorAll('.ans-btn').forEach(b => b.classList.add('disabled'));
             btn.classList.add('correct');
@@ -421,7 +422,6 @@
             btn.classList.add('disabled');
             gameState.hearts--;
             save(); updateUI();
-            
             if(gameState.hearts <= 0) {
                 setTimeout(() => {
                     document.getElementById('quiz-ui').classList.remove('show');
@@ -433,11 +433,13 @@
 
     function useRemoveTwo() {
         const q = gameState.questions[gameState.activeIdx];
-        const btns = Array.from(document.querySelectorAll('.ans-btn')).filter(b => b.innerText !== q.a);
+        const btns = Array.from(document.querySelectorAll('.ans-btn')).filter(b => b.innerText !== q.a && !b.classList.contains('removed'));
         for(let i=0; i<2; i++) {
-            const r = Math.floor(Math.random()*btns.length);
-            btns[r].classList.add('removed');
-            btns.splice(r,1);
+            if(btns.length > 0) {
+                const r = Math.floor(Math.random()*btns.length);
+                btns[r].classList.add('removed');
+                btns.splice(r,1);
+            }
         }
         gameState.score -= 50;
         const usedKey = `${gameState.lang}_${gameState.currentCat}_${gameState.activeIdx}`;
