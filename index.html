@@ -143,6 +143,23 @@
         .ans-btn.correct { background: #10b981 !important; border-color: #10b981; }
         .disabled { opacity: 0.6; pointer-events: none; }
 
+        /* ستايل قائمة المتصدرين */
+        .leaderboard-modal {
+            position: fixed; inset: 0; display: none; align-items: center; justify-content: center;
+            background: rgba(0,0,0,0.85); z-index: 4000; backdrop-filter: blur(10px);
+        }
+        .leaderboard-box {
+            background: #111; border: 2px solid var(--gold); border-radius: 30px;
+            width: 90%; max-width: 400px; padding: 25px; max-height: 80vh; overflow-y: auto;
+        }
+        .leader-item {
+            display: flex; justify-content: space-between; align-items: center;
+            background: rgba(255,255,255,0.05); padding: 12px 15px;
+            margin-bottom: 10px; border-radius: 15px; border-left: 4px solid var(--blue);
+        }
+        .leader-item.top-1 { border-left-color: var(--gold); background: rgba(255, 215, 0, 0.1); }
+        .rank-tag { font-weight: 900; width: 30px; }
+
         .ad-modal {
             position: fixed; inset: 0; display: none; align-items: center; justify-content: center;
             background: rgba(0,0,0,0.9); z-index: 3000;
@@ -181,7 +198,10 @@
     <div style="background: var(--glass); padding: 25px; border-radius: 25px; margin: 20px; max-width: 400px; border: 1px solid rgba(255,255,255,0.1);">
         <p id="fact-txt" style="font-size: 1.1rem; line-height: 1.6;">...</p>
     </div>
-    <button id="btn-start" onclick="showCats()" class="gold-btn">استمرار</button>
+    <div style="display: flex; flex-direction: column; gap: 15px;">
+        <button id="btn-start" onclick="showCats()" class="gold-btn">استمرار</button>
+        <button onclick="openLeaderboard()" class="glass-btn" style="font-weight: 900; color: var(--gold);">🏆 قائمة المتصدرين Top 10</button>
+    </div>
 </div>
 
 <div id="scr-cats" class="screen">
@@ -199,6 +219,14 @@
 
 <div id="scr-map" class="screen" style="padding:0; justify-content: flex-start;">
     <div class="map-view" id="map-cont"></div>
+</div>
+
+<div id="leaderboard-modal" class="leaderboard-modal">
+    <div class="leaderboard-box">
+        <h2 style="color: var(--gold); text-align: center; margin-bottom: 20px;">أفضل 10 لاعبين</h2>
+        <div id="leaderboard-list"></div>
+        <button onclick="closeLeaderboard()" class="glass-btn" style="width: 100%; margin-top: 15px;">إغلاق</button>
+    </div>
 </div>
 
 <div class="quiz-container" id="quiz-ui">
@@ -257,7 +285,7 @@
         },
         es: {
             dir: "ltr", font: "'Poppins', sans-serif", logo: "IQ Cultura", start: "Continuar", select: "Seleccionar Categoría",
-            recharge: "📺 Recargar", noHearts: "¡Sin Corazones!", adDesc: "Mira un anuncio para obtener 8 corazones.", later: "Más tarde",
+            recharge: "📺 Recargar", noHearts: "¡Sin Corات!", adDesc: "Mira un anuncio para obtener 8 corazones.", later: "Más tarde",
             removeBtn: "Eliminar 2 (50 pts)", factLoading: "Cargando...",
             factsGid: "1911794502",
             cats: [
@@ -284,6 +312,7 @@
     };
 
     let gameState = {
+        playerName: localStorage.getItem('iq_player_name') || "",
         score: parseInt(localStorage.getItem('iq_score')) || 0,
         progress: JSON.parse(localStorage.getItem('iq_prog')) || {}, 
         currentCat: '',
@@ -300,12 +329,76 @@
     const muteBtn = document.getElementById('mute-btn');
 
     function init() {
+        checkPlayerName();
         applyLanguage();
         updateUI();
         muteBtn.onclick = toggleMute;
         document.getElementById('remove-two-btn').onclick = useRemoveTwo;
         document.getElementById('watch-ad-btn').onclick = triggerRewardedAd;
     }
+
+    // نظام طلب الاسم
+    function checkPlayerName() {
+        if (!gameState.playerName) {
+            let name = prompt("مرحباً بك في IQ ثقافة! أدخل اسمك ليظهر في قائمة المتصدرين:");
+            if (!name || name.trim() === "") name = "لاعب مجهول";
+            gameState.playerName = name.substring(0, 15);
+            localStorage.setItem('iq_player_name', gameState.playerName);
+            updateLeaderboard(gameState.playerName, gameState.score);
+        }
+    }
+
+    // نظام قائمة المتصدرين (Top 10)
+    function updateLeaderboard(name, score) {
+        let board = JSON.parse(localStorage.getItem('iq_leaderboard')) || [
+            {name: "فهد العتيبي", score: 500},
+            {name: "ياسين", score: 450},
+            {name: "Maria", score: 400},
+            {name: "عمر الخالدي", score: 350},
+            {name: "سارة", score: 300}
+        ];
+        
+        // تحديث نتيجة اللاعب الحالي إذا كان موجوداً، أو إضافته
+        let playerEntry = board.find(e => e.name === name);
+        if (playerEntry) {
+            playerEntry.score = Math.max(playerEntry.score, score);
+        } else {
+            board.push({name: name, score: score});
+        }
+
+        // ترتيب وحفظ أفضل 10
+        board.sort((a, b) => b.score - a.score);
+        board = board.slice(0, 10);
+        localStorage.setItem('iq_leaderboard', JSON.stringify(board));
+    }
+
+    function openLeaderboard() {
+        const board = JSON.parse(localStorage.getItem('iq_leaderboard')) || [];
+        const listCont = document.getElementById('leaderboard-list');
+        listCont.innerHTML = '';
+        
+        board.forEach((entry, i) => {
+            let medal = "";
+            if (i === 0) medal = "🥇";
+            else if (i === 1) medal = "🥈";
+            else if (i === 2) medal = "🥉";
+            else medal = (i + 1);
+
+            const item = document.createElement('div');
+            item.className = `leader-item ${i === 0 ? 'top-1' : ''}`;
+            item.innerHTML = `
+                <div style="display:flex; align-items:center; gap:10px;">
+                    <span class="rank-tag">${medal}</span>
+                    <span style="font-weight:bold;">${entry.name}</span>
+                </div>
+                <div style="color:var(--gold); font-weight:900;">${entry.score}</div>
+            `;
+            listCont.appendChild(item);
+        });
+        document.getElementById('leaderboard-modal').style.display = 'flex';
+    }
+
+    function closeLeaderboard() { document.getElementById('leaderboard-modal').style.display = 'none'; }
 
     // وظائف محاكاة الإعلانات
     function triggerInterstitialAd() {
@@ -377,6 +470,7 @@
         localStorage.setItem('iq_hearts', gameState.hearts);
         localStorage.setItem('iq_muted', gameState.muted);
         localStorage.setItem('iq_rem_used', JSON.stringify(gameState.usedRemove));
+        updateLeaderboard(gameState.playerName, gameState.score);
     }
 
     function updateUI() {
@@ -412,17 +506,15 @@
                 const c = row.split(',').map(x => x.trim().replace(/"/g, ''));
                 return { q: c[0], opts: [c[1], c[2], c[3], c[4]], a: c[5] };
             }).filter(q => q.q);
-            renderMap(true); // نمرر true ليعلم أنه تحميل جديد للتصنيف
+            renderMap(true);
         } catch(e) { console.error("Error loading questions", e); }
     }
 
-    // --- تعديل الخريطة ليصبح التحديث "ذكياً" ولا يسبب قفزة ---
     function renderMap(isFirstLoad = false) {
         const cont = document.getElementById('map-cont');
         const progKey = `${gameState.lang}_${gameState.currentCat}`;
         const unlocked = gameState.progress[progKey] || 1;
         
-        // بناء الخريطة فقط إذا كانت فارغة أو عند تحميل تصنيف جديد
         if (cont.innerHTML === '' || isFirstLoad) {
             cont.innerHTML = '';
             gameState.questions.forEach((_, i) => {
@@ -430,29 +522,25 @@
                 const levelNum = i + 1;
                 node.className = `lvl-node`;
                 node.innerText = levelNum;
-                node.id = `lvl-idx-${levelNum}`; // نعطي كل دائرة ID ثابت
+                node.id = `lvl-idx-${levelNum}`;
                 cont.appendChild(node);
             });
         }
 
-        // تحديث حالة الدوائر (فتح/قفل/حالية) دون مسح المحتوى
         gameState.questions.forEach((_, i) => {
             const levelNum = i + 1;
             const node = document.getElementById(`lvl-idx-${levelNum}`);
             if (node) {
                 node.className = `lvl-node ${levelNum <= unlocked ? 'unlocked' : ''} ${levelNum === unlocked ? 'current' : ''}`;
                 node.onclick = levelNum <= unlocked ? () => openQuiz(i) : null;
-                if (levelNum === unlocked) node.id = "current-level-marker"; // تحديث الـ ID لآخر مستوى مفتوح
+                if (levelNum === unlocked) node.id = "current-level-marker";
             }
         });
 
-        // التمرير للمستوى الحالي يحدث "فقط" عند دخول التصنيف لأول مرة
         if (isFirstLoad) {
             setTimeout(() => {
                 const currentMarker = document.getElementById('current-level-marker');
-                if (currentMarker) {
-                    currentMarker.scrollIntoView({ behavior: 'smooth', block: 'center' });
-                }
+                if (currentMarker) currentMarker.scrollIntoView({ behavior: 'smooth', block: 'center' });
             }, 300);
         }
     }
@@ -495,7 +583,7 @@
             save(); updateUI();
             setTimeout(() => {
                 document.getElementById('quiz-ui').classList.remove('show');
-                renderMap(false); // نمرر false لكي لا يحرك الشاشة ويبقيها ثابتة
+                renderMap(false);
             }, 1000);
         } else {
             btn.classList.add('wrong');
