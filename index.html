@@ -108,6 +108,7 @@
         .map-view { 
             width: 100%; overflow-y: auto; padding: 120px 0; 
             display: flex; flex-direction: column-reverse; align-items: center; gap: 35px; 
+            scroll-behavior: smooth;
         }
         .lvl-node {
             width: 75px; height: 75px; border-radius: 50%;
@@ -223,9 +224,9 @@
 <script>
     const CSV = "https://docs.google.com/spreadsheets/d/e/2PACX-1vSJ4RCU1_iXMqLS3ApB1g8SjSrL2hbIAv-1VniqdMElnalov--mSDTpe9rjMxaWGCuP6gpxWV7OZDe1/pub?output=csv";
 
-    // --- إعدادات أكواد الاختبار لـ AdMob ---
-    const AD_INTERSTITIAL_TEST = "ca-app-pub-3940256099942544/1033173712"; // إعلان الـ 20 سؤالاً
-    const AD_REWARDED_TEST = "ca-app-pub-3940256099942544/5224354917";     // إعلان القلوب
+    // أكواد الاختبار لـ AdMob
+    const AD_INTERSTITIAL_TEST = "ca-app-pub-3940256099942544/1033173712";
+    const AD_REWARDED_TEST = "ca-app-pub-3940256099942544/5224354917";
 
     const langConfig = {
         ar: {
@@ -292,7 +293,7 @@
         muted: (localStorage.getItem('iq_muted') === 'true') || false,
         usedRemove: JSON.parse(localStorage.getItem('iq_rem_used') || '{}'),
         lang: localStorage.getItem('iq_lang') || 'ar',
-        adCounter: 0 // عداد الأسئلة للإعلان
+        adCounter: 0 
     };
 
     const audioEl = document.getElementById('bg-audio');
@@ -303,18 +304,17 @@
         updateUI();
         muteBtn.onclick = toggleMute;
         document.getElementById('remove-two-btn').onclick = useRemoveTwo;
-        document.getElementById('watch-ad-btn').onclick = triggerRewardedAd; // ربط زر المكافأة
+        document.getElementById('watch-ad-btn').onclick = triggerRewardedAd;
     }
 
-    // --- وظائف استدعاء الإعلانات (محاكاة للفحص) ---
+    // وظائف محاكاة الإعلانات
     function triggerInterstitialAd() {
-        console.log("استدعاء إعلان بيني (Test):", AD_INTERSTITIAL_TEST);
-        alert("تنبيه الفحص: سيظهر الآن إعلان بملء الشاشة لأنك أكملت 20 سؤالاً.");
+        console.log("إعلان بيني تجريبي");
+        alert("تنبيه تجريبي: سيظهر الآن إعلان بملء الشاشة لأنك أكملت 20 سؤالاً.");
     }
 
     function triggerRewardedAd() {
-        console.log("استدعاء إعلان فيديو بمكافأة (Test):", AD_REWARDED_TEST);
-        startAd(); // تشغيل العداد الحالي للمحاكاة
+        startAd();
     }
 
     function setLanguage(l) {
@@ -416,18 +416,35 @@
         } catch(e) { console.error("Error loading questions", e); }
     }
 
+    // --- تعديل الخريطة لحل مشكلة القفز ---
     function renderMap() {
         const cont = document.getElementById('map-cont');
         cont.innerHTML = '';
         const progKey = `${gameState.lang}_${gameState.currentCat}`;
         const unlocked = gameState.progress[progKey] || 1;
+        
         gameState.questions.forEach((_, i) => {
             const node = document.createElement('div');
-            node.className = `lvl-node ${i+1 <= unlocked ? 'unlocked' : ''} ${i+1 === unlocked ? 'current' : ''}`;
-            node.innerText = i + 1;
-            if (i+1 <= unlocked) node.onclick = () => openQuiz(i);
+            const levelNum = i + 1;
+            node.className = `lvl-node ${levelNum <= unlocked ? 'unlocked' : ''} ${levelNum === unlocked ? 'current' : ''}`;
+            node.innerText = levelNum;
+
+            // تمييز المستوى الحالي
+            if (levelNum === unlocked) {
+                node.id = "current-level-marker";
+            }
+
+            if (levelNum <= unlocked) node.onclick = () => openQuiz(i);
             cont.appendChild(node);
         });
+
+        // التركيز على المستوى الحالي دون قفز
+        setTimeout(() => {
+            const currentMarker = document.getElementById('current-level-marker');
+            if (currentMarker) {
+                currentMarker.scrollIntoView({ behavior: 'smooth', block: 'center' });
+            }
+        }, 300);
     }
 
     function openQuiz(idx) {
@@ -456,10 +473,9 @@
             btn.classList.add('correct');
             gameState.score += 10;
             
-            // --- عداد الإعلانات ---
             gameState.adCounter++;
             if(gameState.adCounter >= 20) {
-                triggerInterstitialAd(); // ظهور الإعلان كل 20 سؤالاً
+                triggerInterstitialAd();
                 gameState.adCounter = 0;
             }
 
