@@ -1,6 +1,8 @@
 <!DOCTYPE html>
 <html lang="ar" dir="rtl">
 <head>
+    <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-3940256099942544" crossorigin="anonymous"></script>
+    
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>IQ ثقافة - النسخة العالمية</title>
@@ -51,7 +53,6 @@
         }
         .active { display: flex; }
 
-        /* تعديل زر استمرار للون الأصفر الاحترافي */
         .gold-btn {
             background: var(--gold);
             color: black;
@@ -222,6 +223,10 @@
 <script>
     const CSV = "https://docs.google.com/spreadsheets/d/e/2PACX-1vSJ4RCU1_iXMqLS3ApB1g8SjSrL2hbIAv-1VniqdMElnalov--mSDTpe9rjMxaWGCuP6gpxWV7OZDe1/pub?output=csv";
 
+    // --- إعدادات أكواد الاختبار لـ AdMob ---
+    const AD_INTERSTITIAL_TEST = "ca-app-pub-3940256099942544/1033173712"; // إعلان الـ 20 سؤالاً
+    const AD_REWARDED_TEST = "ca-app-pub-3940256099942544/5224354917";     // إعلان القلوب
+
     const langConfig = {
         ar: {
             dir: "rtl", font: "'Cairo', sans-serif", logo: "IQ ثقافة", start: "استمرار", select: "اختر التصنيف",
@@ -286,7 +291,8 @@
         hearts: parseInt(localStorage.getItem('iq_hearts')) || 8,
         muted: (localStorage.getItem('iq_muted') === 'true') || false,
         usedRemove: JSON.parse(localStorage.getItem('iq_rem_used') || '{}'),
-        lang: localStorage.getItem('iq_lang') || 'ar'
+        lang: localStorage.getItem('iq_lang') || 'ar',
+        adCounter: 0 // عداد الأسئلة للإعلان
     };
 
     const audioEl = document.getElementById('bg-audio');
@@ -297,7 +303,18 @@
         updateUI();
         muteBtn.onclick = toggleMute;
         document.getElementById('remove-two-btn').onclick = useRemoveTwo;
-        document.getElementById('watch-ad-btn').onclick = startAd;
+        document.getElementById('watch-ad-btn').onclick = triggerRewardedAd; // ربط زر المكافأة
+    }
+
+    // --- وظائف استدعاء الإعلانات (محاكاة للفحص) ---
+    function triggerInterstitialAd() {
+        console.log("استدعاء إعلان بيني (Test):", AD_INTERSTITIAL_TEST);
+        alert("تنبيه الفحص: سيظهر الآن إعلان بملء الشاشة لأنك أكملت 20 سؤالاً.");
+    }
+
+    function triggerRewardedAd() {
+        console.log("استدعاء إعلان فيديو بمكافأة (Test):", AD_REWARDED_TEST);
+        startAd(); // تشغيل العداد الحالي للمحاكاة
     }
 
     function setLanguage(l) {
@@ -438,6 +455,14 @@
             document.querySelectorAll('.ans-btn').forEach(b => b.classList.add('disabled'));
             btn.classList.add('correct');
             gameState.score += 10;
+            
+            // --- عداد الإعلانات ---
+            gameState.adCounter++;
+            if(gameState.adCounter >= 20) {
+                triggerInterstitialAd(); // ظهور الإعلان كل 20 سؤالاً
+                gameState.adCounter = 0;
+            }
+
             if(gameState.activeIdx + 1 === (gameState.progress[progKey] || 1)) {
                 gameState.progress[progKey] = (gameState.progress[progKey] || 1) + 1;
             }
