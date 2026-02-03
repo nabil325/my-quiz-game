@@ -33,55 +33,62 @@
             z-index: 1;
         }
 
-        /* شريط الأدوات العلوي المطور */
+        /* شريط الأدوات العلوي المطور والمعدل */
         .top-bar {
-            position: fixed; top: 0; width: 100%; padding: 12px 15px;
+            position: fixed; top: 0; width: 100%; padding: 10px 15px;
             display: none; justify-content: space-between; align-items: center; z-index: 1000;
-            background: rgba(0,0,0,0.7); backdrop-filter: blur(15px);
-            box-sizing: border-box; border-bottom: 1px solid rgba(255,215,0,0.3);
+            background: rgba(0,0,0,0.8); backdrop-filter: blur(15px);
+            box-sizing: border-box; border-bottom: 1px solid rgba(255,215,0,0.2);
         }
 
-        .top-left { display: flex; align-items: center; gap: 10px; }
-        .top-right { display: flex; align-items: center; gap: 8px; }
+        .top-right { display: flex; align-items: center; gap: 10px; }
+        .top-left { display: flex; align-items: center; gap: 8px; }
 
         .player-badge {
-            display: flex; align-items: center; gap: 8px;
+            display: flex; align-items: center; gap: 6px;
             background: rgba(255,255,255,0.08); padding: 4px 10px;
             border-radius: 50px; border: 1px solid rgba(255,255,255,0.1);
         }
         .player-avatar {
-            width: 26px; height: 26px; background: var(--gold);
+            width: 24px; height: 24px; background: var(--gold);
             border-radius: 50%; display: flex; align-items: center; justify-content: center;
-            color: black; font-weight: 900; font-size: 0.75rem;
+            color: black; font-weight: 900; font-size: 0.7rem;
+        }
+
+        .stat-badge {
+            display: flex; align-items: center; gap: 5px;
+            background: rgba(255,255,255,0.1);
+            padding: 4px 12px; border-radius: 50px;
+            border: 1px solid rgba(255,255,255,0.1);
+            font-size: 0.85rem; font-weight: 900;
         }
 
         .hearts-display {
-            display: flex; align-items: center; gap: 5px;
             background: rgba(255, 77, 77, 0.15);
-            padding: 4px 12px; border-radius: 50px;
-            border: 1px solid rgba(255, 77, 77, 0.3);
+            border-color: rgba(255, 77, 77, 0.3);
+            color: #ff4d4d;
         }
-        .hearts-txt { font-weight: 900; color: #ff4d4d; display: flex; align-items: center; gap: 4px; }
 
         .icon-btn {
-            background: var(--glass); border: 1px solid rgba(255,255,255,0.1);
-            width: 38px; height: 38px; border-radius: 10px; cursor: pointer; 
+            background: rgba(255,255,255,0.1); border: 1px solid rgba(255,255,255,0.1);
+            width: 36px; height: 36px; border-radius: 10px; cursor: pointer; 
             display: flex; align-items: center; justify-content: center;
-            color: white; transition: 0.2s; font-size: 1.1rem;
+            color: white; transition: 0.2s; font-size: 1rem;
         }
         .icon-btn:active { transform: scale(0.9); }
 
         .recharge-btn {
-            background: rgba(14, 165, 233, 0.2); border-color: var(--blue);
-            width: auto; padding: 0 12px; font-size: 0.85rem; font-weight: bold;
+            background: var(--gold); color: black; border: none;
+            width: auto; padding: 0 12px; font-size: 0.8rem; font-weight: 900;
+            border-radius: 50px; height: 32px;
         }
 
         .exit-btn {
             background: #ef4444; border: none; color: white;
-            box-shadow: 0 0 10px rgba(239, 68, 68, 0.4);
+            font-weight: bold; border-radius: 10px;
         }
 
-        /* باقي الستايلات الأساسية */
+        /* باقي الستايلات الأساسية كما هي */
         .name-input-screen { position: fixed; inset: 0; background: var(--dark-glass); backdrop-filter: blur(15px); z-index: 5000; display: none; align-items: center; justify-content: center; }
         .name-box { background: #111; padding: 40px 30px; border-radius: 30px; border: 2px solid var(--gold); text-align: center; width: 85%; max-width: 400px; }
         .name-box input { width: 100%; padding: 15px; border-radius: 15px; border: 1px solid #333; margin: 20px 0; font-size: 1.2rem; text-align: center; background: #222; color: white; box-sizing: border-box; font-family: 'Cairo'; }
@@ -112,7 +119,7 @@
         .ad-modal { position: fixed; inset: 0; display: none; align-items: center; justify-content: center; background: rgba(0,0,0,0.9); z-index: 4000; }
         .ad-box { background: #222; padding: 35px; border-radius: 25px; width: 85%; max-width: 400px; text-align: center; border: 2px solid var(--gold); }
         .glass-btn { background: rgba(255,255,255,0.1); border: 1px solid rgba(255,255,255,0.2); color: white; padding: 12px 25px; border-radius: 15px; cursor: pointer; }
-        #regen-timer { font-size: 0.7rem; color: #ccc; margin-left: 5px; font-weight: normal; }
+        #regen-timer { font-size: 0.65rem; color: #ddd; margin-right: 3px; font-weight: normal; }
     </style>
 </head>
 <body>
@@ -121,20 +128,22 @@
 <div class="overlay"></div>
 
 <div id="top-bar" class="top-bar">
-    <div class="top-left">
+    <div class="top-right">
         <div class="player-badge">
             <div class="player-avatar" id="avatar-char">?</div>
             <span id="player-name-display" style="font-weight: bold; font-size: 0.8rem;">...</span>
         </div>
-        <div style="font-weight: 900; color: var(--gold); font-size: 0.9rem;">🏆 <span id="score-val">0</span></div>
-        <div class="hearts-display">
-            <div class="hearts-txt">❤️ <span id="hearts-val">5</span></div>
+        <div class="stat-badge hearts-display">
+            <span>❤️</span> <span id="hearts-val">5</span>
             <span id="regen-timer"></span>
         </div>
+        <div class="stat-badge" style="color: var(--gold); border-color: rgba(255,215,0,0.2);">
+            <span>🏆</span> <span id="score-val">0</span>
+        </div>
     </div>
-    <div class="top-right">
-        <button onclick="showAdModal('manual')" class="icon-btn recharge-btn" id="txt-recharge">📺 شحن</button>
-        <button onclick="save()" class="icon-btn" title="حفظ">💾</button>
+    
+    <div class="top-left">
+        <button onclick="showAdModal('manual')" class="recharge-btn" id="txt-recharge">📺 شحن</button>
         <button id="mute-btn" class="icon-btn">🔊</button>
         <button onclick="goBack()" class="icon-btn exit-btn">✕</button>
     </div>
@@ -337,8 +346,6 @@
         localStorage.setItem('iq_hearts', gameState.hearts); localStorage.setItem('iq_last_heart_time', gameState.lastHeartTime);
         localStorage.setItem('iq_muted', gameState.muted); localStorage.setItem('iq_rem_used', JSON.stringify(gameState.usedRemove));
         if(gameState.playerName) db.ref('leaderboard/' + gameState.playerName).set({ name: gameState.playerName, score: gameState.score });
-        // تنبيه بسيط عند الحفظ
-        console.log("Data Saved Successfully");
     }
 
     function updateUI() {
