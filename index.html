@@ -3,11 +3,9 @@
 <head>
     <script src="https://www.gstatic.com/firebasejs/9.1.3/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/9.1.3/firebase-database-compat.js"></script>
-    
     <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-3940256099942544" crossorigin="anonymous"></script>
-    
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>IQ ثقافة - النسخة العالمية</title>
     <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;700;900&family=Poppins:wght@400;700;900&display=swap" rel="stylesheet">
     <style>
@@ -15,7 +13,8 @@
             --gold: #ffd700;
             --blue: #0ea5e9;
             --glass: rgba(255, 255, 255, 0.1);
-            --dark-glass: rgba(0, 0, 0, 0.85); /* تعميق الشفافية للشاشات المنبثقة */
+            --dark-glass: rgba(0, 0, 0, 0.85);
+            --nav-bg: rgba(15, 15, 15, 0.95);
         }
 
         body, html {
@@ -23,17 +22,12 @@
             font-family: 'Cairo', sans-serif; color: white;
             overflow: hidden;
             background: #1a1a1a url('Warface Wallpaper.jpeg') no-repeat center center;
-            background-size: cover;
-            background-attachment: fixed;
+            background-size: cover; background-attachment: fixed;
         }
 
-        .overlay {
-            position: fixed; inset: 0;
-            background: rgba(0, 0, 0, 0.55);
-            z-index: 1;
-        }
+        .overlay { position: fixed; inset: 0; background: rgba(0, 0, 0, 0.55); z-index: 1; }
 
-        /* شاشة الاسم الاحترافية */
+        /* الشاشة الاحترافية لإدخال الاسم */
         .name-input-screen {
             position: fixed; inset: 0; background: var(--dark-glass);
             backdrop-filter: blur(15px); z-index: 5000;
@@ -49,157 +43,83 @@
             box-sizing: border-box; font-family: 'Cairo';
         }
 
-        /* بطاقة اللاعب في شريط الأدوات */
-        .player-badge {
-            display: flex; align-items: center; gap: 8px;
-            background: rgba(255,255,255,0.1); padding: 5px 12px;
-            border-radius: 50px; border: 1px solid var(--gold);
-            margin-left: 10px;
-        }
-        .player-avatar {
-            width: 28px; height: 28px; background: var(--gold);
-            border-radius: 50%; display: flex; align-items: center; justify-content: center;
-            color: black; font-weight: 900; font-size: 0.8rem;
-        }
-
+        /* تحسين الشريط العلوي لتقليل الازدحام */
         .top-bar {
-            position: fixed; top: 0; width: 100%; padding: 10px 15px;
+            position: fixed; top: 0; width: 100%; padding: 12px 20px;
             display: none; justify-content: space-between; align-items: center; z-index: 1000;
-            background: rgba(0,0,0,0.6); backdrop-filter: blur(10px);
-            box-sizing: border-box; border-bottom: 1px solid rgba(255,255,255,0.1);
+            background: linear-gradient(to bottom, rgba(0,0,0,0.8), transparent);
+            box-sizing: border-box;
         }
+        .stats-group { display: flex; gap: 15px; align-items: center; background: rgba(0,0,0,0.4); padding: 5px 15px; border-radius: 50px; backdrop-filter: blur(5px); border: 1px solid rgba(255,255,255,0.1); }
+        .player-badge { display: flex; align-items: center; gap: 8px; }
+        .player-avatar { width: 32px; height: 32px; background: var(--gold); border-radius: 50%; display: flex; align-items: center; justify-content: center; color: black; font-weight: 900; }
 
-        .top-left, .top-right { display: flex; gap: 12px; align-items: center; }
-
-        .icon-btn {
-            background: rgba(255,255,255,0.05);
-            border: 1px solid rgba(255,255,255,0.1);
-            padding: 8px 12px; border-radius: 12px; cursor: pointer; 
-            font-weight: 700; color: white; transition: 0.2s;
+        /* شريط التنقل السفلي الجديد */
+        .bottom-nav {
+            position: fixed; bottom: 0; width: 100%; height: 70px;
+            background: var(--nav-bg); backdrop-filter: blur(20px);
+            display: none; justify-content: space-around; align-items: center;
+            z-index: 1000; border-top: 1px solid rgba(255,255,255,0.1);
+            padding-bottom: env(safe-area-inset-bottom);
         }
+        .nav-item {
+            display: flex; flex-direction: column; align-items: center;
+            color: #888; cursor: pointer; transition: 0.3s; font-size: 0.8rem; font-weight: bold;
+        }
+        .nav-item.active { color: var(--gold); }
+        .nav-item i { font-size: 1.4rem; margin-bottom: 4px; }
 
         .screen {
-            position: relative; z-index: 10; height: 100vh;
+            position: absolute; inset: 0; z-index: 10;
             display: none; flex-direction: column; align-items: center; justify-content: center;
             text-align: center; padding: 20px; box-sizing: border-box;
+            transition: transform 0.4s ease, opacity 0.4s ease;
+            opacity: 0; transform: translateY(20px);
         }
-        .active { display: flex; }
+        .screen.active { display: flex; opacity: 1; transform: translateY(0); }
 
+        /* منطقة الحقائق */
         .fact-container {
-            background: var(--glass); 
-            padding: 25px; 
-            border-radius: 25px; 
-            margin: 20px; 
-            max-width: 400px; 
-            max-height: 180px;
-            overflow-y: auto;
+            background: var(--glass); padding: 25px; border-radius: 25px; 
+            margin: 20px; max-width: 400px; max-height: 150px; overflow-y: auto;
             border: 1px solid rgba(255,255,255,0.1);
-            scrollbar-width: thin;
-            scrollbar-color: var(--gold) transparent;
         }
-        .fact-container::-webkit-scrollbar { width: 4px; }
-        .fact-container::-webkit-scrollbar-thumb { background: var(--gold); border-radius: 10px; }
 
         .gold-btn {
-            background: var(--gold);
-            color: black;
-            border: none;
-            padding: 20px 100px;
-            border-radius: 60px;
-            font-size: 1.4rem;
-            font-weight: 900;
-            cursor: pointer;
-            transition: 0.3s;
-            box-shadow: 0 0 20px rgba(255, 215, 0, 0.3);
-            animation: btnPulse 2s infinite;
+            background: var(--gold); color: black; border: none; padding: 18px 80px;
+            border-radius: 50px; font-size: 1.3rem; font-weight: 900; cursor: pointer;
+            box-shadow: 0 10px 20px rgba(255, 215, 0, 0.2); animation: btnPulse 2s infinite;
         }
-        @keyframes btnPulse {
-            0% { transform: scale(1); box-shadow: 0 0 20px rgba(255, 215, 0, 0.3); }
-            50% { transform: scale(1.05); box-shadow: 0 0 30px rgba(255, 215, 0, 0.5); }
-            100% { transform: scale(1); box-shadow: 0 0 20px rgba(255, 215, 0, 0.3); }
-        }
+        @keyframes btnPulse { 0%, 100% { transform: scale(1); } 50% { transform: scale(1.05); } }
 
-        .lang-toggle-container {
-            margin-bottom: 25px;
-            display: flex;
-            justify-content: center;
-            flex-wrap: wrap;
-            gap: 10px;
-        }
-        .lang-btn {
-            background: var(--glass);
-            border: 1px solid rgba(255,255,255,0.2);
-            color: white;
-            padding: 10px 15px;
-            border-radius: 15px;
-            cursor: pointer;
-            font-weight: 900;
-            transition: 0.3s;
-            backdrop-filter: blur(5px);
-        }
-        .lang-btn.active-lang {
-            background: var(--blue);
-            border-color: var(--blue);
-            box-shadow: 0 0 15px rgba(14, 165, 233, 0.4);
-        }
-
-        .cat-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; width: 100%; max-width: 450px; }
+        .cat-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; width: 100%; max-width: 450px; padding-bottom: 80px; }
         .cat-btn {
             background: var(--glass); backdrop-filter: blur(15px);
-            padding: 25px 10px; border-radius: 20px; border: 1px solid rgba(255,255,255,0.1);
-            cursor: pointer; font-weight: 900; transition: 0.3s; color: white; font-size: 1.1rem;
+            padding: 20px 10px; border-radius: 20px; border: 1px solid rgba(255,255,255,0.1);
+            cursor: pointer; font-weight: 900; color: white; transition: 0.3s;
         }
 
-        .map-view { 
-            width: 100%; overflow-y: auto; padding: 120px 0; 
-            display: flex; flex-direction: column-reverse; align-items: center; gap: 35px; 
-            scroll-behavior: smooth;
-        }
-        .lvl-node {
-            width: 75px; height: 75px; border-radius: 50%;
-            background: rgba(0,0,0,0.7); border: 4px solid #444;
-            display: flex; align-items: center; justify-content: center;
-            font-size: 1.6rem; font-weight: 900; cursor: pointer; transition: 0.4s; color: white;
-            position: relative;
-        }
+        .map-view { width: 100%; overflow-y: auto; padding: 100px 0 150px 0; display: flex; flex-direction: column-reverse; align-items: center; gap: 35px; }
+        .lvl-node { width: 70px; height: 70px; border-radius: 50%; background: rgba(0,0,0,0.7); border: 4px solid #444; display: flex; align-items: center; justify-content: center; font-size: 1.5rem; font-weight: 900; color: white; transition: 0.4s; }
         .unlocked { border-color: var(--blue); background: rgba(14, 165, 233, 0.3); }
         .current { border-color: var(--gold); background: var(--gold); color: black; animation: pulse 2s infinite; }
 
-        @keyframes pulse { 0%, 100% { transform: scale(1); } 50% { transform: scale(1.1); box-shadow: 0 0 25px var(--gold); } }
-
+        /* الحفاظ على منطقة الأسئلة دون تغيير */
         .quiz-container {
             position: fixed; bottom: -100%; left: 0; width: 100%;
             background: rgba(15, 15, 15, 0.98); backdrop-filter: blur(30px);
             border-radius: 35px 35px 0 0; border-top: 3px solid var(--gold);
             padding: 30px 20px; box-sizing: border-box; z-index: 2000;
             transition: 0.6s cubic-bezier(0.19, 1, 0.22, 1);
-            max-height: 75vh; overflow-y: auto;
+            max-height: 80vh; overflow-y: auto;
         }
         .quiz-container.show { bottom: 0; }
-
         .ans-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-top: 25px; }
-        .ans-btn { 
-            background: rgba(255,255,255,0.07); padding: 18px; border-radius: 15px; 
-            cursor: pointer; border: 1px solid rgba(255,255,255,0.1); 
-            font-weight: bold; text-align: center; color: white; transition: 0.2s;
-        }
+        .ans-btn { background: rgba(255,255,255,0.07); padding: 18px; border-radius: 15px; cursor: pointer; border: 1px solid rgba(255,255,255,0.1); font-weight: bold; text-align: center; color: white; }
         .ans-btn.wrong { background: #ef4444 !important; border-color: #ef4444; }
         .ans-btn.correct { background: #10b981 !important; border-color: #10b981; }
 
-        .ad-modal {
-            position: fixed; inset: 0; display: none; align-items: center; justify-content: center;
-            background: rgba(0,0,0,0.9); z-index: 4000;
-        }
-        .ad-box {
-            background: #222; padding: 35px; border-radius: 25px; width: 85%; max-width: 400px; 
-            text-align: center; border: 2px solid var(--gold);
-        }
-        .hearts-txt { display: inline-flex; gap: 6px; align-items: center; font-weight: 900; color: #ff4d4d; }
-        
-        .glass-btn {
-            background: rgba(255,255,255,0.1); border: 1px solid rgba(255,255,255,0.2);
-            color: white; padding: 12px 25px; border-radius: 15px; cursor: pointer;
-        }
+        .icon-btn { background: none; border: none; font-size: 1.5rem; color: white; cursor: pointer; padding: 5px; }
     </style>
 </head>
 <body>
@@ -209,47 +129,50 @@
 
 <div id="name-screen" class="name-input-screen">
     <div class="name-box">
-        <h2 style="color: var(--gold); margin-top: 0;">مرحباً بك!</h2>
-        <p>أدخل اسمك لتبدأ رحلة الثقافة وتنافس في الترتيب العالمي</p>
-        <input type="text" id="player-name-input" placeholder="اكتب اسمك هنا..." maxlength="15">
-        <button onclick="submitName()" class="gold-btn" style="padding: 15px 50px;">ابدأ الآن</button>
+        <h2 style="color: var(--gold);">مرحباً بك!</h2>
+        <p>أدخل اسمك لتبدأ رحلة الثقافة</p>
+        <input type="text" id="player-name-input" placeholder="..." maxlength="15">
+        <button onclick="submitName()" class="gold-btn" style="padding: 15px 50px; font-size: 1rem;">ابدأ</button>
     </div>
 </div>
 
 <div id="top-bar" class="top-bar">
-    <div class="top-left">
-        <div class="player-badge">
-            <div class="player-avatar" id="avatar-char">?</div>
-            <span id="player-name-display" style="font-weight: bold; font-size: 0.9rem;">...</span>
+    <div class="player-badge">
+        <div class="player-avatar" id="avatar-char">?</div>
+        <div style="display:flex; flex-direction:column;">
+            <span id="player-name-display" style="font-weight: bold; font-size: 0.8rem;">...</span>
+            <span style="font-size: 0.7rem; color: var(--gold);">🏆 <span id="score-val">0</span></span>
         </div>
-        <div>🏆 <span id="score-val">0</span></div>
+    </div>
+    
+    <div class="stats-group">
         <div class="hearts-txt">❤️ <span id="hearts-val">8</span></div>
+        <button onclick="showAdModal('manual')" style="background:var(--gold); border:none; border-radius:10px; padding:2px 8px; font-weight:900; font-size:0.7rem;">📺 شحن</button>
     </div>
-    <div class="top-right">
-        <button onclick="showAdModal('manual')" class="icon-btn" id="txt-recharge">📺 شحن</button>
-        <button id="mute-btn" class="icon-btn">🔊</button>
-        <button onclick="location.reload()" class="icon-btn">🏠</button>
+
+    <div style="display:flex; gap:10px;">
+        <button id="mute-btn" class="icon-btn" style="font-size:1.1rem;">🔊</button>
     </div>
+</div>
+
+<div id="bottom-nav" class="bottom-nav">
+    <div class="nav-item active" id="nav-home" onclick="navTo('scr-start')"><span>🏠</span><span>الرئيسية</span></div>
+    <div class="nav-item" id="nav-cats" onclick="navTo('scr-cats')"><span>📁</span><span>الأقسام</span></div>
+    <div class="nav-item" id="nav-map" onclick="openCurrentMap()"><span>🗺️</span><span>الخريطة</span></div>
+    <div class="nav-item" id="nav-rank" onclick="openLeaderboard()"><span>🥇</span><span>التصنيف</span></div>
 </div>
 
 <div id="scr-start" class="screen active">
-    <h1 id="main-logo" style="font-size: 3.5rem; color: var(--gold); font-weight: 900; margin-bottom: 5px;">IQ ثقافة</h1>
-    <div class="fact-container">
-        <p id="fact-txt" style="font-size: 1.1rem; line-height: 1.6;">...</p>
-    </div>
-    <div style="display: flex; flex-direction: column; gap: 15px;">
-        <button id="btn-start" onclick="showCats()" class="gold-btn">استمرار</button>
-        <button id="btn-leaderboard" onclick="openLeaderboard()" class="glass-btn" style="font-weight: 900; color: var(--gold);">🏆 قائمة المتصدرين العالمية</button>
-    </div>
+    <h1 id="main-logo" style="font-size: 3rem; color: var(--gold); font-weight: 900;">IQ ثقافة</h1>
+    <div class="fact-container"><p id="fact-txt">...</p></div>
+    <button id="btn-start" onclick="navTo('scr-cats')" class="gold-btn">ابدأ اللعب</button>
 </div>
 
 <div id="scr-cats" class="screen">
-    <h2 id="txt-select-cat" style="margin-bottom: 20px; font-size: 1.8rem;">اختر التصنيف</h2>
+    <h2 id="txt-select-cat" style="margin-bottom: 20px;">اختر التصنيف</h2>
     <div class="lang-toggle-container">
         <button id="btn-lang-ar" class="lang-btn" onclick="setLanguage('ar')">Ar 🇸🇦</button>
         <button id="btn-lang-en" class="lang-btn" onclick="setLanguage('en')">En 🇺🇸</button>
-        <button id="btn-lang-es" class="lang-btn" onclick="setLanguage('es')">Es 🇪🇸</button>
-        <button id="btn-lang-fr" class="lang-btn" onclick="setLanguage('fr')">Fr 🇫🇷</button>
     </div>
     <div class="cat-grid" id="cat-grid-container"></div>
 </div>
@@ -258,214 +181,114 @@
     <div class="map-view" id="map-cont"></div>
 </div>
 
-<div id="leaderboard-modal" class="leaderboard-modal">
-    <div class="leaderboard-box">
-        <h2 id="txt-leaderboard-title" style="color: var(--gold); text-align: center; margin-bottom: 20px;">أفضل 10 لاعبين في العالم</h2>
+<div id="leaderboard-modal" class="name-input-screen" style="z-index: 4000;">
+    <div class="name-box" style="max-height: 80vh; overflow-y: auto;">
+        <h2 id="txt-leaderboard-title" style="color: var(--gold);">المتصدرين</h2>
         <div id="leaderboard-list"></div>
-        <button id="btn-close-leader" onclick="closeLeaderboard()" class="glass-btn" style="width: 100%; margin-top: 15px;">إغلاق</button>
+        <button onclick="closeLeaderboard()" class="glass-btn" style="width:100%; margin-top:15px;">إغلاق</button>
     </div>
 </div>
 
 <div class="quiz-container" id="quiz-ui">
-    <div id="q-text" style="font-size: 1.4rem; font-weight: bold; line-height: 1.5;"></div>
+    <div id="q-text" style="font-size: 1.4rem; font-weight: bold;"></div>
     <div class="ans-grid" id="ans-box"></div>
-    <div class="controls-row" style="margin-top:25px; display:flex; justify-content:center;">
+    <div style="margin-top:25px; display:flex; justify-content:center;">
         <button id="remove-two-btn" class="glass-btn"></button>
     </div>
 </div>
 
-<div class="ad-modal" id="ad-modal">
+<div class="ad-modal" id="ad-modal" style="z-index:5000;">
     <div class="ad-box">
-        <h3 id="txt-no-hearts" style="color:var(--gold); font-size: 1.5rem;"></h3>
+        <h3 id="txt-no-hearts" style="color:var(--gold);"></h3>
         <p id="txt-ad-desc"></p>
-        <div id="ad-timer" style="display:none; font-size: 2rem; color: var(--gold); font-weight: bold; margin: 15px 0;">5</div>
-        <div style="margin-top:25px; display: flex; flex-direction: column; gap: 10px;">
-            <button id="watch-ad-btn" class="gold-btn" style="padding: 15px;">📺 مشاهدة الإعلان</button>
-            <button onclick="closeAdModal()" class="glass-btn" id="txt-later"></button>
-        </div>
+        <div id="ad-timer" style="display:none; font-size: 2rem; color: var(--gold); font-weight: bold;">5</div>
+        <button id="watch-ad-btn" class="gold-btn" style="padding: 15px; width:100%;">مشاهدة</button>
+        <button onclick="closeAdModal()" class="glass-btn" style="margin-top:10px; width:100%;">لاحقاً</button>
     </div>
 </div>
 
 <script>
-    const firebaseConfig = {
-        apiKey: "AIzaSyCIXq5egNrR0dS5YI2L4BFnm3IGa11128Q",
-        databaseURL: "https://iq-culture-default-rtdb.firebaseio.com/",
-        projectId: "iq-culture"
-    };
+    const firebaseConfig = { apiKey: "AIzaSyCIXq5egNrR0dS5YI2L4BFnm3IGa11128Q", databaseURL: "https://iq-culture-default-rtdb.firebaseio.com/", projectId: "iq-culture" };
     firebase.initializeApp(firebaseConfig);
     const db = firebase.database();
     const CSV = "https://docs.google.com/spreadsheets/d/e/2PACX-1vSJ4RCU1_iXMqLS3ApB1g8SjSrL2hbIAv-1VniqdMElnalov--mSDTpe9rjMxaWGCuP6gpxWV7OZDe1/pub?output=csv";
 
-    // تم إضافة adCounter هنا
     let gameState = {
         playerName: localStorage.getItem('iq_player_name') || "",
         score: parseInt(localStorage.getItem('iq_score')) || 0,
         progress: JSON.parse(localStorage.getItem('iq_prog')) || {}, 
-        currentCat: '',
-        questions: [],
-        activeIdx: 0,
+        currentCat: localStorage.getItem('iq_last_cat') || '',
+        questions: [], activeIdx: 0,
         hearts: parseInt(localStorage.getItem('iq_hearts')) || 8,
         muted: (localStorage.getItem('iq_muted') === 'true') || false,
         usedRemove: JSON.parse(localStorage.getItem('iq_rem_used') || '{}'),
-        lang: localStorage.getItem('iq_lang') || 'ar',
-        adCounter: 0 
+        lang: localStorage.getItem('iq_lang') || 'ar', adCounter: 0 
     };
 
     const langConfig = {
-        ar: {
-            dir: "rtl", font: "'Cairo', sans-serif", logo: "IQ ثقافة", start: "استمرار", select: "اختر التصنيف",
-            recharge: "📺 شحن", noHearts: "انتهت القلوب!", adDesc: "شاهد إعلان للحصول على قلوب.", later: "ربما لاحقاً",
-            removeBtn: "حذف خيارين (50 نقطة)", factLoading: "جاري التحميل...",
-            leaderboardBtn: "🏆 قائمة المتصدرين العالمية", leaderboardTitle: "أفضل 10 لاعبين في العالم", close: "إغلاق",
-            factsGid: "605574246",
-            cats: [
-                { name: "⏳ التاريخ", gid: "11216236", key: "history" },
-                { name: "🌍 الجغرافيا", gid: "99625756", key: "geo" },
-                { name: "🧬 العلوم", gid: "1843208636", key: "science" },
-                { name: "💡 ثقافة عامة", gid: "564130158", key: "general" },
-                { name: "⚽ الرياضة", gid: "0", key: "sports" }
-            ]
-        },
-        en: {
-            dir: "ltr", font: "'Poppins', sans-serif", logo: "IQ Culture", start: "Continue", select: "Select Category",
-            recharge: "📺 Refill", noHearts: "No Hearts!", adDesc: "Watch ad to get 8 hearts.", later: "Maybe later",
-            removeBtn: "Remove 2 (50 pts)", factLoading: "Loading fact...",
-            leaderboardBtn: "🏆 Global Leaderboard", leaderboardTitle: "Top 10 Players in the World", close: "Close",
-            factsGid: "259198059",
-            cats: [
-                { name: "⏳ History", gid: "1950805065", key: "history" },
-                { name: "🌍 Geography", gid: "1899297807", key: "geo" },
-                { name: "🧬 Science", gid: "407039200", key: "science" },
-                { name: "💡 General", gid: "1044248022", key: "general" },
-                { name: "⚽ Sports", gid: "1559005659", key: "sports" }
-            ]
-        },
-        es: {
-            dir: "ltr", font: "'Poppins', sans-serif", logo: "IQ Cultura", start: "Continuar", select: "Seleccionar Categoría",
-            recharge: "📺 Recargar", noHearts: "¡Sin Corazones!", adDesc: "Mira un anuncio para obtener 8 corazones.", later: "Más tarde",
-            removeBtn: "Eliminar 2 (50 pts)", factLoading: "Cargando...",
-            leaderboardBtn: "🏆 Tabla de Líderes", leaderboardTitle: "Los 10 mejores jugadores", close: "Cerrar",
-            factsGid: "1911794502",
-            cats: [
-                { name: "⏳ Historia", gid: "948777647", key: "history" },
-                { name: "🌍 Geografía", gid: "1233201488", key: "geo" },
-                { name: "🧬 Ciencia", gid: "2028449800", key: "science" },
-                { name: "💡 Cultura General", gid: "1662832315", key: "general" },
-                { name: "⚽ Deportes", gid: "1795176380", key: "sports" }
-            ]
-        },
-        fr: {
-            dir: "ltr", font: "'Poppins', sans-serif", logo: "QI Culture", start: "Continuer", select: "Choisir la Catégorie",
-            recharge: "📺 Recharge", noHearts: "Plus de cœurs !", adDesc: "Regardez une pub pour 8 cœurs.", later: "Plus tard",
-            removeBtn: "Supprimer 2 (50 pts)", factLoading: "Chargement...",
-            leaderboardBtn: "🏆 Classement Mondial", leaderboardTitle: "Top 10 des meilleurs joueurs", close: "Fermer",
-            factsGid: "1356278776",
-            cats: [
-                { name: "⏳ Histoire", gid: "1692460075", key: "histoire" },
-                { name: "🌍 Géographie", gid: "1888258036", key: "geo" },
-                { name: "🧬 Sciences", gid: "1043839601", key: "science" },
-                { name: "💡 Culture Générale", gid: "1000789609", key: "general" },
-                { name: "⚽ Sports", gid: "942675202", key: "sports" }
-            ]
-        }
+        ar: { dir: "rtl", font: "'Cairo'", logo: "IQ ثقافة", start: "ابدأ", select: "اختر التصنيف", recharge: "📺 شحن", noHearts: "انتهت القلوب!", adDesc: "شاهد إعلان للقلوب", removeBtn: "حذف (50 نقطة)", factLoading: "جاري التحميل...", factsGid: "605574246", cats: [{ name: "⏳ التاريخ", gid: "11216236", key: "history" }, { name: "🌍 الجغرافيا", gid: "99625756", key: "geo" }, { name: "🧬 العلوم", gid: "1843208636", key: "science" }, { name: "💡 عامة", gid: "564130158", key: "general" }, { name: "⚽ الرياضة", gid: "0", key: "sports" }] },
+        en: { dir: "ltr", font: "'Poppins'", logo: "IQ Culture", start: "Start", select: "Select Category", recharge: "📺 Refill", noHearts: "No Hearts!", adDesc: "Watch ad for hearts", removeBtn: "Remove 2 (50 pts)", factLoading: "Loading...", factsGid: "259198059", cats: [{ name: "⏳ History", gid: "1950805065", key: "history" }, { name: "🌍 Geography", gid: "1899297807", key: "geo" }, { name: "🧬 Science", gid: "407039200", key: "science" }, { name: "💡 General", gid: "1044248022", key: "general" }, { name: "⚽ Sports", gid: "1559005659", key: "sports" }] }
     };
 
     const audioEl = document.getElementById('bg-audio');
-    const muteBtn = document.getElementById('mute-btn');
 
     function init() {
-        checkPlayerName();
-        applyLanguage();
-        updateUI();
-        muteBtn.onclick = toggleMute;
+        if (!gameState.playerName) document.getElementById('name-screen').style.display = 'flex';
+        else updatePlayerDisplay();
+        applyLanguage(); updateUI();
+        document.getElementById('mute-btn').onclick = toggleMute;
         document.getElementById('remove-two-btn').onclick = useRemoveTwo;
         document.getElementById('watch-ad-btn').onclick = triggerRewardedAd;
     }
 
-    // تعديل نظام تسجيل الاسم ليكون احترافياً
-    function checkPlayerName() {
-        if (!gameState.playerName) {
-            document.getElementById('name-screen').style.display = 'flex';
-        } else {
-            updatePlayerDisplay();
-        }
+    function navTo(screenId) {
+        document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
+        document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
+        document.getElementById(screenId).classList.add('active');
+        if(screenId === 'scr-start') document.getElementById('nav-home').classList.add('active');
+        if(screenId === 'scr-cats') document.getElementById('nav-cats').classList.add('active');
+        if(screenId === 'scr-map') document.getElementById('nav-map').classList.add('active');
+        
+        document.getElementById('top-bar').style.display = 'flex';
+        document.getElementById('bottom-nav').style.display = 'flex';
+        if(!gameState.muted && audioEl.paused) audioEl.play().catch(()=>{});
+    }
+
+    function openCurrentMap() {
+        if(!gameState.currentCat) navTo('scr-cats');
+        else navTo('scr-map');
     }
 
     function submitName() {
-        let input = document.getElementById('player-name-input').value.trim();
-        if (input.length < 3) {
-            alert(gameState.lang === 'ar' ? "الاسم قصير جداً!" : "Name too short!");
-            return;
-        }
-        gameState.playerName = input.substring(0, 15);
-        localStorage.setItem('iq_player_name', gameState.playerName);
+        let name = document.getElementById('player-name-input').value.trim();
+        if(name.length < 2) return;
+        gameState.playerName = name;
+        localStorage.setItem('iq_player_name', name);
         document.getElementById('name-screen').style.display = 'none';
-        updatePlayerDisplay();
-        save();
+        updatePlayerDisplay(); save();
     }
 
     function updatePlayerDisplay() {
-        const name = gameState.playerName || "...";
-        document.getElementById('player-name-display').innerText = name;
-        document.getElementById('avatar-char').innerText = name.charAt(0).toUpperCase();
+        document.getElementById('player-name-display').innerText = gameState.playerName;
+        document.getElementById('avatar-char').innerText = gameState.playerName[0].toUpperCase();
     }
-
-    function openLeaderboard() {
-        const listCont = document.getElementById('leaderboard-list');
-        listCont.innerHTML = '<p style="text-align:center;">...</p>';
-        db.ref('leaderboard').orderByChild('score').limitToLast(10).once('value', (snapshot) => {
-            let board = [];
-            snapshot.forEach((child) => { board.push(child.val()); });
-            board.reverse(); 
-            listCont.innerHTML = '';
-            board.forEach((entry, i) => {
-                let rank = (i === 0) ? "🥇" : (i === 1) ? "🥈" : (i === 2) ? "🥉" : (i + 1);
-                const item = document.createElement('div');
-                item.className = `leader-item ${i === 0 ? 'top-1' : ''}`;
-                item.innerHTML = `<div style="display:flex; align-items:center; gap:10px;"><span class="rank-tag">${rank}</span><span>${entry.name}</span></div><div style="color:var(--gold); font-weight:900;">${entry.score}</div>`;
-                listCont.appendChild(item);
-            });
-            document.getElementById('leaderboard-modal').style.display = 'flex';
-        });
-    }
-
-    function closeLeaderboard() { document.getElementById('leaderboard-modal').style.display = 'none'; }
-    function setLanguage(l) { gameState.lang = l; localStorage.setItem('iq_lang', l); applyLanguage(); }
 
     function applyLanguage() {
         const conf = langConfig[gameState.lang];
         document.documentElement.dir = conf.dir;
-        document.documentElement.lang = gameState.lang;
         document.body.style.fontFamily = conf.font;
         document.getElementById('main-logo').innerText = conf.logo;
         document.getElementById('btn-start').innerText = conf.start;
         document.getElementById('txt-select-cat').innerText = conf.select;
-        document.getElementById('txt-recharge').innerText = conf.recharge;
-        document.getElementById('txt-no-hearts').innerText = conf.noHearts;
-        document.getElementById('txt-ad-desc').innerText = conf.adDesc;
-        document.getElementById('txt-later').innerText = conf.later;
         document.getElementById('remove-two-btn').innerText = conf.removeBtn;
-        document.getElementById('btn-leaderboard').innerText = conf.leaderboardBtn;
-        document.getElementById('txt-leaderboard-title').innerText = conf.leaderboardTitle;
-        document.getElementById('btn-close-leader').innerText = conf.close;
-        document.querySelectorAll('.lang-btn').forEach(b => b.classList.remove('active-lang'));
-        document.getElementById(`btn-lang-${gameState.lang}`).classList.add('active-lang');
-        loadFact();
-        renderCats();
+        loadFact(); renderCats();
     }
 
     function loadFact() {
-        const conf = langConfig[gameState.lang];
-        const factBox = document.getElementById('fact-txt');
-        factBox.innerText = conf.factLoading;
-        fetch(CSV + "&gid=" + conf.factsGid).then(r => r.text()).then(d => {
+        fetch(CSV + "&gid=" + langConfig[gameState.lang].factsGid).then(r => r.text()).then(d => {
             const lines = d.split(/\r?\n/).slice(1);
-            if (lines.length > 0) {
-                const fact = lines[Math.floor(Math.random()*lines.length)].split(',')[0].replace(/"/g, '');
-                factBox.innerText = fact;
-                document.querySelector('.fact-container').scrollTop = 0;
-            }
-        }).catch(() => factBox.innerText = "...");
+            if (lines.length > 0) document.getElementById('fact-txt').innerText = lines[Math.floor(Math.random()*lines.length)].split(',')[0].replace(/"/g, '');
+        });
     }
 
     function renderCats() {
@@ -474,89 +297,40 @@
         langConfig[gameState.lang].cats.forEach(c => {
             const btn = document.createElement('div');
             btn.className = 'cat-btn';
-            if(c.key === 'sports') btn.style.gridColumn = 'span 2';
             btn.innerText = c.name;
             btn.onclick = () => startCat(c.gid, c.key);
             container.appendChild(btn);
         });
     }
 
-    function save() {
-        localStorage.setItem('iq_score', gameState.score);
-        localStorage.setItem('iq_prog', JSON.stringify(gameState.progress));
-        localStorage.setItem('iq_hearts', gameState.hearts);
-        localStorage.setItem('iq_muted', gameState.muted);
-        localStorage.setItem('iq_rem_used', JSON.stringify(gameState.usedRemove));
-        if(gameState.playerName) db.ref('leaderboard/' + gameState.playerName).set({ name: gameState.playerName, score: gameState.score });
-    }
-
-    function updateUI() {
-        document.getElementById('score-val').innerText = gameState.score;
-        document.getElementById('hearts-val').innerText = gameState.hearts;
-        muteBtn.innerText = gameState.muted ? '🔇' : '🔊';
-        updatePlayerDisplay();
-    }
-
-    function toggleMute() {
-        gameState.muted = !gameState.muted;
-        gameState.muted ? audioEl.pause() : audioEl.play();
-        save(); updateUI();
-    }
-
-    function showCats() {
-        document.getElementById('top-bar').style.display = 'flex';
-        if(!gameState.muted) audioEl.play().catch(()=>{});
-        switchScreen('scr-cats');
-    }
-
-    function switchScreen(id) {
-        document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
-        document.getElementById(id).classList.add('active');
-    }
-
     async function startCat(gid, name) {
         gameState.currentCat = name;
-        switchScreen('scr-map');
-        try {
-            const r = await fetch(CSV + "&gid=" + gid);
-            const d = await r.text();
-            gameState.questions = d.split(/\r?\n/).slice(1).map(row => {
-                const c = row.split(',').map(x => x.trim().replace(/"/g, ''));
-                return { q: c[0], opts: [c[1], c[2], c[3], c[4]], a: c[5] };
-            }).filter(q => q.q);
-            renderMap(true);
-        } catch(e) { console.error(e); }
+        localStorage.setItem('iq_last_cat', name);
+        navTo('scr-map');
+        const r = await fetch(CSV + "&gid=" + gid);
+        const d = await r.text();
+        gameState.questions = d.split(/\r?\n/).slice(1).map(row => {
+            const c = row.split(',').map(x => x.trim().replace(/"/g, ''));
+            return { q: c[0], opts: [c[1], c[2], c[3], c[4]], a: c[5] };
+        }).filter(q => q.q);
+        renderMap(true);
     }
 
     function renderMap(isFirstLoad = false) {
         const cont = document.getElementById('map-cont');
         const progKey = `${gameState.lang}_${gameState.currentCat}`;
         const unlocked = gameState.progress[progKey] || 1;
-        if (cont.innerHTML === '' || isFirstLoad) {
-            cont.innerHTML = '';
-            gameState.questions.forEach((_, i) => {
-                const node = document.createElement('div');
-                node.className = `lvl-node`;
-                node.innerText = i + 1;
-                node.id = `lvl-idx-${i + 1}`;
-                cont.appendChild(node);
-            });
-        }
+        cont.innerHTML = '';
         gameState.questions.forEach((_, i) => {
+            const node = document.createElement('div');
             const levelNum = i + 1;
-            const node = document.getElementById(`lvl-idx-${levelNum}`);
-            if (node) {
-                node.className = `lvl-node ${levelNum <= unlocked ? 'unlocked' : ''} ${levelNum === unlocked ? 'current' : ''}`;
-                node.onclick = levelNum <= unlocked ? () => openQuiz(i) : null;
-                if (levelNum === unlocked) node.id = "current-level-marker";
-            }
+            node.className = `lvl-node ${levelNum <= unlocked ? 'unlocked' : ''} ${levelNum === unlocked ? 'current' : ''}`;
+            node.innerText = levelNum;
+            node.onclick = levelNum <= unlocked ? () => openQuiz(i) : null;
+            cont.appendChild(node);
+            if (levelNum === unlocked) node.id = "current-level-marker";
         });
-        if (isFirstLoad) {
-            setTimeout(() => {
-                const currentMarker = document.getElementById('current-level-marker');
-                if (currentMarker) currentMarker.scrollIntoView({ behavior: 'smooth', block: 'center' });
-            }, 300);
-        }
+        if (isFirstLoad) setTimeout(() => document.getElementById('current-level-marker')?.scrollIntoView({ behavior: 'smooth', block: 'center' }), 300);
     }
 
     function openQuiz(idx) {
@@ -564,106 +338,77 @@
         gameState.activeIdx = idx;
         const q = gameState.questions[idx];
         document.getElementById('q-text').innerText = q.q;
-        const box = document.getElementById('ans-box');
-        box.innerHTML = '';
+        const box = document.getElementById('ans-box'); box.innerHTML = '';
         const usedKey = `${gameState.lang}_${gameState.currentCat}_${idx}`;
         document.getElementById('remove-two-btn').style.display = (gameState.score >= 50 && !gameState.usedRemove[usedKey]) ? 'block' : 'none';
-        const letters = ['a', 'b', 'c', 'd'];
-        q.opts.forEach((o, i) => {
-            const b = document.createElement('div');
-            b.className = 'ans-btn';
-            b.innerText = o;
-            b.onclick = () => checkAns(b, letters[i], q.a);
-            box.appendChild(b);
+        ['a','b','c','d'].forEach((l, i) => {
+            const b = document.createElement('div'); b.className = 'ans-btn'; b.innerText = q.opts[i];
+            b.onclick = () => checkAns(b, l, q.a); box.appendChild(b);
         });
         document.getElementById('quiz-ui').classList.add('show');
     }
 
-    function checkAns(btn, selectedLetter, correctLetter) {
-        const progKey = `${gameState.lang}_${gameState.currentCat}`;
-        if(selectedLetter.toLowerCase().trim() === correctLetter.toLowerCase().trim()) {
-            btn.classList.add('correct');
-            gameState.score += 10;
-            gameState.adCounter++;
-            
-            // إعلان الـ 20 سؤالاً
-            if(gameState.adCounter >= 20) {
-                gameState.adCounter = 0;
-                setTimeout(() => {
-                    document.getElementById('quiz-ui').classList.remove('show');
-                    showAdModal('milestone');
-                }, 800);
-            } else {
-                if(gameState.activeIdx + 1 === (gameState.progress[progKey] || 1)) {
-                    gameState.progress[progKey] = (gameState.progress[progKey] || 1) + 1;
-                }
-                setTimeout(() => { document.getElementById('quiz-ui').classList.remove('show'); renderMap(false); }, 800);
-            }
+    function checkAns(btn, sel, cor) {
+        if(sel.toLowerCase().trim() === cor.toLowerCase().trim()) {
+            btn.classList.add('correct'); gameState.score += 10; gameState.adCounter++;
+            const progKey = `${gameState.lang}_${gameState.currentCat}`;
+            if(gameState.activeIdx + 1 === (gameState.progress[progKey] || 1)) gameState.progress[progKey] = (gameState.progress[progKey] || 1) + 1;
+            setTimeout(() => { document.getElementById('quiz-ui').classList.remove('show'); renderMap(false); if(gameState.adCounter>=20){gameState.adCounter=0; showAdModal('milestone');} }, 800);
         } else {
-            btn.classList.add('wrong');
-            gameState.hearts--;
-            if(gameState.hearts <= 0) {
-                setTimeout(() => { document.getElementById('quiz-ui').classList.remove('show'); showAdModal('hearts'); }, 800);
-            }
+            btn.classList.add('wrong'); gameState.hearts--;
+            if(gameState.hearts <= 0) setTimeout(() => { document.getElementById('quiz-ui').classList.remove('show'); showAdModal('hearts'); }, 800);
         }
         save(); updateUI();
     }
 
     function useRemoveTwo() {
         const q = gameState.questions[gameState.activeIdx];
-        const letters = ['a', 'b', 'c', 'd'];
         const btns = Array.from(document.querySelectorAll('.ans-btn'));
-        let removedCount = 0;
-        for(let i=0; i<btns.length; i++) {
-            if(letters[i] !== q.a && removedCount < 2) {
-                btns[i].style.visibility = 'hidden';
-                removedCount++;
-            }
-        }
-        gameState.score -= 50;
-        gameState.usedRemove[`${gameState.lang}_${gameState.currentCat}_${gameState.activeIdx}`] = true;
-        document.getElementById('remove-two-btn').style.display = 'none';
-        save(); updateUI();
+        let removed = 0;
+        ['a','b','c','d'].forEach((l, i) => { if(l !== q.a && removed < 2) { btns[i].style.visibility = 'hidden'; removed++; } });
+        gameState.score -= 50; gameState.usedRemove[`${gameState.lang}_${gameState.currentCat}_${gameState.activeIdx}`] = true;
+        document.getElementById('remove-two-btn').style.display = 'none'; save(); updateUI();
     }
 
-    function showAdModal(type) { 
-        const t = document.getElementById('txt-no-hearts');
-        const d = document.getElementById('txt-ad-desc');
-        const conf = langConfig[gameState.lang];
-
-        if(type === 'milestone') {
-            t.innerText = gameState.lang === 'ar' ? "استراحة محارب!" : "Great Progress!";
-            d.innerText = gameState.lang === 'ar' ? "أجبت على 20 سؤالاً! شاهد إعلان للحصول على قلوب كاملة." : "20 questions done! Watch ad for full hearts.";
-        } else {
-            t.innerText = conf.noHearts;
-            d.innerText = conf.adDesc;
-        }
-        document.getElementById('ad-modal').style.display = 'flex'; 
+    function save() {
+        localStorage.setItem('iq_score', gameState.score); localStorage.setItem('iq_prog', JSON.stringify(gameState.progress));
+        localStorage.setItem('iq_hearts', gameState.hearts); localStorage.setItem('iq_muted', gameState.muted);
+        localStorage.setItem('iq_rem_used', JSON.stringify(gameState.usedRemove));
+        if(gameState.playerName) db.ref('leaderboard/' + gameState.playerName).set({ name: gameState.playerName, score: gameState.score });
     }
-    
-    function closeAdModal() { document.getElementById('ad-modal').style.display = 'none'; renderMap(); }
 
-    function startAd() {
-        let sec = 5;
-        const btn = document.getElementById('watch-ad-btn');
-        const tmr = document.getElementById('ad-timer');
-        btn.style.display = 'none';
-        tmr.style.display = 'block';
+    function updateUI() {
+        document.getElementById('score-val').innerText = gameState.score;
+        document.getElementById('hearts-val').innerText = gameState.hearts;
+        document.getElementById('mute-btn').innerText = gameState.muted ? '🔇' : '🔊';
+    }
+
+    function toggleMute() { gameState.muted = !gameState.muted; gameState.muted ? audioEl.pause() : audioEl.play(); save(); updateUI(); }
+    function showAdModal(type) { document.getElementById('ad-modal').style.display = 'flex'; }
+    function closeAdModal() { document.getElementById('ad-modal').style.display = 'none'; }
+    function triggerRewardedAd() {
+        let sec = 5; document.getElementById('watch-ad-btn').style.display = 'none'; document.getElementById('ad-timer').style.display = 'block';
         const inter = setInterval(() => {
-            tmr.innerText = sec;
-            sec--;
-            if(sec < 0) {
-                clearInterval(inter);
-                gameState.hearts = 8;
-                save(); updateUI();
-                closeAdModal();
-                btn.style.display = 'block';
-                tmr.style.display = 'none';
-            }
+            document.getElementById('ad-timer').innerText = sec; sec--;
+            if(sec < 0) { clearInterval(inter); gameState.hearts = 8; save(); updateUI(); closeAdModal(); document.getElementById('watch-ad-btn').style.display = 'block'; document.getElementById('ad-timer').style.display = 'none'; }
         }, 1000);
     }
-    
-    function triggerRewardedAd() { startAd(); }
+
+    function openLeaderboard() {
+        const list = document.getElementById('leaderboard-list'); list.innerHTML = '...';
+        db.ref('leaderboard').orderByChild('score').limitToLast(10).once('value', s => {
+            let b = []; s.forEach(c => { b.push(c.val()); }); b.reverse(); list.innerHTML = '';
+            b.forEach((e, i) => {
+                const item = document.createElement('div'); item.style = "display:flex; justify-content:space-between; padding:10px; border-bottom:1px solid #333";
+                item.innerHTML = `<span>${i+1}. ${e.name}</span><span style="color:var(--gold)">${e.score}</span>`;
+                list.appendChild(item);
+            });
+            document.getElementById('leaderboard-modal').style.display = 'flex';
+        });
+    }
+    function closeLeaderboard() { document.getElementById('leaderboard-modal').style.display = 'none'; }
+    function setLanguage(l) { gameState.lang = l; localStorage.setItem('iq_lang', l); applyLanguage(); }
+
     window.onload = init;
 </script>
 </body>
