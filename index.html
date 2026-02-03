@@ -78,14 +78,15 @@
         .icon-btn:active { transform: scale(0.9); }
 
         .recharge-btn {
-            background: var(--gold); color: black; border: none;
-            width: auto; padding: 0 12px; font-size: 0.8rem; font-weight: 900;
+            background: rgba(14, 165, 233, 0.2); border: 1px solid var(--blue);
+            color: white; width: auto; padding: 0 12px; font-size: 0.8rem; font-weight: 900;
             border-radius: 50px; height: 32px;
         }
 
         .exit-btn {
-            background: #ef4444; border: none; color: white;
-            font-weight: bold; border-radius: 10px;
+            background: var(--gold); border: none; color: black;
+            font-weight: 900; border-radius: 10px;
+            box-shadow: 0 0 10px rgba(255, 215, 0, 0.3);
         }
 
         /* باقي الستايلات الأساسية كما هي */
@@ -129,6 +130,7 @@
 
 <div id="top-bar" class="top-bar">
     <div class="top-right">
+        <button onclick="goBack()" class="icon-btn exit-btn">✕</button>
         <div class="player-badge">
             <div class="player-avatar" id="avatar-char">?</div>
             <span id="player-name-display" style="font-weight: bold; font-size: 0.8rem;">...</span>
@@ -145,7 +147,6 @@
     <div class="top-left">
         <button onclick="showAdModal('manual')" class="recharge-btn" id="txt-recharge">📺 شحن</button>
         <button id="mute-btn" class="icon-btn">🔊</button>
-        <button onclick="goBack()" class="icon-btn exit-btn">✕</button>
     </div>
 </div>
 
@@ -242,7 +243,7 @@
     const langConfig = {
         ar: { dir: "rtl", font: "'Cairo', sans-serif", logo: "IQ ثقافة", start: "استمرار", select: "اختر التصنيف", recharge: "📺 شحن", noHearts: "انتهت القلوب!", adDesc: "شاهد إعلان للحصول على قلوب كاملة.", later: "ربما لاحقاً", removeBtn: "حذف خيارين (50 نقطة)", factLoading: "جاري التحميل...", leaderboardBtn: "🏆 قائمة المتصدرين العالمية", leaderboardTitle: "أفضل 10 لاعبين في العالم", close: "إغلاق", factsGid: "605574246", cats: [{ name: "⏳ التاريخ", gid: "11216236", key: "history" }, { name: "🌍 الجغرافيا", gid: "99625756", key: "geo" }, { name: "🧬 العلوم", gid: "1843208636", key: "science" }, { name: "💡 ثقافة عامة", gid: "564130158", key: "general" }, { name: "⚽ الرياضة", gid: "0", key: "sports" }] },
         en: { dir: "ltr", font: "'Poppins', sans-serif", logo: "IQ Culture", start: "Continue", select: "Select Category", recharge: "📺 Refill", noHearts: "No Hearts!", adDesc: "Watch ad to get full hearts.", later: "Maybe later", removeBtn: "Remove 2 (50 pts)", factLoading: "Loading fact...", leaderboardBtn: "🏆 Global Leaderboard", leaderboardTitle: "Top 10 Players in the World", close: "Close", factsGid: "259198059", cats: [{ name: "⏳ History", gid: "1950805065", key: "history" }, { name: "🌍 Geography", gid: "1899297807", key: "geo" }, { name: "🧬 Science", gid: "407039200", key: "science" }, { name: "💡 General", gid: "1044248022", key: "general" }, { name: "⚽ Sports", gid: "1559005659", key: "sports" }] },
-        es: { dir: "ltr", font: "'Poppins', sans-serif", logo: "IQ Cultura", start: "Continuar", select: "Seleccionar Categoría", recharge: "📺 Recargar", noHearts: "¡Sin Corazones!", adDesc: "Mira un anuncio para obtener corazones.", later: "Más tarde", removeBtn: "Eliminar 2 (50 pts)", factLoading: "Cargando...", leaderboardBtn: "🏆 Tabla de Líderes", leaderboardTitle: "Los 10 mejores jugadores", close: "Cerrar", factsGid: "1911794502", cats: [{ name: "⏳ Historia", gid: "948777647", key: "history" }, { name: "🌍 Geografía", gid: "1233201488", key: "geo" }, { name: "🧬 Ciencia", gid: "2028449800", key: "science" }, { name: "💡 Cultura General", gid: "1662832315", key: "general" }, { name: "⚽ Deportes", gid: "1795176380", key: "sports" }] },
+        es: { dir: "ltr", font: "'Poppins', sans-serif", logo: "IQ Cultura", start: "Continuar", select: "Seleccionar Categoría", recharge: "📺 Recargar", noHearts: "¡Sin Corازones!", adDesc: "Mira un anuncio para obtener corazones.", later: "Más tarde", removeBtn: "Eliminar 2 (50 pts)", factLoading: "Cargando...", leaderboardBtn: "🏆 Tabla de Líderes", leaderboardTitle: "Los 10 mejores jugadores", close: "Cerrar", factsGid: "1911794502", cats: [{ name: "⏳ Historia", gid: "948777647", key: "history" }, { name: "🌍 Geografía", gid: "1233201488", key: "geo" }, { name: "🧬 Ciencia", gid: "2028449800", key: "science" }, { name: "💡 Cultura General", gid: "1662832315", key: "general" }, { name: "⚽ Deportes", gid: "1795176380", key: "sports" }] },
         fr: { dir: "ltr", font: "'Poppins', sans-serif", logo: "QI Culture", start: "Continuer", select: "Choisir la Catégorie", recharge: "📺 Recharge", noHearts: "Plus de cœurs !", adDesc: "Regardez une pub pour des cœurs.", later: "Plus tard", removeBtn: "Supprimer 2 (50 pts)", factLoading: "Chargement...", leaderboardBtn: "🏆 Classement Mondial", leaderboardTitle: "Top 10 des meilleurs joueurs", close: "Fermer", factsGid: "1356278776", cats: [{ name: "⏳ Histoire", gid: "1692460075", key: "histoire" }, { name: "🌍 Géographie", gid: "1888258036", key: "geo" }, { name: "🧬 Sciences", gid: "1043839601", key: "science" }, { name: "💡 Culture Générale", gid: "1000789609", key: "general" }, { name: "⚽ Sports", gid: "942675202", key: "sports" }] }
     };
 
