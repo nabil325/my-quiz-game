@@ -33,143 +33,84 @@
             z-index: 1;
         }
 
-        .name-input-screen {
-            position: fixed; inset: 0; background: var(--dark-glass);
-            backdrop-filter: blur(15px); z-index: 5000;
-            display: none; align-items: center; justify-content: center;
+        /* شريط الأدوات العلوي المطور */
+        .top-bar {
+            position: fixed; top: 0; width: 100%; padding: 12px 15px;
+            display: none; justify-content: space-between; align-items: center; z-index: 1000;
+            background: rgba(0,0,0,0.7); backdrop-filter: blur(15px);
+            box-sizing: border-box; border-bottom: 1px solid rgba(255,215,0,0.3);
         }
-        .name-box {
-            background: #111; padding: 40px 30px; border-radius: 30px;
-            border: 2px solid var(--gold); text-align: center; width: 85%; max-width: 400px;
-        }
-        .name-box input {
-            width: 100%; padding: 15px; border-radius: 15px; border: 1px solid #333;
-            margin: 20px 0; font-size: 1.2rem; text-align: center; background: #222; color: white;
-            box-sizing: border-box; font-family: 'Cairo';
-        }
+
+        .top-left { display: flex; align-items: center; gap: 10px; }
+        .top-right { display: flex; align-items: center; gap: 8px; }
 
         .player-badge {
             display: flex; align-items: center; gap: 8px;
-            background: rgba(255,255,255,0.1); padding: 5px 12px;
-            border-radius: 50px; border: 1px solid var(--gold);
-            margin-left: 10px;
+            background: rgba(255,255,255,0.08); padding: 4px 10px;
+            border-radius: 50px; border: 1px solid rgba(255,255,255,0.1);
         }
         .player-avatar {
-            width: 28px; height: 28px; background: var(--gold);
+            width: 26px; height: 26px; background: var(--gold);
             border-radius: 50%; display: flex; align-items: center; justify-content: center;
-            color: black; font-weight: 900; font-size: 0.8rem;
+            color: black; font-weight: 900; font-size: 0.75rem;
         }
 
-        .top-bar {
-            position: fixed; top: 0; width: 100%; padding: 10px 15px;
-            display: none; justify-content: space-between; align-items: center; z-index: 1000;
-            background: rgba(0,0,0,0.6); backdrop-filter: blur(10px);
-            box-sizing: border-box; border-bottom: 1px solid rgba(255,255,255,0.1);
+        .hearts-display {
+            display: flex; align-items: center; gap: 5px;
+            background: rgba(255, 77, 77, 0.15);
+            padding: 4px 12px; border-radius: 50px;
+            border: 1px solid rgba(255, 77, 77, 0.3);
         }
-
-        .top-left, .top-right { display: flex; gap: 12px; align-items: center; }
+        .hearts-txt { font-weight: 900; color: #ff4d4d; display: flex; align-items: center; gap: 4px; }
 
         .icon-btn {
-            background: rgba(255,255,255,0.05);
-            border: 1px solid rgba(255,255,255,0.1);
-            padding: 8px 12px; border-radius: 12px; cursor: pointer; 
-            font-weight: 700; color: white; transition: 0.2s;
-        }
-
-        .back-btn { background: var(--gold); color: black; border: none; box-shadow: 0 0 10px var(--gold); }
-
-        .screen {
-            position: relative; z-index: 10; height: 100vh;
-            display: none; flex-direction: column; align-items: center; justify-content: center;
-            text-align: center; padding: 20px; box-sizing: border-box;
-        }
-        .active { display: flex; }
-
-        .fact-container {
-            background: var(--glass); 
-            padding: 25px; 
-            border-radius: 25px; 
-            margin: 20px; 
-            max-width: 400px; 
-            max-height: 180px;
-            overflow-y: auto;
-            border: 1px solid rgba(255,255,255,0.1);
-        }
-
-        .gold-btn {
-            background: var(--gold); color: black; border: none; padding: 20px 100px;
-            border-radius: 60px; font-size: 1.4rem; font-weight: 900; cursor: pointer;
-            transition: 0.3s; box-shadow: 0 0 20px rgba(255, 215, 0, 0.3);
-            animation: btnPulse 2s infinite;
-        }
-        @keyframes btnPulse {
-            0% { transform: scale(1); }
-            50% { transform: scale(1.05); }
-            100% { transform: scale(1); }
-        }
-
-        .lang-toggle-container { margin-bottom: 25px; display: flex; justify-content: center; flex-wrap: wrap; gap: 10px; }
-        .lang-btn {
-            background: var(--glass); border: 1px solid rgba(255,255,255,0.2);
-            color: white; padding: 10px 15px; border-radius: 15px; cursor: pointer; font-weight: 900;
-        }
-        .lang-btn.active-lang { background: var(--blue); border-color: var(--blue); }
-
-        .cat-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; width: 100%; max-width: 450px; }
-        .cat-btn {
-            background: var(--glass); backdrop-filter: blur(15px);
-            padding: 25px 10px; border-radius: 20px; border: 1px solid rgba(255,255,255,0.1);
-            cursor: pointer; font-weight: 900; transition: 0.3s; color: white; font-size: 1.1rem;
-        }
-
-        .map-view { 
-            width: 100%; overflow-y: auto; padding: 120px 0; 
-            display: flex; flex-direction: column-reverse; align-items: center; gap: 35px; 
-        }
-        .lvl-node {
-            width: 75px; height: 75px; border-radius: 50%;
-            background: rgba(0,0,0,0.7); border: 4px solid #444;
+            background: var(--glass); border: 1px solid rgba(255,255,255,0.1);
+            width: 38px; height: 38px; border-radius: 10px; cursor: pointer; 
             display: flex; align-items: center; justify-content: center;
-            font-size: 1.6rem; font-weight: 900; cursor: pointer; transition: 0.4s; color: white;
+            color: white; transition: 0.2s; font-size: 1.1rem;
         }
+        .icon-btn:active { transform: scale(0.9); }
+
+        .recharge-btn {
+            background: rgba(14, 165, 233, 0.2); border-color: var(--blue);
+            width: auto; padding: 0 12px; font-size: 0.85rem; font-weight: bold;
+        }
+
+        .exit-btn {
+            background: #ef4444; border: none; color: white;
+            box-shadow: 0 0 10px rgba(239, 68, 68, 0.4);
+        }
+
+        /* باقي الستايلات الأساسية */
+        .name-input-screen { position: fixed; inset: 0; background: var(--dark-glass); backdrop-filter: blur(15px); z-index: 5000; display: none; align-items: center; justify-content: center; }
+        .name-box { background: #111; padding: 40px 30px; border-radius: 30px; border: 2px solid var(--gold); text-align: center; width: 85%; max-width: 400px; }
+        .name-box input { width: 100%; padding: 15px; border-radius: 15px; border: 1px solid #333; margin: 20px 0; font-size: 1.2rem; text-align: center; background: #222; color: white; box-sizing: border-box; font-family: 'Cairo'; }
+        .screen { position: relative; z-index: 10; height: 100vh; display: none; flex-direction: column; align-items: center; justify-content: center; text-align: center; padding: 20px; box-sizing: border-box; }
+        .active { display: flex; }
+        .fact-container { background: var(--glass); padding: 25px; border-radius: 25px; margin: 20px; max-width: 400px; max-height: 180px; overflow-y: auto; border: 1px solid rgba(255,255,255,0.1); }
+        .gold-btn { background: var(--gold); color: black; border: none; padding: 20px 100px; border-radius: 60px; font-size: 1.4rem; font-weight: 900; cursor: pointer; transition: 0.3s; box-shadow: 0 0 20px rgba(255, 215, 0, 0.3); animation: btnPulse 2s infinite; }
+        @keyframes btnPulse { 0% { transform: scale(1); } 50% { transform: scale(1.05); } 100% { transform: scale(1); } }
+        .lang-toggle-container { margin-bottom: 25px; display: flex; justify-content: center; flex-wrap: wrap; gap: 10px; }
+        .lang-btn { background: var(--glass); border: 1px solid rgba(255,255,255,0.2); color: white; padding: 10px 15px; border-radius: 15px; cursor: pointer; font-weight: 900; }
+        .lang-btn.active-lang { background: var(--blue); border-color: var(--blue); }
+        .cat-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; width: 100%; max-width: 450px; }
+        .cat-btn { background: var(--glass); backdrop-filter: blur(15px); padding: 25px 10px; border-radius: 20px; border: 1px solid rgba(255,255,255,0.1); cursor: pointer; font-weight: 900; transition: 0.3s; color: white; font-size: 1.1rem; }
+        .map-view { width: 100%; overflow-y: auto; padding: 120px 0; display: flex; flex-direction: column-reverse; align-items: center; gap: 35px; }
+        .lvl-node { width: 75px; height: 75px; border-radius: 50%; background: rgba(0,0,0,0.7); border: 4px solid #444; display: flex; align-items: center; justify-content: center; font-size: 1.6rem; font-weight: 900; cursor: pointer; transition: 0.4s; color: white; }
         .unlocked { border-color: var(--blue); background: rgba(14, 165, 233, 0.3); }
         .current { border-color: var(--gold); background: var(--gold); color: black; animation: pulse 2s infinite; }
-
         @keyframes pulse { 0%, 100% { transform: scale(1); } 50% { transform: scale(1.1); } }
-
-        .quiz-container {
-            position: fixed; bottom: -100%; left: 0; width: 100%;
-            background: rgba(15, 15, 15, 0.98); backdrop-filter: blur(30px);
-            border-radius: 35px 35px 0 0; border-top: 3px solid var(--gold);
-            padding: 30px 20px; box-sizing: border-box; z-index: 2000;
-            transition: 0.6s cubic-bezier(0.19, 1, 0.22, 1);
-            max-height: 75vh; overflow-y: auto;
-        }
+        .quiz-container { position: fixed; bottom: -100%; left: 0; width: 100%; background: rgba(15, 15, 15, 0.98); backdrop-filter: blur(30px); border-radius: 35px 35px 0 0; border-top: 3px solid var(--gold); padding: 30px 20px; box-sizing: border-box; z-index: 2000; transition: 0.6s cubic-bezier(0.19, 1, 0.22, 1); max-height: 75vh; overflow-y: auto; }
         .quiz-container.show { bottom: 0; }
-
         .ans-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-top: 25px; }
-        .ans-btn { 
-            background: rgba(255,255,255,0.07); padding: 18px; border-radius: 15px; 
-            cursor: pointer; border: 1px solid rgba(255,255,255,0.1); 
-            font-weight: bold; text-align: center; color: white;
-        }
+        .ans-btn { background: rgba(255,255,255,0.07); padding: 18px; border-radius: 15px; cursor: pointer; border: 1px solid rgba(255,255,255,0.1); font-weight: bold; text-align: center; color: white; }
         .ans-btn.wrong { background: #ef4444 !important; }
         .ans-btn.correct { background: #10b981 !important; }
-
-        .leaderboard-modal {
-            position: fixed; inset: 0; display: none; align-items: center; justify-content: center;
-            background: rgba(0,0,0,0.9); z-index: 6000;
-        }
+        .leaderboard-modal { position: fixed; inset: 0; display: none; align-items: center; justify-content: center; background: rgba(0,0,0,0.9); z-index: 6000; }
         .leaderboard-box { background: #111; padding: 25px; border-radius: 25px; width: 90%; max-width: 400px; border: 1px solid var(--gold); }
         .leader-item { display: flex; justify-content: space-between; align-items: center; padding: 10px; border-bottom: 1px solid #333; }
-
-        .ad-modal {
-            position: fixed; inset: 0; display: none; align-items: center; justify-content: center;
-            background: rgba(0,0,0,0.9); z-index: 4000;
-        }
+        .ad-modal { position: fixed; inset: 0; display: none; align-items: center; justify-content: center; background: rgba(0,0,0,0.9); z-index: 4000; }
         .ad-box { background: #222; padding: 35px; border-radius: 25px; width: 85%; max-width: 400px; text-align: center; border: 2px solid var(--gold); }
-        .hearts-txt { display: inline-flex; gap: 6px; align-items: center; font-weight: 900; color: #ff4d4d; }
-        
         .glass-btn { background: rgba(255,255,255,0.1); border: 1px solid rgba(255,255,255,0.2); color: white; padding: 12px 25px; border-radius: 15px; cursor: pointer; }
         #regen-timer { font-size: 0.7rem; color: #ccc; margin-left: 5px; font-weight: normal; }
     </style>
@@ -179,28 +120,32 @@
 <audio id="bg-audio" src="./jazz-music-466491.mp3" loop></audio>
 <div class="overlay"></div>
 
+<div id="top-bar" class="top-bar">
+    <div class="top-left">
+        <div class="player-badge">
+            <div class="player-avatar" id="avatar-char">?</div>
+            <span id="player-name-display" style="font-weight: bold; font-size: 0.8rem;">...</span>
+        </div>
+        <div style="font-weight: 900; color: var(--gold); font-size: 0.9rem;">🏆 <span id="score-val">0</span></div>
+        <div class="hearts-display">
+            <div class="hearts-txt">❤️ <span id="hearts-val">5</span></div>
+            <span id="regen-timer"></span>
+        </div>
+    </div>
+    <div class="top-right">
+        <button onclick="showAdModal('manual')" class="icon-btn recharge-btn" id="txt-recharge">📺 شحن</button>
+        <button onclick="save()" class="icon-btn" title="حفظ">💾</button>
+        <button id="mute-btn" class="icon-btn">🔊</button>
+        <button onclick="goBack()" class="icon-btn exit-btn">✕</button>
+    </div>
+</div>
+
 <div id="name-screen" class="name-input-screen">
     <div class="name-box">
         <h2 style="color: var(--gold); margin-top: 0;">مرحباً بك!</h2>
         <p>أدخل اسمك لتبدأ رحلة الثقافة وتنافس في الترتيب العالمي</p>
         <input type="text" id="player-name-input" placeholder="اكتب اسمك هنا..." maxlength="15">
         <button onclick="submitName()" class="gold-btn" style="padding: 15px 50px;">ابدأ الآن</button>
-    </div>
-</div>
-
-<div id="top-bar" class="top-bar">
-    <div class="top-left">
-        <div class="player-badge">
-            <div class="player-avatar" id="avatar-char">?</div>
-            <span id="player-name-display" style="font-weight: bold; font-size: 0.9rem;">...</span>
-        </div>
-        <div>🏆 <span id="score-val">0</span></div>
-        <div class="hearts-txt">❤️ <span id="hearts-val">5</span><span id="regen-timer"></span></div>
-    </div>
-    <div class="top-right">
-        <button onclick="showAdModal('manual')" class="icon-btn" id="txt-recharge">📺 شحن</button>
-        <button id="mute-btn" class="icon-btn">🔊</button>
-        <button onclick="goBack()" class="icon-btn back-btn">➔</button>
     </div>
 </div>
 
@@ -392,6 +337,8 @@
         localStorage.setItem('iq_hearts', gameState.hearts); localStorage.setItem('iq_last_heart_time', gameState.lastHeartTime);
         localStorage.setItem('iq_muted', gameState.muted); localStorage.setItem('iq_rem_used', JSON.stringify(gameState.usedRemove));
         if(gameState.playerName) db.ref('leaderboard/' + gameState.playerName).set({ name: gameState.playerName, score: gameState.score });
+        // تنبيه بسيط عند الحفظ
+        console.log("Data Saved Successfully");
     }
 
     function updateUI() {
