@@ -22,7 +22,8 @@
             margin: 0; padding: 0; height: 100%; width: 100%;
             font-family: 'Cairo', sans-serif; color: white;
             overflow: hidden;
-            background: #1a1a1a url('Warface Wallpaper.jpeg') no-repeat center center;
+            /* تم تحديث الخلفية هنا لتتناسب مع الصورة الجديدة */
+            background: #1a1a1a url('athena.jpg') no-repeat center center;
             background-size: cover;
             background-attachment: fixed;
         }
@@ -78,7 +79,7 @@
 
         /* زر الخروج السهمي المنفصل */
         .exit-arrow-btn {
-            position: fixed; top: 70px; right: 15px; /* يبتعد عن الشريط العلوي بسنتيمترات */
+            position: fixed; top: 70px; right: 15px; 
             background: var(--gold); color: black; border: none;
             width: 45px; height: 45px; border-radius: 12px;
             font-size: 1.5rem; font-weight: 900; cursor: pointer;
@@ -93,7 +94,6 @@
             color: white; transition: 0.2s; font-size: 1rem;
         }
 
-        /* باقي الستايلات الأساسية */
         .name-input-screen { position: fixed; inset: 0; background: var(--dark-glass); backdrop-filter: blur(15px); z-index: 5000; display: none; align-items: center; justify-content: center; }
         .name-box { background: #111; padding: 40px 30px; border-radius: 30px; border: 2px solid var(--gold); text-align: center; width: 85%; max-width: 400px; }
         .name-box input { width: 100%; padding: 15px; border-radius: 15px; border: 1px solid #333; margin: 20px 0; font-size: 1.2rem; text-align: center; background: #222; color: white; box-sizing: border-box; font-family: 'Cairo'; }
@@ -126,37 +126,19 @@
         .glass-btn { background: rgba(255,255,255,0.1); border: 1px solid rgba(255,255,255,0.2); color: white; padding: 12px 25px; border-radius: 15px; cursor: pointer; }
         #regen-timer { font-size: 0.65rem; color: #ddd; margin-right: 3px; font-weight: normal; }
 
-        /* ستايل اسم اللعبة المطور */
-        .logo-wrapper {
-            margin-bottom: 30px;
-            perspective: 1000px;
-        }
+        .logo-wrapper { margin-bottom: 30px; perspective: 1000px; }
         .main-logo-styled {
-            font-size: 4.5rem;
-            font-weight: 900;
-            margin: 0;
-            letter-spacing: -2px;
+            font-size: 4.5rem; font-weight: 900; margin: 0; letter-spacing: -2px;
             background: linear-gradient(180deg, #fff 30%, var(--gold) 100%);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
+            -webkit-background-clip: text; -webkit-text-fill-color: transparent;
             filter: drop-shadow(0 10px 15px rgba(0,0,0,0.5));
-            animation: logoFloat 3s ease-in-out infinite;
-            display: inline-block;
+            animation: logoFloat 3s ease-in-out infinite; display: inline-block;
         }
         @keyframes logoFloat {
             0%, 100% { transform: translateY(0) rotateX(0); filter: drop-shadow(0 10px 15px rgba(0,0,0,0.5)) brightness(1); }
             50% { transform: translateY(-10px) rotateX(5deg); filter: drop-shadow(0 20px 25px rgba(255,215,0,0.3)) brightness(1.2); }
         }
-        .logo-subtitle {
-            display: block;
-            font-size: 0.9rem;
-            color: var(--gold);
-            letter-spacing: 5px;
-            margin-top: -10px;
-            font-weight: 700;
-            opacity: 0.8;
-            text-transform: uppercase;
-        }
+        .logo-subtitle { display: block; font-size: 0.9rem; color: var(--gold); letter-spacing: 5px; margin-top: -10px; font-weight: 700; opacity: 0.8; text-transform: uppercase; }
     </style>
 </head>
 <body>
@@ -203,7 +185,7 @@
 <div id="scr-start" class="screen active">
     <div class="logo-wrapper">
         <h1 id="main-logo" class="main-logo-styled">IQ ثقافة</h1>
-        <span class="logo-subtitle">GLOBAL EDITION</span>
+        <span id="main-subtitle" class="logo-subtitle">GLOBAL EDITION</span>
     </div>
     
     <div class="fact-container"><p id="fact-txt" style="font-size: 1.1rem; line-height: 1.6;">...</p></div>
@@ -286,10 +268,10 @@
     }
 
     const langConfig = {
-        ar: { dir: "rtl", font: "'Cairo', sans-serif", logo: "IQ ثقافة", start: "استمرار", select: "اختر التصنيف", recharge: "+", noHearts: "انتهت القلوب!", adDesc: "شاهد إعلان للحصول على قلوب كاملة.", later: "ربما لاحقاً", removeBtn: "حذف خيارين (50 نقطة)", factLoading: "جاري التحميل...", leaderboardBtn: "🏆 قائمة المتصدرين العالمية", leaderboardTitle: "أفضل 10 لاعبين في العالم", close: "إغلاق", factsGid: "605574246", cats: [{ name: "⏳ التاريخ", gid: "11216236", key: "history" }, { name: "🌍 الجغرافيا", gid: "99625756", key: "geo" }, { name: "🧬 العلوم", gid: "1843208636", key: "science" }, { name: "💡 ثقافة عامة", gid: "564130158", key: "general" }, { name: "⚽ الرياضة", gid: "0", key: "sports" }] },
-        en: { dir: "ltr", font: "'Poppins', sans-serif", logo: "IQ Culture", start: "Continue", select: "Select Category", recharge: "+", noHearts: "No Hearts!", adDesc: "Watch ad to get full hearts.", later: "Maybe later", removeBtn: "Remove 2 (50 pts)", factLoading: "Loading fact...", leaderboardBtn: "🏆 Global Leaderboard", leaderboardTitle: "Top 10 Players in the World", close: "Close", factsGid: "259198059", cats: [{ name: "⏳ History", gid: "1950805065", key: "history" }, { name: "🌍 Geography", gid: "1899297807", key: "geo" }, { name: "🧬 Science", gid: "407039200", key: "science" }, { name: "💡 General", gid: "1044248022", key: "general" }, { name: "⚽ Sports", gid: "1559005659", key: "sports" }] },
-        es: { dir: "ltr", font: "'Poppins', sans-serif", logo: "IQ Cultura", start: "Continuar", select: "Seleccionar Categoría", recharge: "+", noHearts: "¡Sin Corazones!", adDesc: "Mira un anuncio para obtener corazones.", later: "Más tarde", removeBtn: "Eliminar 2 (50 pts)", factLoading: "Cargando...", leaderboardBtn: "🏆 Tabla de Líderes", leaderboardTitle: "Los 10 mejores jugadores", close: "Cerrار", factsGid: "1911794502", cats: [{ name: "⏳ Historia", gid: "948777647", key: "history" }, { name: "🌍 Geografía", gid: "1233201488", key: "geo" }, { name: "🧬 Ciencia", gid: "2028449800", key: "science" }, { name: "💡 Cultura General", gid: "1662832315", key: "general" }, { name: "⚽ Deportes", gid: "1795176380", key: "sports" }] },
-        fr: { dir: "ltr", font: "'Poppins', sans-serif", logo: "QI Culture", start: "Continuer", select: "Choisir la Catégorie", recharge: "+", noHearts: "Plus de cœurs !", adDesc: "Regardez une pub pour des cœurs.", later: "Plus tard", removeBtn: "Supprimer 2 (50 pts)", factLoading: "Chargement...", leaderboardBtn: "🏆 Classement Mondial", leaderboardTitle: "Top 10 des meilleurs joueurs", close: "Fermer", factsGid: "1356278776", cats: [{ name: "⏳ Histoire", gid: "1692460075", key: "histoire" }, { name: "🌍 Géographie", gid: "1888258036", key: "geo" }, { name: "🧬 Sciences", gid: "1043839601", key: "science" }, { name: "💡 Culture Générale", gid: "1000789609", key: "general" }, { name: "⚽ Sports", gid: "942675202", key: "sports" }] }
+        ar: { dir: "rtl", font: "'Cairo', sans-serif", logo: "IQ ثقافة", subtitle: "النسخة العالمية", start: "استمرار", select: "اختر التصنيف", recharge: "+", noHearts: "انتهت القلوب!", adDesc: "شاهد إعلان للحصول على قلوب كاملة.", later: "ربما لاحقاً", removeBtn: "حذف خيارين (50 نقطة)", factLoading: "جاري التحميل...", leaderboardBtn: "🏆 قائمة المتصدرين العالمية", leaderboardTitle: "أفضل 10 لاعبين في العالم", close: "إغلاق", factsGid: "605574246", cats: [{ name: "⏳ التاريخ", gid: "11216236", key: "history" }, { name: "🌍 الجغرافيا", gid: "99625756", key: "geo" }, { name: "🧬 العلوم", gid: "1843208636", key: "science" }, { name: "💡 ثقافة عامة", gid: "564130158", key: "general" }, { name: "⚽ الرياضة", gid: "0", key: "sports" }] },
+        en: { dir: "ltr", font: "'Poppins', sans-serif", logo: "IQ Culture", subtitle: "GLOBAL EDITION", start: "Continue", select: "Select Category", recharge: "+", noHearts: "No Hearts!", adDesc: "Watch ad to get full hearts.", later: "Maybe later", removeBtn: "Remove 2 (50 pts)", factLoading: "Loading fact...", leaderboardBtn: "🏆 Global Leaderboard", leaderboardTitle: "Top 10 Players in the World", close: "Close", factsGid: "259198059", cats: [{ name: "⏳ History", gid: "1950805065", key: "history" }, { name: "🌍 Geography", gid: "1899297807", key: "geo" }, { name: "🧬 Science", gid: "407039200", key: "science" }, { name: "💡 General", gid: "1044248022", key: "general" }, { name: "⚽ Sports", gid: "1559005659", key: "sports" }] },
+        es: { dir: "ltr", font: "'Poppins', sans-serif", logo: "IQ Cultura", subtitle: "EDICIÓN GLOBAL", start: "Continuar", select: "Seleccionar Categoría", recharge: "+", noHearts: "¡Sin Corazones!", adDesc: "Mira un anuncio para obtener corazones.", later: "Más tarde", removeBtn: "Eliminar 2 (50 pts)", factLoading: "Cargando...", leaderboardBtn: "🏆 Tabla de Líderes", leaderboardTitle: "Los 10 mejores jugadores", close: "Cerrar", factsGid: "1911794502", cats: [{ name: "⏳ Historia", gid: "948777647", key: "history" }, { name: "🌍 Geografía", gid: "1233201488", key: "geo" }, { name: "🧬 Ciencia", gid: "2028449800", key: "science" }, { name: "💡 Cultura General", gid: "1662832315", key: "general" }, { name: "⚽ Deportes", gid: "1795176380", key: "sports" }] },
+        fr: { dir: "ltr", font: "'Poppins', sans-serif", logo: "QI Culture", subtitle: "ÉDITION GLOBALE", start: "Continuer", select: "Choisir la Catégorie", recharge: "+", noHearts: "Plus de cœurs !", adDesc: "Regardez une pub pour des cœurs.", later: "Plus tard", removeBtn: "Supprimer 2 (50 pts)", factLoading: "Chargement...", leaderboardBtn: "🏆 Classement Mondial", leaderboardTitle: "Top 10 des meilleurs joueurs", close: "Fermer", factsGid: "1356278776", cats: [{ name: "⏳ Histoire", gid: "1692460075", key: "histoire" }, { name: "🌍 Géographie", gid: "1888258036", key: "geo" }, { name: "🧬 Sciences", gid: "1043839601", key: "science" }, { name: "💡 Culture Générale", gid: "1000789609", key: "general" }, { name: "⚽ Sports", gid: "942675202", key: "sports" }] }
     };
 
     const audioEl = document.getElementById('bg-audio');
@@ -355,7 +337,9 @@
     function applyLanguage() {
         const conf = langConfig[gameState.lang];
         document.documentElement.dir = conf.dir; document.documentElement.lang = gameState.lang;
-        document.body.style.fontFamily = conf.font; document.getElementById('main-logo').innerText = conf.logo;
+        document.body.style.fontFamily = conf.font; 
+        document.getElementById('main-logo').innerText = conf.logo;
+        document.getElementById('main-subtitle').innerText = conf.subtitle;
         document.getElementById('btn-start').innerText = conf.start; document.getElementById('txt-select-cat').innerText = conf.select;
         document.getElementById('txt-no-hearts').innerText = conf.noHearts;
         document.getElementById('txt-ad-desc').innerText = conf.adDesc; document.getElementById('txt-later').innerText = conf.later;
