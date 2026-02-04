@@ -14,10 +14,9 @@
         :root {
             --gold: #ffd700;
             --blue: #0ea5e9;
-            --glass: rgba(255, 255, 255, 0.1);
-            --dark-glass: rgba(0, 0, 0, 0.75);
+            --glass: rgba(0, 0, 0, 0.5); /* زجاج داكن قليلاً لبروز النص */
+            --dark-glass: rgba(0, 0, 0, 0.85);
             --text-shadow: 2px 2px 10px rgba(0, 0, 0, 0.9);
-            --blur-effect: blur(12px);
         }
 
         body, html {
@@ -25,156 +24,113 @@
             font-family: 'Cairo', sans-serif; color: white;
             overflow: hidden;
             background: #000 url('athena.jpg') no-repeat center center;
-            background-size: cover;
+            background-size: cover; 
             background-attachment: fixed;
         }
 
         .overlay {
             position: fixed; 
             inset: 0;
-            background: linear-gradient(to bottom, rgba(0,0,0,0.3) 0%, rgba(0,0,0,0.1) 50%, rgba(0,0,0,0.7) 100%);
+            background: linear-gradient(to bottom, rgba(0,0,0,0.5) 0%, rgba(0,0,0,0.2) 50%, rgba(0,0,0,0.6) 100%);
+            backdrop-filter: blur(1px);
+            -webkit-backdrop-filter: blur(1px);
             z-index: 1;
         }
 
-        /* --- تعديل الشريط العلوي الاحترافي --- */
+        /* --- تعديل الشريط العلوي ليكون شفافاً --- */
         .top-bar {
-            position: fixed; 
-            top: 0; 
-            width: 100%; 
-            padding: 15px 20px;
-            display: none; 
-            justify-content: space-between; 
-            align-items: center; 
-            z-index: 1000;
-            /* تأثير الزجاج الشفاف */
-            background: rgba(0, 0, 0, 0.2); 
-            backdrop-filter: var(--blur-effect);
-            -webkit-backdrop-filter: var(--blur-effect);
+            position: fixed; top: 0; width: 100%; padding: 10px 15px;
+            display: none; justify-content: space-between; align-items: center; z-index: 1000;
+            background: transparent; /* إزالة الخلفية السوداء */
+            backdrop-filter: none; /* إزالة التغبيش */
             box-sizing: border-box; 
-            /* حدود خفيفة جداً لإعطاء ملمس زجاجي */
-            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+            border-bottom: 1px solid rgba(255,215,0,0.1); /* خط سفلي خفيف جداً */
         }
 
-        .top-right, .top-left { display: flex; align-items: center; gap: 10px; }
+        .top-right, .top-left { display: flex; align-items: center; gap: 8px; }
 
+        /* --- جعل حاويات الأيقونات والقلوب شفافة --- */
         .player-badge {
-            display: flex; align-items: center; gap: 8px;
-            background: rgba(255, 255, 255, 0.1); 
-            padding: 5px 12px;
-            border-radius: 50px; 
-            border: 1px solid rgba(255, 255, 255, 0.1);
+            display: flex; align-items: center; gap: 6px;
+            background: transparent; /* شفاف */
+            padding: 4px 10px;
+            border-radius: 50px; border: 1px solid rgba(255,215,0,0.3);
         }
         
         .player-avatar {
-            width: 28px; height: 28px; background: var(--gold);
+            width: 24px; height: 24px; background: var(--gold);
             border-radius: 50%; display: flex; align-items: center; justify-content: center;
-            color: black; font-weight: 900; font-size: 0.8rem;
-            box-shadow: 0 0 10px rgba(255, 215, 0, 0.4);
+            color: black; font-weight: 900; font-size: 0.7rem;
         }
 
         .hearts-group {
             display: flex; align-items: center; gap: 2px;
-            background: rgba(255, 77, 77, 0.15);
-            border: 1px solid rgba(255, 77, 77, 0.3);
-            padding: 3px 6px; border-radius: 50px;
+            background: transparent; /* شفاف */
+            border: 1px solid rgba(255, 77, 77, 0.4);
+            padding: 2px 4px; border-radius: 50px;
         }
 
         .stat-badge {
-            display: flex; align-items: center; gap: 5px;
-            font-size: 0.9rem; font-weight: 900;
+            display: flex; align-items: center; gap: 4px;
+            padding: 4px 8px; border-radius: 50px;
+            font-size: 0.85rem; font-weight: 900;
             text-shadow: var(--text-shadow);
+            background: transparent; /* شفاف */
         }
 
         .recharge-mini-btn {
             background: #ff4d4d; color: white; border: none;
-            width: 24px; height: 24px; border-radius: 50%;
-            font-size: 1.1rem; cursor: pointer; display: flex; align-items: center; justify-content: center;
-            box-shadow: 0 2px 10px rgba(255, 77, 77, 0.4);
+            width: 26px; height: 26px; border-radius: 50%;
+            font-size: 1rem; cursor: pointer; display: flex; align-items: center; justify-content: center;
         }
 
         .exit-arrow-btn {
-            position: fixed; top: 85px; right: 20px; 
+            position: fixed; top: 70px; right: 15px; 
             background: var(--gold); color: black; border: none;
-            width: 45px; height: 45px; border-radius: 15px;
+            width: 45px; height: 45px; border-radius: 12px;
             font-size: 1.5rem; font-weight: 900; cursor: pointer;
             z-index: 1001; display: none; align-items: center; justify-content: center;
-            box-shadow: 0 8px 20px rgba(0,0,0,0.4);
+            box-shadow: 0 4px 15px rgba(0,0,0,0.5);
         }
 
         .icon-btn {
-            background: rgba(255,255,255,0.1); border: 1px solid rgba(255,255,255,0.1);
-            width: 40px; height: 40px; border-radius: 12px; cursor: pointer; 
+            background: transparent; /* شفاف */
+            border: 1px solid rgba(255,255,255,0.4);
+            width: 36px; height: 36px; border-radius: 10px; cursor: pointer; 
             display: flex; align-items: center; justify-content: center;
-            color: white; font-size: 1.2rem;
-            backdrop-filter: blur(5px);
+            color: white; font-size: 1rem;
         }
 
-        /* باقي التنسيقات كما هي لضمان منطق اللعبة */
-        .name-input-screen { position: fixed; inset: 0; background: var(--dark-glass); z-index: 5000; display: none; align-items: center; justify-content: center; backdrop-filter: blur(8px); }
+        /* باقي التنسيقات كما هي دون تغيير */
+        .name-input-screen { position: fixed; inset: 0; background: var(--dark-glass); z-index: 5000; display: none; align-items: center; justify-content: center; }
         .name-box { background: #111; padding: 40px 30px; border-radius: 30px; border: 2px solid var(--gold); text-align: center; width: 85%; max-width: 400px; }
         .name-box input { width: 100%; padding: 15px; border-radius: 15px; border: 1px solid #333; margin: 20px 0; font-size: 1.2rem; text-align: center; background: #222; color: white; box-sizing: border-box; font-family: 'Cairo'; }
-
         .screen { position: relative; z-index: 10; height: 100vh; display: none; flex-direction: column; align-items: center; justify-content: center; text-align: center; padding: 20px; box-sizing: border-box; }
         .active { display: flex; }
-
-        .fact-container { 
-            background: rgba(0, 0, 0, 0.5); padding: 20px; border-radius: 20px; margin: 20px; 
-            max-width: 400px; border: 1px solid rgba(255,215,0,0.2);
-            backdrop-filter: blur(10px); text-shadow: var(--text-shadow);
-        }
-
-        .gold-btn { 
-            background: var(--gold); color: black; border: none; padding: 18px 80px; 
-            border-radius: 60px; font-size: 1.4rem; font-weight: 900; cursor: pointer; 
-            box-shadow: 0 8px 25px rgba(0,0,0,0.5); animation: btnPulse 2s infinite; 
-        }
+        .fact-container { background: var(--glass); padding: 20px; border-radius: 20px; margin: 20px; max-width: 400px; border: 1px solid rgba(255,215,0,0.2); box-shadow: 0 10px 30px rgba(0,0,0,0.5); text-shadow: var(--text-shadow); }
+        .gold-btn { background: var(--gold); color: black; border: none; padding: 18px 80px; border-radius: 60px; font-size: 1.4rem; font-weight: 900; cursor: pointer; box-shadow: 0 8px 25px rgba(0,0,0,0.5); animation: btnPulse 2s infinite; }
         @keyframes btnPulse { 0%, 100% { transform: scale(1); } 50% { transform: scale(1.05); } }
-
         .lang-toggle-container { margin-bottom: 25px; display: flex; justify-content: center; gap: 8px; }
         .lang-btn { background: rgba(0,0,0,0.6); border: 1px solid rgba(255,255,255,0.3); color: white; padding: 10px 14px; border-radius: 12px; cursor: pointer; font-weight: 900; }
         .lang-btn.active-lang { background: var(--blue); border-color: var(--blue); }
-
         .cat-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; width: 100%; max-width: 450px; }
-        .cat-btn { 
-            background: rgba(0,0,0,0.4); backdrop-filter: blur(15px); -webkit-backdrop-filter: blur(15px);
-            padding: 25px 10px; border-radius: 22px; border: 1px solid rgba(255,255,255,0.15); 
-            cursor: pointer; font-weight: 900; color: white; font-size: 1.1rem; text-shadow: var(--text-shadow);
-            transition: 0.3s;
-        }
-        .cat-btn:active { transform: scale(0.95); background: rgba(255,255,255,0.1); }
-
+        .cat-btn { background: rgba(0,0,0,0.6); backdrop-filter: blur(10px); padding: 25px 10px; border-radius: 20px; border: 1px solid rgba(255,255,255,0.2); cursor: pointer; font-weight: 900; color: white; font-size: 1.1rem; text-shadow: var(--text-shadow); }
         .map-view { width: 100%; overflow-y: auto; padding: 120px 0; display: flex; flex-direction: column-reverse; align-items: center; gap: 35px; }
         .lvl-node { width: 70px; height: 70px; border-radius: 50%; background: rgba(0,0,0,0.8); border: 4px solid #444; display: flex; align-items: center; justify-content: center; font-size: 1.6rem; font-weight: 900; cursor: pointer; color: white; box-shadow: 0 5px 15px rgba(0,0,0,0.5); }
         .unlocked { border-color: var(--blue); background: rgba(14, 165, 233, 0.4); }
         .current { border-color: var(--gold); background: var(--gold); color: black; animation: pulse 2s infinite; }
         @keyframes pulse { 0%, 100% { transform: scale(1); } 50% { transform: scale(1.1); } }
-
-        .quiz-container { 
-            position: fixed; bottom: -100%; left: 0; width: 100%; 
-            background: rgba(10, 10, 10, 0.95); backdrop-filter: blur(25px); 
-            border-radius: 35px 35px 0 0; border-top: 3px solid var(--gold); 
-            padding: 30px 20px; box-sizing: border-box; z-index: 2000; 
-            transition: 0.6s cubic-bezier(0.19, 1, 0.22, 1); max-height: 85vh; overflow-y: auto; 
-        }
+        .quiz-container { position: fixed; bottom: -100%; left: 0; width: 100%; background: rgba(10, 10, 10, 0.95); backdrop-filter: blur(20px); border-radius: 35px 35px 0 0; border-top: 3px solid var(--gold); padding: 30px 20px; box-sizing: border-box; z-index: 2000; transition: 0.6s cubic-bezier(0.19, 1, 0.22, 1); max-height: 80vh; overflow-y: auto; }
         .quiz-container.show { bottom: 0; }
-
         .ans-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-top: 25px; }
         .ans-btn { background: rgba(255,255,255,0.08); padding: 18px; border-radius: 15px; cursor: pointer; border: 1px solid rgba(255,255,255,0.1); font-weight: bold; text-align: center; color: white; }
         .ans-btn.wrong { background: #ef4444 !important; }
         .ans-btn.correct { background: #10b981 !important; }
-
-        .leaderboard-modal, .ad-modal { position: fixed; inset: 0; display: none; align-items: center; justify-content: center; background: rgba(0,0,0,0.92); z-index: 6000; backdrop-filter: blur(5px); }
+        .leaderboard-modal, .ad-modal { position: fixed; inset: 0; display: none; align-items: center; justify-content: center; background: rgba(0,0,0,0.9); z-index: 6000; }
         .leaderboard-box, .ad-box { background: #111; padding: 25px; border-radius: 25px; width: 90%; max-width: 400px; border: 1px solid var(--gold); }
-        
         .glass-btn { background: rgba(255,255,255,0.1); border: 1px solid rgba(255,255,255,0.2); color: white; padding: 12px 25px; border-radius: 15px; cursor: pointer; }
-
         .logo-wrapper { margin-bottom: 30px; text-shadow: var(--text-shadow); }
-        .main-logo-styled {
-            font-size: 4.5rem; font-weight: 900; margin: 0; 
-            background: linear-gradient(180deg, #fff 30%, var(--gold) 100%);
-            -webkit-background-clip: text; -webkit-text-fill-color: transparent;
-            filter: drop-shadow(0 5px 15px rgba(0,0,0,0.8));
-        }
+        .main-logo-styled { font-size: 4.5rem; font-weight: 900; margin: 0; background: linear-gradient(180deg, #fff 30%, var(--gold) 100%); -webkit-background-clip: text; -webkit-text-fill-color: transparent; filter: drop-shadow(0 5px 15px rgba(0,0,0,0.8)); }
         .logo-subtitle { display: block; font-size: 0.9rem; color: var(--gold); letter-spacing: 5px; font-weight: 700; }
     </style>
 </head>
@@ -189,22 +145,20 @@
     <div class="top-right">
         <div class="player-badge">
             <div class="player-avatar" id="avatar-char">?</div>
-            <span id="player-name-display" style="font-weight: bold; font-size: 0.85rem;">...</span>
+            <span id="player-name-display" style="font-weight: bold; font-size: 0.75rem;">...</span>
         </div>
         <div class="hearts-group">
             <div class="stat-badge" style="color: #ff4d4d;">
                 <span>❤️</span> <span id="hearts-val">5</span>
-                <span id="regen-timer" style="font-size: 0.7rem; margin-right: 4px; opacity: 0.8;"></span>
+                <span id="regen-timer"></span>
             </div>
             <button onclick="showAdModal('manual')" class="recharge-mini-btn">+</button>
         </div>
-        <div class="stat-badge" style="color: var(--gold); background: rgba(255,215,0,0.1); padding: 5px 10px; border-radius: 50px; border: 1px solid rgba(255,215,0,0.2);">
+        <div class="stat-badge" style="color: var(--gold);">
             <span>🏆</span> <span id="score-val">0</span>
         </div>
     </div>
-    <div class="top-left">
-        <button id="mute-btn" class="icon-btn">🔊</button>
-    </div>
+    <div class="top-left"><button id="mute-btn" class="icon-btn">🔊</button></div>
 </div>
 
 <div id="name-screen" class="name-input-screen">
@@ -268,7 +222,7 @@
 </div>
 
 <script>
-    /* منطق اللعبة كما هو بدون أي تغيير لضمان العمل */
+    /* ملاحظة: منطق اللعبة والربط بـ Firebase لم يتغير لضمان استقرار الوظائف */
     const firebaseConfig = { apiKey: "AIzaSyCIXq5egNrR0dS5YI2L4BFnm3IGa11128Q", databaseURL: "https://iq-culture-default-rtdb.firebaseio.com/", projectId: "iq-culture" };
     firebase.initializeApp(firebaseConfig);
     const db = firebase.database();
@@ -302,7 +256,7 @@
     const langConfig = {
         ar: { dir: "rtl", font: "'Cairo', sans-serif", logo: "IQ ثقافة", subtitle: "النسخة العالمية", start: "استمرار", select: "اختر التصنيف", recharge: "+", noHearts: "انتهت القلوب!", adDesc: "شاهد إعلان للحصول على قلوب كاملة.", later: "ربما لاحقاً", removeBtn: "حذف خيارين (50 نقطة)", factLoading: "جاري التحميل...", leaderboardBtn: "🏆 قائمة المتصدرين العالمية", leaderboardTitle: "أفضل 10 لاعبين في العالم", close: "إغلاق", factsGid: "605574246", cats: [{ name: "⏳ التاريخ", gid: "11216236", key: "history" }, { name: "🌍 الجغرافيا", gid: "99625756", key: "geo" }, { name: "🧬 العلوم", gid: "1843208636", key: "science" }, { name: "💡 ثقافة عامة", gid: "564130158", key: "general" }, { name: "⚽ الرياضة", gid: "0", key: "sports" }] },
         en: { dir: "ltr", font: "'Poppins', sans-serif", logo: "IQ Culture", subtitle: "GLOBAL EDITION", start: "Continue", select: "Select Category", recharge: "+", noHearts: "No Hearts!", adDesc: "Watch ad to get full hearts.", later: "Maybe later", removeBtn: "Remove 2 (50 pts)", factLoading: "Loading fact...", leaderboardBtn: "🏆 Global Leaderboard", leaderboardTitle: "Top 10 Players in the World", close: "Close", factsGid: "259198059", cats: [{ name: "⏳ History", gid: "1950805065", key: "history" }, { name: "🌍 Geography", gid: "1899297807", key: "geo" }, { name: "🧬 Science", gid: "407039200", key: "science" }, { name: "💡 General", gid: "1044248022", key: "general" }, { name: "⚽ Sports", gid: "1559005659", key: "sports" }] },
-        es: { dir: "ltr", font: "'Poppins', sans-serif", logo: "IQ Cultura", subtitle: "EDICIÓN GLOBAL", start: "Continuar", select: "Seleccionar Categoría", recharge: "+", noHearts: "¡Sin Corazones!", adDesc: "Mira un anuncio para obtener corazones.", later: "Más tarde", removeBtn: "Eliminar 2 (50 pts)", factLoading: "Cargando...", leaderboardBtn: "🏆 Tabla de Líderes", leaderboardTitle: "Los 10 mejores jugadores", close: "Cerrar", factsGid: "1911794502", cats: [{ name: "⏳ Historia", gid: "948777647", key: "history" }, { name: "🌍 Geografía", gid: "1233201488", key: "geo" }, { name: "🧬 Ciencia", gid: "2028449800", key: "science" }, { name: "💡 Cultura General", gid: "1662832315", key: "general" }, { name: "⚽ Deportes", gid: "1795176380", key: "sports" }] },
+        es: { dir: "ltr", font: "'Poppins', sans-serif", logo: "IQ Cultura", subtitle: "EDICIÓN GLOBAL", start: "Continuar", select: "Seleccionar Categoría", recharge: "+", noHearts: "¡Sin Corazones!", adDesc: "Mira un anuncio para obtener corazones.", later: "Más tarde", removeBtn: "Eliminar 2 (50 pts)", factLoading: "Cargando...", leaderboardBtn: "🏆 Tabla de Líderes", leaderboardTitle: "Los 10 mejores jugadores", close: "Cerrار", factsGid: "1911794502", cats: [{ name: "⏳ Historia", gid: "948777647", key: "history" }, { name: "🌍 Geografía", gid: "1233201488", key: "geo" }, { name: "🧬 Ciencia", gid: "2028449800", key: "science" }, { name: "💡 Cultura General", gid: "1662832315", key: "general" }, { name: "⚽ Deportes", gid: "1795176380", key: "sports" }] },
         fr: { dir: "ltr", font: "'Poppins', sans-serif", logo: "QI Culture", subtitle: "ÉDITION GLOBALE", start: "Continuer", select: "Choisir la Catégorie", recharge: "+", noHearts: "Plus de cœurs !", adDesc: "Regardez une pub pour des cœurs.", later: "Plus tard", removeBtn: "Supprimer 2 (50 pts)", factLoading: "Chargement...", leaderboardBtn: "🏆 Classement Mondial", leaderboardTitle: "Top 10 des meilleurs joueurs", close: "Fermer", factsGid: "1356278776", cats: [{ name: "⏳ Histoire", gid: "1692460075", key: "histoire" }, { name: "🌍 Géographie", gid: "1888258036", key: "geo" }, { name: "🧬 Sciences", gid: "1043839601", key: "science" }, { name: "💡 Culture Générale", gid: "1000789609", key: "general" }, { name: "⚽ Sports", gid: "942675202", key: "sports" }] }
     };
 
@@ -538,7 +492,7 @@
             if(sec < 0) {
                 clearInterval(inter);
                 if(btn.getAttribute('data-ad-type') !== 'milestone') { gameState.hearts = MAX_HEARTS; gameState.lastHeartTime = Date.now(); }
-                save(); updateUI(); closeAdModal(); btn.style.display = 'block'; tmr.style.none = 'block';
+                save(); updateUI(); closeAdModal(); btn.style.display = 'block'; tmr.style.display = 'none';
             }
         }, 1000);
     }
