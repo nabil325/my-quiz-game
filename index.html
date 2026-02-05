@@ -60,7 +60,7 @@
             -webkit-backdrop-filter: blur(15px);
             box-sizing: border-box; 
             border-bottom: 1px solid rgba(255,255,255,0.1);
-            padding-top: env(safe-area-inset-top); /* لدعم الهواتف ذات النتوء/النوتش */
+            padding-top: env(safe-area-inset-top);
         }
 
         .top-right { display: flex; align-items: center; gap: 8px; }
@@ -128,7 +128,6 @@
         .cat-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; width: 100%; max-width: 450px; }
         .cat-btn { background: var(--glass); backdrop-filter: blur(15px); padding: 25px 10px; border-radius: 20px; border: 1px solid rgba(255,255,255,0.1); cursor: pointer; font-weight: 900; transition: 0.3s; color: white; font-size: 1.1rem; }
         
-        /* --- Map Style Start --- */
         .map-view { 
             width: 100%; 
             height: 100vh; 
@@ -184,7 +183,6 @@
             0%, 100% { transform: scale(1); } 
             50% { transform: scale(1.15); } 
         }
-        /* --- Map Style End --- */
 
         .quiz-container { position: fixed; bottom: -100%; left: 0; width: 100%; background: rgba(15, 15, 15, 0.98); backdrop-filter: blur(30px); border-radius: 35px 35px 0 0; border-top: 3px solid var(--gold); padding: 30px 20px; box-sizing: border-box; z-index: 2000; transition: 0.6s cubic-bezier(0.19, 1, 0.22, 1); max-height: 75vh; overflow-y: auto; }
         .quiz-container.show { bottom: 0; }
@@ -202,13 +200,13 @@
 
         .logo-wrapper { margin-bottom: 30px; perspective: 1000px; }
         .main-logo-styled { font-size: 4.5rem; font-weight: 900; margin: 0; letter-spacing: -2px; background: linear-gradient(180deg, #fff 30%, var(--gold) 100%); -webkit-background-clip: text; -webkit-text-fill-color: transparent; filter: drop-shadow(0 10px 15px rgba(0,0,0,0.5)); animation: logoFloat 3s ease-in-out infinite; display: inline-block; }
-        @keyframes logoFloat { 0%, 100% { transform: translateY(0) rotateX(0); filter: drop-shadow(0 10px 15px rgba(0,0,0,0.5)) brightness(1); } 50% { transform: translateY(-10px) rotateX(5deg); filter: drop-shadow(0 20px 25px rgba(255,215,0,0.3)) brightness(1.2); } }
+        @keyframes logoFloat { 0%, 100% { transform: translateY(0) rotateX(0); } 50% { transform: translateY(-10px) rotateX(5deg); } }
         .logo-subtitle { display: block; font-size: 0.9rem; color: var(--gold); letter-spacing: 5px; margin-top: -10px; font-weight: 700; opacity: 0.8; text-transform: uppercase; }
     </style>
 </head>
 <body>
 
-<div id="offline-warning">⚠️ لا يوجد اتصال بالإنترنت</div>
+<div id="offline-warning"></div>
 
 <audio id="bg-audio" src="./jazz-music-466491.mp3" loop></audio>
 <div class="overlay"></div>
@@ -323,9 +321,20 @@
         adCounter: 0 
     };
 
+    const langConfig = {
+        ar: { dir: "rtl", font: "'Cairo', sans-serif", logo: "IQ ثقافة", sub: "النسخة العالمية", start: "استمرار", select: "اختر التصنيف", recharge: "+", noHearts: "انتهت القلوب!", adDesc: "شاهد إعلان للحصول على قلوب كاملة.", later: "ربما لاحقاً", removeBtn: "حذف خيارين (50 نقطة)", factLoading: "جاري التحميل...", leaderboardBtn: "🏆 قائمة المتصدرين العالمية", leaderboardTitle: "أفضل 10 لاعبين في العالم", close: "إغلاق", offline: "⚠️ لا يوجد اتصال بالإنترنت", factsGid: "605574246", cats: [{ name: "⏳ التاريخ", gid: "11216236", key: "history" }, { name: "🌍 الجغرافيا", gid: "99625756", key: "geo" }, { name: "🧬 العلوم", gid: "1843208636", key: "science" }, { name: "💡 ثقافة عامة", gid: "564130158", key: "general" }, { name: "⚽ الرياضة", gid: "0", key: "sports" }] },
+        en: { dir: "ltr", font: "'Poppins', sans-serif", logo: "IQ Culture", sub: "GLOBAL EDITION", start: "Continue", select: "Select Category", recharge: "+", noHearts: "No Hearts!", adDesc: "Watch ad to get full hearts.", later: "Maybe later", removeBtn: "Remove 2 (50 pts)", factLoading: "Loading fact...", leaderboardBtn: "🏆 Global Leaderboard", leaderboardTitle: "Top 10 Players in the World", close: "Close", offline: "⚠️ No internet connection", factsGid: "259198059", cats: [{ name: "⏳ History", gid: "1950805065", key: "history" }, { name: "🌍 Geography", gid: "1899297807", key: "geo" }, { name: "🧬 Science", gid: "407039200", key: "science" }, { name: "💡 General", gid: "1044248022", key: "general" }, { name: "⚽ Sports", gid: "1559005659", key: "sports" }] },
+        es: { dir: "ltr", font: "'Poppins', sans-serif", logo: "IQ Cultura", sub: "EDICIÓN GLOBAL", start: "Continuar", select: "Seleccionar Categoría", recharge: "+", noHearts: "¡Sin Corazones!", adDesc: "Mira un anuncio para obtener corazones.", later: "Más tarde", removeBtn: "Eliminar 2 (50 pts)", factLoading: "Cargando...", leaderboardBtn: "🏆 Tabla de Líderes", leaderboardTitle: "Los 10 mejores jugadores", close: "Cerrar", offline: "⚠️ Sin conexión a internet", factsGid: "1911794502", cats: [{ name: "⏳ Historia", gid: "948777647", key: "history" }, { name: "🌍 Geografía", gid: "1233201488", key: "geo" }, { name: "🧬 Ciencia", gid: "2028449800", key: "science" }, { name: "💡 Cultura General", gid: "1662832315", key: "general" }, { name: "⚽ Deportes", gid: "1795176380", key: "sports" }] },
+        fr: { dir: "ltr", font: "'Poppins', sans-serif", logo: "QI Culture", sub: "ÉDITION MONDIALE", start: "Continuer", select: "Choisir la Catégorie", recharge: "+", noHearts: "Plus de cœurs !", adDesc: "Regardez une pub pour des cœurs.", later: "Plus tard", removeBtn: "Supprimer 2 (50 pts)", factLoading: "Chargement...", leaderboardBtn: "🏆 Classement Mondial", leaderboardTitle: "Top 10 des meilleurs joueurs", close: "Fermer", offline: "⚠️ Pas de connexion internet", factsGid: "1356278776", cats: [{ name: "⏳ Histoire", gid: "1692460075", key: "histoire" }, { name: "🌍 Géographie", gid: "1888258036", key: "geo" }, { name: "🧬 Sciences", gid: "1043839601", key: "science" }, { name: "💡 Culture Générale", gid: "1000789609", key: "general" }, { name: "⚽ Sports", gid: "942675202", key: "sports" }] }
+    };
+
+    const audioEl = document.getElementById('bg-audio');
+    const muteBtn = document.getElementById('mute-btn');
+
     function checkConnection() {
         const warning = document.getElementById('offline-warning');
         const startBtn = document.getElementById('btn-start');
+        warning.innerText = langConfig[gameState.lang].offline;
         if (!navigator.onLine) {
             warning.style.display = 'block';
             if(startBtn) startBtn.disabled = true;
@@ -336,6 +345,17 @@
     }
     window.addEventListener('online', checkConnection);
     window.addEventListener('offline', checkConnection);
+
+    // إصلاح الموسيقى عند الخروج من اللعبة
+    document.addEventListener("visibilitychange", function() {
+        if (document.hidden) {
+            audioEl.pause();
+        } else {
+            if (!gameState.muted) {
+                audioEl.play().catch(() => {});
+            }
+        }
+    });
 
     function goBack() {
         const quizUI = document.getElementById('quiz-ui');
@@ -349,16 +369,6 @@
             document.getElementById('main-exit-btn').style.display = 'none'; 
         }
     }
-
-    const langConfig = {
-        ar: { dir: "rtl", font: "'Cairo', sans-serif", logo: "IQ ثقافة", sub: "النسخة العالمية", start: "استمرار", select: "اختر التصنيف", recharge: "+", noHearts: "انتهت القلوب!", adDesc: "شاهد إعلان للحصول على قلوب كاملة.", later: "ربما لاحقاً", removeBtn: "حذف خيارين (50 نقطة)", factLoading: "جاري التحميل...", leaderboardBtn: "🏆 قائمة المتصدرين العالمية", leaderboardTitle: "أفضل 10 لاعبين في العالم", close: "إغلاق", factsGid: "605574246", cats: [{ name: "⏳ التاريخ", gid: "11216236", key: "history" }, { name: "🌍 الجغرافيا", gid: "99625756", key: "geo" }, { name: "🧬 العلوم", gid: "1843208636", key: "science" }, { name: "💡 ثقافة عامة", gid: "564130158", key: "general" }, { name: "⚽ الرياضة", gid: "0", key: "sports" }] },
-        en: { dir: "ltr", font: "'Poppins', sans-serif", logo: "IQ Culture", sub: "GLOBAL EDITION", start: "Continue", select: "Select Category", recharge: "+", noHearts: "No Hearts!", adDesc: "Watch ad to get full hearts.", later: "Maybe later", removeBtn: "Remove 2 (50 pts)", factLoading: "Loading fact...", leaderboardBtn: "🏆 Global Leaderboard", leaderboardTitle: "Top 10 Players in the World", close: "Close", factsGid: "259198059", cats: [{ name: "⏳ History", gid: "1950805065", key: "history" }, { name: "🌍 Geography", gid: "1899297807", key: "geo" }, { name: "🧬 Science", gid: "407039200", key: "science" }, { name: "💡 General", gid: "1044248022", key: "general" }, { name: "⚽ Sports", gid: "1559005659", key: "sports" }] },
-        es: { dir: "ltr", font: "'Poppins', sans-serif", logo: "IQ Cultura", sub: "EDICIÓN GLOBAL", start: "Continuar", select: "Seleccionar Categoría", recharge: "+", noHearts: "¡Sin Corazones!", adDesc: "Mira un anuncio para obtener corazones.", later: "Más tarde", removeBtn: "Eliminar 2 (50 pts)", factLoading: "Cargando...", leaderboardBtn: "🏆 Tabla de Líderes", leaderboardTitle: "Los 10 mejores jugadores", close: "Cerrار", factsGid: "1911794502", cats: [{ name: "⏳ Historia", gid: "948777647", key: "history" }, { name: "🌍 Geografía", gid: "1233201488", key: "geo" }, { name: "🧬 Ciencia", gid: "2028449800", key: "science" }, { name: "💡 Cultura General", gid: "1662832315", key: "general" }, { name: "⚽ Deportes", gid: "1795176380", key: "sports" }] },
-        fr: { dir: "ltr", font: "'Poppins', sans-serif", logo: "QI Culture", sub: "ÉDITION MONDIALE", start: "Continuer", select: "Choisir la Catégorie", recharge: "+", noHearts: "Plus de cœurs !", adDesc: "Regardez une pub pour des cœurs.", later: "Plus tard", removeBtn: "Supprimer 2 (50 pts)", factLoading: "Chargement...", leaderboardBtn: "🏆 Classement Mondial", leaderboardTitle: "Top 10 des meilleurs joueurs", close: "Fermer", factsGid: "1356278776", cats: [{ name: "⏳ Histoire", gid: "1692460075", key: "histoire" }, { name: "🌍 Géographie", gid: "1888258036", key: "geo" }, { name: "🧬 Sciences", gid: "1043839601", key: "science" }, { name: "💡 Culture Générale", gid: "1000789609", key: "general" }, { name: "⚽ Sports", gid: "942675202", key: "sports" }] }
-    };
-
-    const audioEl = document.getElementById('bg-audio');
-    const muteBtn = document.getElementById('mute-btn');
 
     function init() {
         checkConnection();
@@ -435,6 +445,7 @@
         document.getElementById('txt-leaderboard-title').innerText = conf.leaderboardTitle; document.getElementById('btn-close-leader').innerText = conf.close;
         document.querySelectorAll('.lang-btn').forEach(b => b.classList.remove('active-lang'));
         document.getElementById(`btn-lang-${gameState.lang}`).classList.add('active-lang');
+        checkConnection();
         loadFact(); renderCats();
     }
 
