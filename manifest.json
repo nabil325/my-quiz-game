@@ -1,0 +1,15 @@
+{
+  "name": "IQ ثقافة",
+  "short_name": "IQ",
+  "start_url": "index.html",
+  "display": "standalone",
+  "background_color": "#1a1a1a",
+  "theme_color": "#ffd700",
+  "icons": [
+    {
+      "src": "athena.jpg",
+      "sizes": "512x512",
+      "type": "image/jpeg"
+    }
+  ]
+}
