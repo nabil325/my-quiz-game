@@ -198,10 +198,12 @@
         .glass-btn { background: rgba(255,255,255,0.1); border: 1px solid rgba(255,255,255,0.2); color: white; padding: 12px 25px; border-radius: 15px; cursor: pointer; }
         #regen-timer { font-size: 0.65rem; color: #ddd; margin-right: 3px; font-weight: normal; }
 
-        .logo-wrapper { margin-bottom: 30px; perspective: 1000px; }
-        .main-logo-styled { font-size: 4.5rem; font-weight: 900; margin: 0; letter-spacing: -2px; background: linear-gradient(180deg, #fff 30%, var(--gold) 100%); -webkit-background-clip: text; -webkit-text-fill-color: transparent; filter: drop-shadow(0 10px 15px rgba(0,0,0,0.5)); animation: logoFloat 3s ease-in-out infinite; display: inline-block; }
-        @keyframes logoFloat { 0%, 100% { transform: translateY(0) rotateX(0); } 50% { transform: translateY(-10px) rotateX(5deg); } }
-        .logo-subtitle { display: block; font-size: 0.9rem; color: var(--gold); letter-spacing: 5px; margin-top: -10px; font-weight: 700; opacity: 0.8; text-transform: uppercase; }
+        /* تنسيق اللوجو الجديد */
+        .logo-wrapper { margin-bottom: 20px; perspective: 1000px; text-align: center; }
+        .logo-img-main { width: 120px; height: 120px; border-radius: 20px; filter: drop-shadow(0 5px 15px rgba(0,0,0,0.5)); margin-bottom: 15px; animation: logoFloat 3s ease-in-out infinite; }
+        .main-logo-styled { font-size: 3.8rem; font-weight: 900; margin: 0; letter-spacing: -2px; background: linear-gradient(180deg, #fff 30%, var(--gold) 100%); -webkit-background-clip: text; -webkit-text-fill-color: transparent; display: block; }
+        @keyframes logoFloat { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-10px); } }
+        .logo-subtitle { display: block; font-size: 0.9rem; color: var(--gold); letter-spacing: 5px; margin-top: -5px; font-weight: 700; opacity: 0.8; text-transform: uppercase; }
     </style>
 </head>
 <body>
@@ -246,6 +248,7 @@
 
 <div id="scr-start" class="screen active">
     <div class="logo-wrapper">
+        <img src="logo.png" alt="IQ Logo" class="logo-img-main">
         <h1 id="main-logo" class="main-logo-styled">IQ ثقافة</h1>
         <span id="logo-sub" class="logo-subtitle">GLOBAL EDITION</span>
     </div>
@@ -331,10 +334,15 @@
     const audioEl = document.getElementById('bg-audio');
     const muteBtn = document.getElementById('mute-btn');
 
+    // وظيفة التحقق من الإنترنت المترجمة
     function checkConnection() {
         const warning = document.getElementById('offline-warning');
         const startBtn = document.getElementById('btn-start');
-        warning.innerText = langConfig[gameState.lang].offline;
+        
+        // جلب النص المترجم بناءً على اللغة الحالية
+        const offlineText = langConfig[gameState.lang] ? langConfig[gameState.lang].offline : "No Internet";
+        warning.innerText = offlineText;
+
         if (!navigator.onLine) {
             warning.style.display = 'block';
             if(startBtn) startBtn.disabled = true;
@@ -346,7 +354,7 @@
     window.addEventListener('online', checkConnection);
     window.addEventListener('offline', checkConnection);
 
-    // إصلاح الموسيقى عند الخروج من اللعبة
+    // إصلاح الموسيقى عند الخروج من اللعبة (أو غلق الشاشة)
     document.addEventListener("visibilitychange", function() {
         if (document.hidden) {
             audioEl.pause();
