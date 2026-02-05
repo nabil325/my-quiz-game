@@ -26,7 +26,7 @@
   "display": "standalone",
   "orientation": "portrait",
   "background_color": "#1a1a1a",
-  "theme_color": "#ffd700",
+  "theme_color": "#1a1a1a",
   "dir": "rtl",
   "lang": "ar-SA",
   "categories": ["games", "education"]
