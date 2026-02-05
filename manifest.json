@@ -1,15 +1,18 @@
 {
   "name": "IQ ثقافة",
-  "short_name": "IQ",
+  "short_name": "ثقافة",
+  "description": "لعبة تحدي الذكاء والمعلومات العامة",
   "start_url": "index.html",
   "display": "standalone",
-  "background_color": "#1a1a1a",
-  "theme_color": "#ffd700",
+  "background_color": "#000000",
+  "theme_color": "#FFD700",
+  "orientation": "portrait",
   "icons": [
     {
-      "src": "athena.jpg",
+      "src": "logo.png",
       "sizes": "512x512",
-      "type": "image/jpeg"
+      "type": "image/png",
+      "purpose": "any maskable"
     }
   ]
 }
