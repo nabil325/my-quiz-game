@@ -1,18 +1,23 @@
 {
-  "name": "IQ ثقافة",
-  "short_name": "ثقافة",
-  "description": "لعبة تحدي الذكاء والمعلومات العامة",
-  "start_url": "index.html",
-  "display": "standalone",
-  "background_color": "#000000",
-  "theme_color": "#FFD700",
-  "orientation": "portrait",
+  "short_name": "IQ ثقافة",
+  "name": "IQ ثقافة - النسخة العالمية",
   "icons": [
+    {
+      "src": "logo.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "any maskable"
+    },
     {
       "src": "logo.png",
       "sizes": "512x512",
       "type": "image/png",
       "purpose": "any maskable"
     }
-  ]
+  ],
+  "start_url": "index.html",
+  "background_color": "#1a1a1a",
+  "display": "standalone",
+  "scope": "/",
+  "theme_color": "#ffd700"
 }
