@@ -36,24 +36,40 @@
             z-index: 10000; display: none; font-weight: bold;
         }
 
+        /* الطبقات الجديدة للخلفية لمنع التقطيع */
         body, html {
             margin: 0; padding: 0; height: 100%; width: 100%;
             font-family: 'Cairo', sans-serif; color: white;
             overflow: hidden;
-            background: #1a1a1a url('athena.jpg') no-repeat center center;
+            background-color: #000;
+        }
+
+        .bg-layer {
+            position: fixed; inset: 0;
             background-size: cover;
-            background-attachment: fixed;
-            transition: background 0.8s ease-in-out;
+            background-position: center;
+            background-repeat: no-repeat;
+            z-index: -2;
+        }
+
+        #athena-bg {
+            background-image: url('athena.jpg');
+            z-index: -3; /* أثينا دائماً في الخلف */
+        }
+
+        #category-bg-layer {
+            opacity: 0;
+            transition: opacity 0.8s ease-in-out;
+            z-index: -2; /* صور التصنيفات تظهر فوق أثينا */
         }
 
         .overlay {
             position: fixed; inset: 0;
             background: rgba(0, 0, 0, 0.55);
-            z-index: 1;
-            transition: opacity 0.5s ease; /* إضافة تنعيم لاختفاء التعتيم */
+            z-index: -1;
+            transition: opacity 0.5s ease;
         }
 
-        /* كلاس جديد لإخفاء التعتيم وإظهار الصور ساطعة */
         .overlay.no-dim {
             opacity: 0;
             pointer-events: none;
@@ -135,32 +151,8 @@
         .cat-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; width: 100%; max-width: 450px; }
         .cat-btn { background: var(--glass); backdrop-filter: blur(15px); padding: 25px 10px; border-radius: 20px; border: 1px solid rgba(255,255,255,0.1); cursor: pointer; font-weight: 900; transition: 0.3s; color: white; font-size: 1.1rem; }
         
-        .map-view { 
-            width: 100%; 
-            height: 100vh; 
-            overflow-y: auto; 
-            padding: 150px 0; 
-            display: flex; 
-            flex-direction: column-reverse; 
-            align-items: center; 
-            gap: 40px; 
-            scroll-behavior: smooth;
-            position: relative;
-        }
-        
-        .map-view svg { position: absolute; top: 0; left: 0; width: 100%; height: 100%; pointer-events: none; z-index: -1; }
-
-        .lvl-node { 
-            width: 80px; height: 80px; border-radius: 50%; 
-            background: rgba(255, 255, 255, 0.05); 
-            border: 4px solid rgba(255, 255, 255, 0.2); 
-            display: flex; align-items: center; justify-content: center; 
-            font-size: 1.6rem; font-weight: 900; cursor: default; 
-            transition: 0.4s; color: rgba(255, 255, 255, 0.3);
-            backdrop-filter: blur(5px); flex-shrink: 0;
-            position: relative; z-index: 2;
-        }
-
+        .map-view { width: 100%; height: 100vh; overflow-y: auto; padding: 150px 0; display: flex; flex-direction: column-reverse; align-items: center; gap: 40px; scroll-behavior: smooth; position: relative; }
+        .lvl-node { width: 80px; height: 80px; border-radius: 50%; background: rgba(255, 255, 255, 0.05); border: 4px solid rgba(255, 255, 255, 0.2); display: flex; align-items: center; justify-content: center; font-size: 1.6rem; font-weight: 900; cursor: default; transition: 0.4s; color: rgba(255, 255, 255, 0.3); backdrop-filter: blur(5px); flex-shrink: 0; position: relative; z-index: 2; }
         .lvl-node.completed { background: var(--gold); border-color: #b8860b; color: black; cursor: pointer; box-shadow: 0 0 15px rgba(255, 215, 0, 0.5); }
         .lvl-node.current { background: white; border-color: var(--gold); color: black; cursor: pointer; animation: pulseWhite 2s infinite; box-shadow: 0 0 25px rgba(255, 255, 255, 0.7); z-index: 5; }
 
@@ -178,19 +170,20 @@
         .ad-modal { position: fixed; inset: 0; display: none; align-items: center; justify-content: center; background: rgba(0,0,0,0.9); z-index: 4000; }
         .ad-box { background: #222; padding: 35px; border-radius: 25px; width: 85%; max-width: 400px; text-align: center; border: 2px solid var(--gold); }
         .glass-btn { background: rgba(255,255,255,0.1); border: 1px solid rgba(255,255,255,0.2); color: white; padding: 12px 25px; border-radius: 15px; cursor: pointer; }
-        #regen-timer { font-size: 0.65rem; color: #ddd; margin-right: 3px; font-weight: normal; }
-
-        .logo-wrapper { margin-bottom: 30px; perspective: 1000px; }
-        .main-logo-styled { font-size: 4.5rem; font-weight: 900; margin: 0; letter-spacing: -2px; background: linear-gradient(180deg, #fff 30%, var(--gold) 100%); -webkit-background-clip: text; -webkit-text-fill-color: transparent; filter: drop-shadow(0 10px 15px rgba(0,0,0,0.5)); animation: logoFloat 3s ease-in-out infinite; display: inline-block; }
+        
+        .main-logo-styled { font-size: 4.5rem; font-weight: 900; margin: 0; background: linear-gradient(180deg, #fff 30%, var(--gold) 100%); -webkit-background-clip: text; -webkit-text-fill-color: transparent; filter: drop-shadow(0 10px 15px rgba(0,0,0,0.5)); animation: logoFloat 3s ease-in-out infinite; display: inline-block; }
         @keyframes logoFloat { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-10px); } }
         .logo-subtitle { display: block; font-size: 0.9rem; color: var(--gold); letter-spacing: 5px; margin-top: -10px; font-weight: 700; opacity: 0.8; text-transform: uppercase; }
     </style>
 </head>
 <body>
 
+<div id="athena-bg" class="bg-layer"></div>
+<div id="category-bg-layer" class="bg-layer"></div>
+<div class="overlay" id="main-overlay"></div>
+
 <div id="offline-warning"></div>
 <audio id="bg-audio" src="./jazz-music-466491.mp3" loop></audio>
-<div class="overlay" id="main-overlay"></div>
 
 <button id="main-exit-btn" onclick="goBack()" class="exit-arrow-btn">➔</button>
 
@@ -203,7 +196,7 @@
         <div class="hearts-group">
             <div class="stat-badge" style="color: #ff4d4d;">
                 <span>❤️</span> <span id="hearts-val">5</span>
-                <span id="regen-timer"></span>
+                <span id="regen-timer" style="font-size:0.65rem; color:#ddd; margin-right:3px;"></span>
             </div>
             <button onclick="showAdModal('manual')" class="recharge-mini-btn">+</button>
         </div>
@@ -226,7 +219,7 @@
 </div>
 
 <div id="scr-start" class="screen active">
-    <div class="logo-wrapper">
+    <div class="logo-wrapper" style="margin-bottom:30px;">
         <h1 id="main-logo" class="main-logo-styled">IQ ثقافة</h1>
         <span id="logo-sub" class="logo-subtitle">GLOBAL EDITION</span>
     </div>
@@ -362,7 +355,8 @@
     function updatePlayerDisplay() {
         const name = gameState.playerName || "...";
         document.getElementById('player-name-display').innerText = name;
-        document.getElementById('avatar-char').innerText = name.charAt(0).toUpperCase();
+        const char = name.charAt(0).toUpperCase();
+        document.getElementById('avatar-char').innerText = char;
     }
 
     function openLeaderboard() {
@@ -442,13 +436,16 @@
     async function startCat(gid, name) {
         if(!navigator.onLine) return;
         gameState.currentCat = name; 
+        
+        // تغيير الطبقة العلوية للخلفية بسلاسة دون تغيير أثينا في الخلف
         const bgFile = categoryBackgrounds[name];
+        const catLayer = document.getElementById('category-bg-layer');
         if(bgFile) {
-            document.body.style.background = `url('${bgFile}') no-repeat center center`;
-            document.body.style.backgroundSize = "cover";
-            document.body.style.backgroundAttachment = "fixed";
-            document.getElementById('main-overlay').classList.add('no-dim'); // إخفاء التعتيم
+            catLayer.style.backgroundImage = `url('${bgFile}')`;
+            catLayer.style.opacity = "1";
+            document.getElementById('main-overlay').classList.add('no-dim'); 
         }
+        
         switchScreen('scr-map');
         try {
             const r = await fetch(CSV + "&gid=" + gid); const d = await r.text();
@@ -482,6 +479,7 @@
         const box = document.getElementById('ans-box'); box.innerHTML = '';
         const usedKey = `${gameState.lang}_${gameState.currentCat}_${idx}`;
         document.getElementById('remove-two-btn').style.display = (gameState.score >= 50 && !gameState.usedRemove[usedKey]) ? 'block' : 'none';
+        
         const letters = ['a', 'b', 'c', 'd'];
         let optionsList = q.opts.map((text, i) => { return { text: text, originalLetter: letters[i] }; });
         optionsList.sort(() => Math.random() - 0.5);
@@ -556,8 +554,7 @@
         const quizUI = document.getElementById('quiz-ui'); if (quizUI.classList.contains('show')) { quizUI.classList.remove('show'); return; }
         if (document.getElementById('scr-map').classList.contains('active')) { 
             switchScreen('scr-cats'); 
-            document.body.style.background = "#1a1a1a url('athena.jpg') no-repeat center center";
-            document.body.style.backgroundSize = "cover";
+            document.getElementById('category-bg-layer').style.opacity = "0"; // إخفاء صورة التصنيف لظهور أثينا
             document.getElementById('main-overlay').classList.remove('no-dim'); // إعادة التعتيم
         } 
         else if (document.getElementById('scr-cats').classList.contains('active')) { 
