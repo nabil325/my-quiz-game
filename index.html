@@ -41,9 +41,11 @@
             margin: 0; padding: 0; height: 100%; width: 100%;
             font-family: 'Cairo', sans-serif; color: white;
             overflow: hidden;
+            /* الخلفية الافتراضية */
             background: #1a1a1a url('athena.jpg') no-repeat center center;
             background-size: cover;
             background-attachment: fixed;
+            transition: background 0.8s ease-in-out; /* انتقال ناعم عند تغيير الخلفية */
         }
 
         .overlay {
@@ -308,6 +310,17 @@
     const MAX_HEARTS = 5;
     const REGEN_TIME = 5 * 60 * 1000;
 
+    // مصفوفة لربط أسماء التصنيفات بالصور المرفوعة على GitHub
+    const categoryBackgrounds = {
+        "history": "history.jpg",
+        "histoire": "history.jpg",
+        "historia": "history.jpg",
+        "geo": "geography.jpg",
+        "science": "science.jpg",
+        "general": "general.jpg",
+        "sports": "sports.jpg"
+    };
+
     let gameState = {
         playerName: localStorage.getItem('iq_player_name') || "",
         score: parseInt(localStorage.getItem('iq_score')) || 0,
@@ -325,13 +338,12 @@
         ar: { dir: "rtl", font: "'Cairo', sans-serif", logo: "IQ ثقافة", sub: "النسخة العالمية", start: "استمرار", select: "اختر التصنيف", recharge: "+", noHearts: "انتهت القلوب!", adDesc: "شاهد إعلان للحصول على قلوب كاملة.", later: "ربما لاحقاً", removeBtn: "حذف خيارين (50 نقطة)", factLoading: "جاري التحميل...", leaderboardBtn: "🏆 قائمة المتصدرين العالمية", leaderboardTitle: "أفضل 10 لاعبين في العالم", close: "إغلاق", offline: "⚠️ لا يوجد اتصال بالإنترنت", factsGid: "605574246", cats: [{ name: "⏳ التاريخ", gid: "11216236", key: "history" }, { name: "🌍 الجغرافيا", gid: "99625756", key: "geo" }, { name: "🧬 العلوم", gid: "1843208636", key: "science" }, { name: "💡 ثقافة عامة", gid: "564130158", key: "general" }, { name: "⚽ الرياضة", gid: "0", key: "sports" }] },
         en: { dir: "ltr", font: "'Poppins', sans-serif", logo: "IQ Culture", sub: "GLOBAL EDITION", start: "Continue", select: "Select Category", recharge: "+", noHearts: "No Hearts!", adDesc: "Watch ad to get full hearts.", later: "Maybe later", removeBtn: "Remove 2 (50 pts)", factLoading: "Loading fact...", leaderboardBtn: "🏆 Global Leaderboard", leaderboardTitle: "Top 10 Players in the World", close: "Close", offline: "⚠️ No internet connection", factsGid: "259198059", cats: [{ name: "⏳ History", gid: "1950805065", key: "history" }, { name: "🌍 Geography", gid: "1899297807", key: "geo" }, { name: "🧬 Science", gid: "407039200", key: "science" }, { name: "💡 General", gid: "1044248022", key: "general" }, { name: "⚽ Sports", gid: "1559005659", key: "sports" }] },
         es: { dir: "ltr", font: "'Poppins', sans-serif", logo: "IQ Cultura", sub: "EDICIÓN GLOBAL", start: "Continuar", select: "Seleccionar Categoría", recharge: "+", noHearts: "¡Sin Corazones!", adDesc: "Mira un anuncio para obtener corazones.", later: "Más tarde", removeBtn: "Eliminar 2 (50 pts)", factLoading: "Cargando...", leaderboardBtn: "🏆 Tabla de Líderes", leaderboardTitle: "Los 10 mejores jugadores", close: "Cerrar", offline: "⚠️ Sin conexión a internet", factsGid: "1911794502", cats: [{ name: "⏳ Historia", gid: "948777647", key: "history" }, { name: "🌍 Geografía", gid: "1233201488", key: "geo" }, { name: "🧬 Ciencia", gid: "2028449800", key: "science" }, { name: "💡 Cultura General", gid: "1662832315", key: "general" }, { name: "⚽ Deportes", gid: "1795176380", key: "sports" }] },
-        fr: { dir: "ltr", font: "'Poppins', sans-serif", logo: "QI Culture", sub: "ÉDITION MONDIALE", start: "Continuer", select: "Choisir la Catégorie", recharge: "+", noHearts: "Plus de cœurs !", adDesc: "Regardez une pub pour des cœurs.", later: "Plus tard", removeBtn: "Supprimer 2 (50 pts)", factLoading: "Chargement...", leaderboardBtn: "🏆 Classement Mondial", leaderboardTitle: "Top 10 des meilleurs joueurs", close: "Fermer", offline: "⚠️ Pas de connexion internet", factsGid: "1356278776", cats: [{ name: "⏳ Histoire", gid: "1692460075", key: "histoire" }, { name: "🌍 Géographie", gid: "1888258036", key: "geo" }, { name: "🧬 Sciences", gid: "1043839601", key: "science" }, { name: "💡 Culture Générale", gid: "1000789609", key: "general" }, { name: "⚽ Sports", gid: "942675202", key: "sports" }] }
+        fr: { dir: "ltr", font: "'Poppins', sans-serif", logo: "QI Culture", sub: "ÉDITION MONDIALE", start: "Continuer", select: "Choisir la Catégorie", recharge: "+", noHearts: "Plus de cœurs !", adDesc: "Regardez une pub pour des cœurs.", later: "Plus tard", removeBtn: "Supprimer 2 (50 pts)", factLoading: "Chargement...", leaderboardBtn: "🏆 Classement Mondial", leaderboardTitle: "Top 10 des meilleurs joueurs", close: "Fermer", offline: "⚠️ Pas de connexion internet", factsGid: "1356278776", cats: [{ name: "⏳ Histoire", gid: "1692460075", key: "history" }, { name: "🌍 Géographie", gid: "1888258036", key: "geo" }, { name: "🧬 Sciences", gid: "1043839601", key: "science" }, { name: "💡 Culture Générale", gid: "1000789609", key: "general" }, { name: "⚽ Sports", gid: "942675202", key: "sports" }] }
     };
 
     const audioEl = document.getElementById('bg-audio');
     const muteBtn = document.getElementById('mute-btn');
 
-    // وظيفة التحقق من الاتصال مع ترجمة الرسالة
     function checkConnection() {
         const warning = document.getElementById('offline-warning');
         const startBtn = document.getElementById('btn-start');
@@ -347,7 +359,6 @@
     window.addEventListener('online', checkConnection);
     window.addEventListener('offline', checkConnection);
 
-    // إصلاح الموسيقى عند الخروج من اللعبة أو تغيير التبويب
     document.addEventListener("visibilitychange", function() {
         if (document.hidden) {
             audioEl.pause();
@@ -363,7 +374,12 @@
         if (quizUI.classList.contains('show')) { quizUI.classList.remove('show'); return; }
         const mapScreen = document.getElementById('scr-map');
         const catsScreen = document.getElementById('scr-cats');
-        if (mapScreen.classList.contains('active')) { switchScreen('scr-cats'); } 
+        if (mapScreen.classList.contains('active')) { 
+            switchScreen('scr-cats'); 
+            // العودة للخلفية الافتراضية
+            document.body.style.background = "#1a1a1a url('athena.jpg') no-repeat center center";
+            document.body.style.backgroundSize = "cover";
+        } 
         else if (catsScreen.classList.contains('active')) { 
             switchScreen('scr-start'); 
             document.getElementById('top-bar').style.display = 'none'; 
@@ -497,7 +513,17 @@
 
     async function startCat(gid, name) {
         if(!navigator.onLine) return;
-        gameState.currentCat = name; switchScreen('scr-map');
+        gameState.currentCat = name; 
+
+        // تطبيق صورة الخلفية الجديدة بناءً على التصنيف المختار
+        const bgFile = categoryBackgrounds[name];
+        if(bgFile) {
+            document.body.style.background = `linear-gradient(rgba(0,0,0,0.4), rgba(0,0,0,0.4)), url('${bgFile}') no-repeat center center`;
+            document.body.style.backgroundSize = "cover";
+            document.body.style.backgroundAttachment = "fixed";
+        }
+
+        switchScreen('scr-map');
         try {
             const r = await fetch(CSV + "&gid=" + gid); const d = await r.text();
             gameState.questions = d.split(/\r?\n/).slice(1).map(row => {
