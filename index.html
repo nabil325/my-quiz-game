@@ -14,7 +14,7 @@
     <script src="https://www.gstatic.com/firebasejs/9.1.3/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/9.1.3/firebase-database-compat.js"></script>
     
-    <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-3940256099942544" crossorigin="anonymous"></script>
+    <script async src="https://pagead2.googlesyndication.com/pagead/js/ads58.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-3940256099942544" crossorigin="anonymous"></script>
     
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
@@ -49,30 +49,29 @@
             background-size: cover;
             background-position: center;
             background-repeat: no-repeat;
-            z-index: -2;
+            transition: opacity 0.8s ease-in-out;
         }
 
         #athena-bg {
             background-image: url('athena.jpg');
-            z-index: -3; /* أثينا دائماً في الخلف */
+            z-index: -3; /* أثينا هي الأساس */
+            opacity: 1;
         }
 
         #category-bg-layer {
             opacity: 0;
-            transition: opacity 0.8s ease-in-out;
-            z-index: -2; /* صور التصنيفات تظهر فوق أثينا */
+            z-index: -2; /* فوق أثينا ولكن تحت المحتوى */
         }
 
         .overlay {
             position: fixed; inset: 0;
-            background: rgba(0, 0, 0, 0.55);
+            background: rgba(0, 0, 0, 0.6);
             z-index: -1;
             transition: opacity 0.5s ease;
         }
 
-        .overlay.no-dim {
-            opacity: 0;
-            pointer-events: none;
+        .overlay.light-dim {
+            background: rgba(0, 0, 0, 0.3); /* تعتيم أخف للخريطة لإبراز الخلفية */
         }
 
         .top-bar {
@@ -282,9 +281,13 @@
     const MAX_HEARTS = 5;
     const REGEN_TIME = 5 * 60 * 1000;
 
+    // التأكد من أن أسماء الملفات تطابق أسماء التصنيفات
     const categoryBackgrounds = {
-        "history": "history.jpg", "histoire": "history.jpg", "historia": "history.jpg",
-        "geo": "geography.jpg", "science": "science.jpg", "general": "general.jpg", "sports": "sports.jpg"
+        "history": "history.jpg",
+        "geo": "geography.jpg", 
+        "science": "science.jpg", 
+        "general": "general.jpg", 
+        "sports": "sports.jpg"
     };
 
     let gameState = {
@@ -437,13 +440,13 @@
         if(!navigator.onLine) return;
         gameState.currentCat = name; 
         
-        // تغيير الطبقة العلوية للخلفية بسلاسة دون تغيير أثينا في الخلف
+        // تغيير خلفية التصنيف بسلاسة
         const bgFile = categoryBackgrounds[name];
         const catLayer = document.getElementById('category-bg-layer');
         if(bgFile) {
             catLayer.style.backgroundImage = `url('${bgFile}')`;
-            catLayer.style.opacity = "1";
-            document.getElementById('main-overlay').classList.add('no-dim'); 
+            catLayer.style.opacity = "1"; // إظهار الصورة فوق أثينا
+            document.getElementById('main-overlay').classList.add('light-dim'); // تقليل التعتيم ليتضح جمال الخلفية
         }
         
         switchScreen('scr-map');
@@ -554,8 +557,8 @@
         const quizUI = document.getElementById('quiz-ui'); if (quizUI.classList.contains('show')) { quizUI.classList.remove('show'); return; }
         if (document.getElementById('scr-map').classList.contains('active')) { 
             switchScreen('scr-cats'); 
-            document.getElementById('category-bg-layer').style.opacity = "0"; // إخفاء صورة التصنيف لظهور أثينا
-            document.getElementById('main-overlay').classList.remove('no-dim'); // إعادة التعتيم
+            document.getElementById('category-bg-layer').style.opacity = "0"; // إخفاء خلفية التصنيف لتعود أثينا للظهور
+            document.getElementById('main-overlay').classList.remove('light-dim');
         } 
         else if (document.getElementById('scr-cats').classList.contains('active')) { 
             switchScreen('scr-start'); 
