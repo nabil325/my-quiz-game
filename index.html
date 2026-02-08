@@ -29,7 +29,6 @@
             --danger: #ff4d4d;
         }
 
-        /* تنبيه حالة الإنترنت */
         #offline-warning {
             position: fixed; top: 0; left: 0; width: 100%;
             background: var(--danger); color: white;
@@ -41,38 +40,34 @@
             margin: 0; padding: 0; height: 100%; width: 100%;
             font-family: 'Cairo', sans-serif; color: white;
             overflow: hidden;
-            background-color: #000; /* خلفية سوداء أساسية لمنع الوميض */
+            background-color: #000;
         }
 
-        /* طبقات الخلفية */
+        /* إدارة الخلفيات */
         .bg-layer {
             position: fixed; inset: 0;
             background-size: cover;
             background-position: center;
             background-repeat: no-repeat;
             z-index: -2;
-            transition: opacity 0.8s ease-in-out;
-        }
-
-        #athena-bg {
-            background-image: url('athena.jpg');
-            opacity: 1;
+            transition: opacity 1s ease-in-out;
+            background-image: url('athena.jpg'); /* الافتراضية */
         }
 
         #category-bg {
             opacity: 0;
+            z-index: -1;
         }
 
         .overlay {
             position: fixed; inset: 0;
-            background: rgba(0, 0, 0, 0.6);
-            z-index: -1;
-            transition: background 0.5s ease;
+            background: rgba(0, 0, 0, 0.65);
+            z-index: 0;
+            transition: background 0.5s;
         }
 
-        /* تقليل التعتيم في الخريطة لإظهار الخلفية بوضوح */
-        .map-active-overlay {
-            background: rgba(0, 0, 0, 0.3) !important;
+        .map-mode-overlay {
+            background: rgba(0, 0, 0, 0.35); /* تقليل التعتيم لرؤية خلفية القسم */
         }
 
         .top-bar {
@@ -163,7 +158,7 @@
             scroll-behavior: smooth;
             position: relative;
         }
-
+        
         .lvl-node { 
             width: 80px; height: 80px; border-radius: 50%; 
             background: rgba(255, 255, 255, 0.05); 
@@ -223,8 +218,8 @@
 
 <div id="offline-warning"></div>
 
-<div id="athena-bg" class="bg-layer"></div>
-<div id="category-bg" class="bg-layer"></div>
+<div id="base-bg" class="bg-layer" style="background-image: url('athena.jpg');"></div>
+<div id="category-bg" class="bg-layer" style="opacity: 0;"></div>
 <div id="main-overlay" class="overlay"></div>
 
 <audio id="bg-audio" src="./jazz-music-466491.mp3" loop></audio>
@@ -326,13 +321,13 @@
     const MAX_HEARTS = 5;
     const REGEN_TIME = 5 * 60 * 1000;
 
-    // ربط الصور بالتصنيفات
-    const categoryImages = {
-        'history': 'history.jpg',
-        'geo': 'geography.jpg',
-        'science': 'science.jpg',
-        'general': 'general.jpg',
-        'sports': 'sports.jpg'
+    // ربط ملفات الصور بالتصنيفات بناءً على مجلد GitHub الخاص بك
+    const CAT_BGS = {
+        history: "history.jpg",
+        geo: "geography.jpg",
+        science: "science.jpg",
+        general: "general.jpg",
+        sports: "sports.jpg"
     };
 
     let gameState = {
@@ -351,12 +346,26 @@
     const langConfig = {
         ar: { dir: "rtl", font: "'Cairo', sans-serif", logo: "IQ ثقافة", sub: "النسخة العالمية", start: "استمرار", select: "اختر التصنيف", recharge: "+", noHearts: "انتهت القلوب!", adDesc: "شاهد إعلان للحصول على قلوب كاملة.", later: "ربما لاحقاً", removeBtn: "حذف خيارين (50 نقطة)", factLoading: "جاري التحميل...", leaderboardBtn: "🏆 قائمة المتصدرين العالمية", leaderboardTitle: "أفضل 10 لاعبين في العالم", close: "إغلاق", offline: "⚠️ لا يوجد اتصال بالإنترنت", factsGid: "605574246", cats: [{ name: "⏳ التاريخ", gid: "11216236", key: "history" }, { name: "🌍 الجغرافيا", gid: "99625756", key: "geo" }, { name: "🧬 العلوم", gid: "1843208636", key: "science" }, { name: "💡 ثقافة عامة", gid: "564130158", key: "general" }, { name: "⚽ الرياضة", gid: "0", key: "sports" }] },
         en: { dir: "ltr", font: "'Poppins', sans-serif", logo: "IQ Culture", sub: "GLOBAL EDITION", start: "Continue", select: "Select Category", recharge: "+", noHearts: "No Hearts!", adDesc: "Watch ad to get full hearts.", later: "Maybe later", removeBtn: "Remove 2 (50 pts)", factLoading: "Loading fact...", leaderboardBtn: "🏆 Global Leaderboard", leaderboardTitle: "Top 10 Players in the World", close: "Close", offline: "⚠️ No internet connection", factsGid: "259198059", cats: [{ name: "⏳ History", gid: "1950805065", key: "history" }, { name: "🌍 Geography", gid: "1899297807", key: "geo" }, { name: "🧬 Science", gid: "407039200", key: "science" }, { name: "💡 General", gid: "1044248022", key: "general" }, { name: "⚽ Sports", gid: "1559005659", key: "sports" }] },
-        es: { dir: "ltr", font: "'Poppins', sans-serif", logo: "IQ Cultura", sub: "EDICIÓN GLOBAL", start: "Continuar", select: "Seleccionar Categoría", recharge: "+", noHearts: "¡Sin Corazones!", adDesc: "Mira un anuncio para obtener corazones.", later: "Más tarde", removeBtn: "Eliminar 2 (50 pts)", factLoading: "Cargando...", leaderboardBtn: "🏆 Tabla de Líderes", leaderboardTitle: "Los 10 mejores jugadores", close: "Cerrar", offline: "⚠️ Sin conexión a internet", factsGid: "1911794502", cats: [{ name: "⏳ Historia", gid: "948777647", key: "history" }, { name: "🌍 Geografía", gid: "1233201488", key: "geo" }, { name: "🧬 Ciencia", gid: "2028449800", key: "science" }, { name: "💡 Cultura General", gid: "1662832315", key: "general" }, { name: "⚽ Deportes", gid: "1795176380", key: "sports" }] },
+        es: { dir: "ltr", font: "'Poppins', sans-serif", logo: "IQ Cultura", sub: "EDICIÓN GLOBAL", start: "Continuar", select: "Seleccionar Categoría", recharge: "+", noHearts: "¡Sin Corازones!", adDesc: "Mira un anuncio para obtener corazones.", later: "Más tarde", removeBtn: "Eliminar 2 (50 pts)", factLoading: "Cargando...", leaderboardBtn: "🏆 Tabla de Líderes", leaderboardTitle: "Los 10 mejores jugadores", close: "Cerrar", offline: "⚠️ Sin conexión a internet", factsGid: "1911794502", cats: [{ name: "⏳ Historia", gid: "948777647", key: "history" }, { name: "🌍 Geografía", gid: "1233201488", key: "geo" }, { name: "🧬 Ciencia", gid: "2028449800", key: "science" }, { name: "💡 Cultura General", gid: "1662832315", key: "general" }, { name: "⚽ Deportes", gid: "1795176380", key: "sports" }] },
         fr: { dir: "ltr", font: "'Poppins', sans-serif", logo: "QI Culture", sub: "ÉDITION MONDIALE", start: "Continuer", select: "Choisir la Catégorie", recharge: "+", noHearts: "Plus de cœurs !", adDesc: "Regardez une pub pour des cœurs.", later: "Plus tard", removeBtn: "Supprimer 2 (50 pts)", factLoading: "Chargement...", leaderboardBtn: "🏆 Classement Mondial", leaderboardTitle: "Top 10 des meilleurs joueurs", close: "Fermer", offline: "⚠️ Pas de connexion internet", factsGid: "1356278776", cats: [{ name: "⏳ Histoire", gid: "1692460075", key: "history" }, { name: "🌍 Géographie", gid: "1888258036", key: "geo" }, { name: "🧬 Sciences", gid: "1043839601", key: "science" }, { name: "💡 Culture Générale", gid: "1000789609", key: "general" }, { name: "⚽ Sports", gid: "942675202", key: "sports" }] }
     };
 
     const audioEl = document.getElementById('bg-audio');
     const muteBtn = document.getElementById('mute-btn');
+
+    function updateBackground(catKey) {
+        const catLayer = document.getElementById('category-bg');
+        const overlay = document.getElementById('main-overlay');
+        
+        if (catKey && CAT_BGS[catKey]) {
+            catLayer.style.backgroundImage = `url('${CAT_BGS[catKey]}')`;
+            catLayer.style.opacity = '1';
+            overlay.classList.add('map-mode-overlay');
+        } else {
+            catLayer.style.opacity = '0';
+            overlay.classList.remove('map-mode-overlay');
+        }
+    }
 
     function checkConnection() {
         const warning = document.getElementById('offline-warning');
@@ -383,18 +392,13 @@
         }
     });
 
-    // إدارة الخلفيات عند العودة
     function goBack() {
         const quizUI = document.getElementById('quiz-ui');
         if (quizUI.classList.contains('show')) { quizUI.classList.remove('show'); return; }
         const mapScreen = document.getElementById('scr-map');
         const catsScreen = document.getElementById('scr-cats');
-        
         if (mapScreen.classList.contains('active')) { 
-            // إخفاء خلفية القسم وإرجاع أثينا
-            document.getElementById('category-bg').style.opacity = '0';
-            document.getElementById('athena-bg').style.opacity = '1';
-            document.getElementById('main-overlay').classList.remove('map-active-overlay');
+            updateBackground(null); // العودة لخلفية أثينا
             switchScreen('scr-cats'); 
         } 
         else if (catsScreen.classList.contains('active')) { 
@@ -478,8 +482,7 @@
         document.getElementById('remove-two-btn').innerText = conf.removeBtn; document.getElementById('btn-leaderboard').innerText = conf.leaderboardBtn;
         document.getElementById('txt-leaderboard-title').innerText = conf.leaderboardTitle; document.getElementById('btn-close-leader').innerText = conf.close;
         document.querySelectorAll('.lang-btn').forEach(b => b.classList.remove('active-lang'));
-        const activeBtn = document.getElementById(`btn-lang-${gameState.lang}`);
-        if(activeBtn) activeBtn.classList.add('active-lang');
+        document.getElementById(`btn-lang-${gameState.lang}`).classList.add('active-lang');
         checkConnection();
         loadFact(); renderCats();
     }
@@ -529,22 +532,10 @@
 
     function switchScreen(id) { document.querySelectorAll('.screen').forEach(s => s.classList.remove('active')); document.getElementById(id).classList.add('active'); }
 
-    async function startCat(gid, name) {
+    async function startCat(gid, key) {
         if(!navigator.onLine) return;
-        gameState.currentCat = name; 
-        
-        // تغيير الخلفية حسب التصنيف
-        const catLayer = document.getElementById('category-bg');
-        const athenaLayer = document.getElementById('athena-bg');
-        const overlay = document.getElementById('main-overlay');
-        
-        if (categoryImages[name]) {
-            catLayer.style.backgroundImage = `url('${categoryImages[name]}')`;
-            catLayer.style.opacity = '1';
-            athenaLayer.style.opacity = '0'; // إخفاء أثينا مؤقتاً
-            overlay.classList.add('map-active-overlay'); // تفتيح التعتيم
-        }
-
+        gameState.currentCat = key; 
+        updateBackground(key); // تفعيل صورة الخلفية للقسم
         switchScreen('scr-map');
         try {
             const r = await fetch(CSV + "&gid=" + gid); const d = await r.text();
