@@ -266,9 +266,12 @@
         </div>
     </div>
 </div>
-
 <script>
-    const firebaseConfig = { apiKey: "AIzaSyCIXq5egNrR0dS5YI2L4BFnm3IGa11128Q", databaseURL: "https://iq-culture-default-rtdb.firebaseio.com/", projectId: "iq-culture" };
+    const firebaseConfig = { 
+        apiKey: "AIzaSyCIXq5egNrR0dS5YI2L4BFnm3IGa11128Q", 
+        databaseURL: "https://iq-culture-default-rtdb.firebaseio.com/", 
+        projectId: "iq-culture" 
+    };
     firebase.initializeApp(firebaseConfig);
     const db = firebase.database();
     const CSV = "https://docs.google.com/spreadsheets/d/e/2PACX-1vSJ4RCU1_iXMqLS3ApB1g8SjSrL2hbIAv-1VniqdMElnalov--mSDTpe9rjMxaWGCuP6gpxWV7OZDe1/pub?output=csv";
@@ -333,7 +336,7 @@
                 const regenEl = document.getElementById('regen-timer');
                 if(regenEl) regenEl.innerText = `${mins}:${secs < 10 ? '0' : ''}${secs}`;
             }
-        } else { document.getElementById('regen-timer').innerText = ""; gameState.lastHeartTime = Date.now(); }
+        } else { if(document.getElementById('regen-timer')) document.getElementById('regen-timer').innerText = ""; gameState.lastHeartTime = Date.now(); }
     }
 
     function checkPlayerName() { if (!gameState.playerName) document.getElementById('name-screen').style.display = 'flex'; else updatePlayerDisplay(); }
@@ -361,7 +364,7 @@
             listCont.innerHTML = '';
             board.forEach((entry, i) => {
                 let rank = (i === 0) ? "🥇" : (i === 1) ? "🥈" : (i === 2) ? "🥉" : (i + 1);
-                listCont.innerHTML += `<div class="leader-item"><span>${rank} ${entry.name}</span><b>${entry.score}</b></div>`;
+                listCont.innerHTML += `<div class="leader-item" style="display:flex; justify-content:space-between; padding:10px; border-bottom:1px solid #333;"><span>${rank} ${entry.name}</span><b>${entry.score}</b></div>`;
             });
             document.getElementById('leaderboard-modal').style.display = 'flex';
         });
@@ -431,7 +434,6 @@
     async function startCat(gid, name) {
         if(!navigator.onLine) return;
         gameState.currentCat = name; 
-        
         const bgFile = categoryBackgrounds[name];
         const catLayer = document.getElementById('category-bg-layer');
         if(bgFile) {
@@ -439,7 +441,6 @@
             catLayer.style.opacity = "1"; 
             document.getElementById('main-overlay').classList.add('map-active'); 
         }
-        
         switchScreen('scr-map');
         try {
             const r = await fetch(CSV + "&gid=" + gid); const d = await r.text();
@@ -494,13 +495,11 @@
     function goBack() {
         const quizUI = document.getElementById('quiz-ui'); 
         if (quizUI.classList.contains('show')) { quizUI.classList.remove('show'); return; }
-        
         if (document.getElementById('scr-map').classList.contains('active')) { 
             document.getElementById('category-bg-layer').style.opacity = "0";
             document.getElementById('main-overlay').classList.remove('map-active');
             switchScreen('scr-cats'); 
-        } 
-        else if (document.getElementById('scr-cats').classList.contains('active')) { 
+        } else if (document.getElementById('scr-cats').classList.contains('active')) { 
             switchScreen('scr-start'); 
             document.getElementById('top-bar').style.display = 'none'; 
             document.getElementById('main-exit-btn').style.display = 'none'; 
@@ -509,10 +508,8 @@
 
     function showAdModal(type) { document.getElementById('ad-modal').style.display = 'flex'; }
     function closeAdModal() { document.getElementById('ad-modal').style.display = 'none'; }
-    function triggerRewardedAd() { 
-        gameState.hearts = MAX_HEARTS; save(); updateUI(); closeAdModal(); 
-    }
-    function useRemoveTwo() { /* وظيفة حذف خيارين */ }
+    function triggerRewardedAd() { gameState.hearts = MAX_HEARTS; save(); updateUI(); closeAdModal(); }
+    function useRemoveTwo() { /* logic here */ }
 
     window.onload = init;
 </script>
