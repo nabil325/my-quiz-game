@@ -423,7 +423,6 @@
     function showCats() { 
         document.getElementById('top-bar').style.display = 'flex'; 
         document.getElementById('main-exit-btn').style.display = 'flex';
-        // عند الدخول لشاشة التصنيفات: إخفاء خلفية الأقسام للتأكد من ظهور أثينا
         document.getElementById('category-bg-layer').style.opacity = "0";
         document.getElementById('main-overlay').classList.remove('map-active');
         switchScreen('scr-cats'); 
@@ -433,7 +432,6 @@
         if(!navigator.onLine) return;
         gameState.currentCat = name; 
         
-        // الانتقال إلى الخريطة: إظهار خلفية التصنيف وإخفاء أثينا خلفها
         const bgFile = categoryBackgrounds[name];
         const catLayer = document.getElementById('category-bg-layer');
         if(bgFile) {
@@ -498,7 +496,6 @@
         if (quizUI.classList.contains('show')) { quizUI.classList.remove('show'); return; }
         
         if (document.getElementById('scr-map').classList.contains('active')) { 
-            // العودة من الخريطة: إخفاء صورة التصنيف للعودة لصورة أثينا
             document.getElementById('category-bg-layer').style.opacity = "0";
             document.getElementById('main-overlay').classList.remove('map-active');
             switchScreen('scr-cats'); 
