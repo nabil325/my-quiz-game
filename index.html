@@ -46,44 +46,23 @@
         }
 
         /* ===== الخلفيات ===== */
-        .bg-container {
+        body {
+            background-size: cover;
+            background-position: center;
+            background-repeat: no-repeat;
+            background-attachment: fixed;
+            transition: background-image 1s ease-in-out;
+        }
+
+        .overlay {
             position: fixed;
             top: 0;
             left: 0;
             width: 100%;
             height: 100%;
-            z-index: -10;
-        }
-
-        .bg-layer {
-            position: absolute;
-            inset: 0;
-            background-size: cover;
-            background-position: center;
-            background-repeat: no-repeat;
-            transition: opacity 1s ease;
-            opacity: 1;
-        }
-
-        .bg-layer.hidden {
-            opacity: 0;
-            pointer-events: none;
-        }
-
-        #base-bg {
-            background: linear-gradient(135deg, #0f0f0f 0%, #1a1a2e 100%);
-        }
-
-        #category-bg {
-            background-size: cover;
-            background-position: center;
-        }
-
-        .overlay {
-            position: absolute;
-            inset: 0;
             background: rgba(0, 0, 0, 0.35);
             z-index: 1;
+            pointer-events: none;
         }
 
         /* ===== رسائل تحذير ===== */
@@ -242,12 +221,6 @@
             display: none;
             align-items: center;
             justify-content: center;
-            animation: fadeIn 0.3s ease;
-        }
-
-        @keyframes fadeIn {
-            from { opacity: 0; }
-            to { opacity: 1; }
         }
 
         .name-box {
@@ -258,18 +231,11 @@
             text-align: center;
             width: 85%;
             max-width: 400px;
-            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.5);
         }
 
         .name-box h2 {
             color: var(--gold);
             margin-bottom: 10px;
-            font-size: 1.6rem;
-        }
-
-        .name-box p {
-            color: rgba(255, 255, 255, 0.7);
-            margin-bottom: 20px;
         }
 
         .name-box input {
@@ -283,13 +249,11 @@
             background: rgba(255, 255, 255, 0.05);
             color: white;
             font-family: 'Cairo';
-            transition: 0.2s;
         }
 
         .name-box input:focus {
             outline: none;
             border-color: var(--gold);
-            background: rgba(255, 255, 255, 0.1);
         }
 
         /* ===== الشاشات ===== */
@@ -345,7 +309,6 @@
             color: var(--gold);
             letter-spacing: 3px;
             font-weight: 700;
-            text-transform: uppercase;
         }
 
         /* ===== الأزرار ===== */
@@ -360,16 +323,10 @@
             cursor: pointer;
             transition: 0.3s;
             font-family: 'Cairo';
-            box-shadow: 0 4px 15px rgba(255, 215, 0, 0.2);
         }
 
         .gold-btn:hover:not(:disabled) {
             transform: translateY(-2px);
-            box-shadow: 0 6px 25px rgba(255, 215, 0, 0.3);
-        }
-
-        .gold-btn:active {
-            transform: translateY(0);
         }
 
         .gold-btn:disabled {
@@ -385,9 +342,7 @@
             border-radius: 25px;
             cursor: pointer;
             font-weight: 900;
-            transition: 0.2s;
             font-family: 'Cairo';
-            backdrop-filter: blur(10px);
         }
 
         .glass-btn:hover {
@@ -443,7 +398,6 @@
 
         .cat-btn:hover {
             background: rgba(0, 0, 0, 0.8);
-            border-color: rgba(255, 255, 255, 0.3);
             transform: translateY(-3px);
         }
 
@@ -457,19 +411,6 @@
             flex-direction: column-reverse;
             align-items: center;
             gap: 40px;
-        }
-
-        .map-view::-webkit-scrollbar {
-            width: 6px;
-        }
-
-        .map-view::-webkit-scrollbar-track {
-            background: rgba(255, 255, 255, 0.05);
-        }
-
-        .map-view::-webkit-scrollbar-thumb {
-            background: rgba(255, 255, 255, 0.2);
-            border-radius: 3px;
         }
 
         .level-node {
@@ -509,7 +450,6 @@
             cursor: pointer;
             animation: pulse 2s infinite;
             z-index: 5;
-            box-shadow: 0 0 20px rgba(255, 255, 255, 0.5);
         }
 
         @keyframes pulse {
@@ -530,7 +470,7 @@
             padding: 30px 20px;
             box-sizing: border-box;
             z-index: 2000;
-            transition: 0.6s cubic-bezier(0.19, 1, 0.22, 1);
+            transition: 0.6s;
             max-height: 75vh;
             overflow-y: auto;
         }
@@ -568,18 +508,15 @@
 
         .answer-btn:hover:not(.wrong):not(.correct) {
             background: rgba(255, 255, 255, 0.15);
-            border-color: rgba(255, 255, 255, 0.25);
         }
 
         .answer-btn.wrong {
             background: #ef4444;
-            border-color: #dc2626;
             animation: shake 0.3s;
         }
 
         .answer-btn.correct {
             background: var(--green);
-            border-color: #059669;
             animation: wiggle 0.5s;
         }
 
@@ -623,29 +560,6 @@
             align-items: center;
             padding: 12px;
             border-bottom: 1px solid rgba(255, 255, 255, 0.1);
-            transition: 0.2s;
-        }
-
-        .leader-item:hover {
-            background: rgba(255, 255, 255, 0.05);
-        }
-
-        .leader-rank {
-            font-weight: 900;
-            font-size: 1.1rem;
-            min-width: 30px;
-        }
-
-        .leader-name {
-            flex: 1;
-            text-align: left;
-            margin-left: 10px;
-        }
-
-        .leader-score {
-            color: var(--gold);
-            font-weight: 900;
-            font-size: 1rem;
         }
 
         /* ===== modal الإعلانات ===== */
@@ -667,18 +581,12 @@
             max-width: 420px;
             text-align: center;
             border: 2px solid var(--gold);
-            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.5);
         }
 
         .ad-box h3 {
             color: var(--gold);
             font-size: 1.5rem;
             margin-bottom: 10px;
-        }
-
-        .ad-box p {
-            color: rgba(255, 255, 255, 0.8);
-            margin-bottom: 20px;
         }
 
         .ad-timer {
@@ -689,35 +597,27 @@
             display: none;
         }
 
-        /* ===== Responsive ===== */
+        #regen-timer {
+            font-size: 0.7rem;
+            color: #fff;
+            margin-left: 5px;
+        }
+
         @media (max-width: 600px) {
             .main-logo {
                 font-size: 3rem;
             }
 
-            .cat-grid {
-                max-width: 100%;
-            }
-
             .answers-grid {
                 grid-template-columns: 1fr;
-            }
-
-            .screen {
-                padding: 15px;
             }
         }
     </style>
 </head>
-<body>
+<body style="background-image: url('athena.jpg');">
 
 <div id="offline-warning"></div>
-
-<div class="bg-container">
-    <div id="base-bg" class="bg-layer"></div>
-    <div id="category-bg" class="bg-layer hidden"></div>
-    <div class="overlay"></div>
-</div>
+<div class="overlay"></div>
 
 <audio id="bg-audio" src="./jazz-music-466491.mp3" loop></audio>
 
@@ -732,6 +632,7 @@
         <div class="hearts-group">
             <span>❤️</span>
             <span id="hearts-count">5</span>
+            <span id="regen-timer"></span>
             <button onclick="showAdModal('manual')" class="recharge-btn">+</button>
         </div>
         <div class="stat-badge" style="color: var(--gold);">
@@ -748,7 +649,7 @@
         <h2>مرحباً بك! 👋</h2>
         <p>أدخل اسمك لتبدأ رحلة الثقافة</p>
         <input type="text" id="name-input" placeholder="اكتب اسمك..." maxlength="15" onkeypress="if(event.key==='Enter') submitName()">
-        <button onclick="submitName()" class="gold-btn" style="padding: 12px 50px; font-size: 1.1rem;">ابدأ الآن</button>
+        <button onclick="submitName()" class="gold-btn" style="padding: 12px 50px; margin-top: 20px;">ابدأ الآن</button>
     </div>
 </div>
 
@@ -817,22 +718,22 @@
     try {
         firebase.initializeApp(firebaseConfig);
     } catch(e) {
-        console.log('Firebase init');
+        console.log('Firebase');
     }
     const db = firebase.database();
 
     // ============== ثوابت ==============
     const CSV_URL = "https://docs.google.com/spreadsheets/d/e/2PACX-1vSJ4RCU1_iXMqLS3ApB1g8SjSrL2hbIAv-1VniqdMElnalov--mSDTpe9rjMxaWGCuP6gpxWV7OZDe1/pub?output=csv";
     const MAX_HEARTS = 5;
-    const REGEN_TIME = 5 * 60 * 1000;
+    const REGEN_TIME = 5 * 60 * 1000; // 5 دقائق
 
     // ============== الخلفيات ==============
-    const CATEGORY_COLORS = {
-        history: "linear-gradient(135deg, rgb(139, 69, 19) 0%, rgb(184, 134, 11) 100%)",
-        geo: "linear-gradient(135deg, rgb(0, 100, 200) 0%, rgb(0, 150, 255) 100%)",
-        science: "linear-gradient(135deg, rgb(75, 0, 130) 0%, rgb(138, 43, 226) 100%)",
-        general: "linear-gradient(135deg, rgb(75, 0, 0) 0%, rgb(139, 0, 0) 100%)",
-        sports: "linear-gradient(135deg, rgb(0, 100, 0) 0%, rgb(0, 200, 0) 100%)"
+    const CATEGORY_IMAGES = {
+        history: 'history.jpg',
+        geo: 'geography.jpg',
+        science: 'science.jpg',
+        general: 'general.jpg',
+        sports: 'sports.jpg'
     };
 
     // ============== حالة اللعبة ==============
@@ -843,11 +744,11 @@
         hearts: parseInt(localStorage.getItem('iq_hearts')) || MAX_HEARTS,
         lastHeartTime: parseInt(localStorage.getItem('iq_last_heart')) || Date.now(),
         muted: (localStorage.getItem('iq_muted') === 'true') || false,
-        usedPowerups: JSON.parse(localStorage.getItem('iq_powerups') || '{}'),
         language: localStorage.getItem('iq_language') || 'ar',
         currentCategory: '',
         currentQuestion: 0,
-        questions: []
+        questions: [],
+        heartRegenInterval: null
     };
 
     // ============== إعدادات اللغات ==============
@@ -904,22 +805,22 @@
         avatar: document.getElementById('avatar'),
         playerName: document.getElementById('player-name'),
         hearts: document.getElementById('hearts-count'),
+        regenTimer: document.getElementById('regen-timer'),
         score: document.getElementById('score-count'),
         topBar: document.getElementById('top-bar'),
         exitBtn: document.getElementById('exit-btn'),
-        categoryBg: document.getElementById('category-bg'),
-        baseBg: document.getElementById('base-bg')
+        body: document.body
     };
 
     // ============== التهيئة ==============
     function init() {
-        console.log('Game Initializing...');
+        console.log('Game Starting...');
         checkConnection();
         checkPlayerName();
         loadFact();
         renderCategories();
         updateDisplay();
-        setInterval(checkHeartRegen, 1000);
+        startHeartRegen(); // بدء نظام تجديد القلوب
         window.addEventListener('online', checkConnection);
         window.addEventListener('offline', checkConnection);
     }
@@ -933,6 +834,47 @@
         } else {
             warning.style.display = 'none';
         }
+    }
+
+    // ============== نظام تجديد القلوب ===== */
+    function startHeartRegen() {
+        // حذف الـ interval السابق إن وجد
+        if (gameState.heartRegenInterval) {
+            clearInterval(gameState.heartRegenInterval);
+        }
+
+        // تحديث كل ثانية للعرض
+        gameState.heartRegenInterval = setInterval(() => {
+            if (gameState.hearts >= MAX_HEARTS) {
+                elements.regenTimer.innerText = '';
+                return;
+            }
+
+            const now = Date.now();
+            const elapsed = now - gameState.lastHeartTime;
+            const remaining = REGEN_TIME - elapsed;
+
+            if (remaining <= 0) {
+                // إضافة قلب جديد
+                gameState.hearts++;
+                gameState.lastHeartTime = now;
+                saveGame();
+                updateDisplay();
+
+                // إذا وصلنا للحد الأقصى
+                if (gameState.hearts >= MAX_HEARTS) {
+                    elements.regenTimer.innerText = '';
+                    return;
+                }
+            }
+
+            // حساب الوقت المتبقي
+            const remainingSeconds = Math.ceil(remaining / 1000);
+            const minutes = Math.floor(remainingSeconds / 60);
+            const seconds = remainingSeconds % 60;
+
+            elements.regenTimer.innerText = `⏱️ ${minutes}:${seconds < 10 ? '0' : ''}${seconds}`;
+        }, 1000);
     }
 
     // ============== اسم اللاعب ==============
@@ -971,7 +913,7 @@
         fetch(CSV_URL + "&gid=" + lang.factsId)
             .then(r => r.text())
             .then(data => {
-                const lines = data.split('\n').slice(1).filter(l => l);
+                const lines = data.split('\n').slice(1).filter(l => l.trim());
                 if (lines.length) {
                     const fact = lines[Math.floor(Math.random() * lines.length)]
                         .split(',')[0]
@@ -1010,6 +952,8 @@
     function showCategories() {
         elements.topBar.style.display = 'flex';
         elements.exitBtn.style.display = 'flex';
+        // إعادة الخلفية الأساسية
+        elements.body.style.backgroundImage = "url('athena.jpg')";
         if (!gameState.muted) elements.audio.play().catch(() => {});
         switchScreen('screen-cats');
     }
@@ -1025,7 +969,7 @@
         const catsScreen = document.getElementById('screen-cats');
 
         if (mapScreen.classList.contains('active')) {
-            elements.categoryBg.classList.add('hidden');
+            elements.body.style.backgroundImage = "url('athena.jpg')";
             switchScreen('screen-cats');
         } else if (catsScreen.classList.contains('active')) {
             switchScreen('screen-start');
@@ -1042,8 +986,8 @@
         }
 
         gameState.currentCategory = catKey;
-        elements.categoryBg.style.backgroundImage = CATEGORY_COLORS[catKey];
-        elements.categoryBg.classList.remove('hidden');
+        // === تغيير الخلفية ===
+        elements.body.style.backgroundImage = `url('${CATEGORY_IMAGES[catKey]}')`;
         switchScreen('screen-map');
 
         try {
@@ -1119,7 +1063,6 @@
 
         let answers = q.answers.map((ans, idx) => ({
             text: ans,
-            correct: String.fromCharCode(97 + idx),
             correctLetter: String.fromCharCode(97 + idx)
         }));
 
@@ -1140,7 +1083,7 @@
     function checkAnswer(btn, selected, correct) {
         const progKey = `${gameState.language}_${gameState.currentCategory}`;
 
-        if (selected === correct) {
+        if (selected === correct.charAt(0)) {
             btn.classList.add('correct');
             gameState.score += 10;
 
@@ -1170,19 +1113,9 @@
             } else {
                 saveGame();
                 updateDisplay();
-            }
-        }
-    }
-
-    // ============== تجديد القلوب ==============
-    function checkHeartRegen() {
-        if (gameState.hearts < MAX_HEARTS) {
-            const now = Date.now();
-            if (now - gameState.lastHeartTime >= REGEN_TIME) {
-                gameState.hearts++;
-                gameState.lastHeartTime = now;
-                saveGame();
-                updateDisplay();
+                setTimeout(() => {
+                    document.getElementById('quiz-container').classList.remove('show');
+                }, 800);
             }
         }
     }
@@ -1241,6 +1174,7 @@
                 closeAdModal();
                 btn.style.display = 'block';
                 timer.style.display = 'none';
+                startHeartRegen(); // إعادة بدء العداد
             }
         }, 1000);
     }
@@ -1266,9 +1200,11 @@
                     const item = document.createElement('div');
                     item.className = 'leader-item';
                     item.innerHTML = `
-                        <span class="leader-rank">${rank}</span>
-                        <span class="leader-name">${leader.name}</span>
-                        <span class="leader-score">${leader.score}</span>
+                        <div>
+                            <span style="font-weight: 900; font-size: 1.1rem; margin-right: 10px;">${rank}</span>
+                            <span>${leader.name}</span>
+                        </div>
+                        <span style="color: var(--gold); font-weight: 900;">${leader.score}</span>
                     `;
                     content.appendChild(item);
                 });
