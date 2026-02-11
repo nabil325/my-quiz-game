@@ -43,39 +43,41 @@
             background-color: #000;
         }
 
-        /* --- إصلاح إدارة الخلفيات --- */
+        /* --- نظام الخلفيات المطور --- */
         .bg-layer {
             position: fixed; inset: 0;
             background-size: cover;
             background-position: center;
             background-repeat: no-repeat;
-            z-index: -10; /* جعلها في أعمق طبقة */
+            z-index: -10;
             transition: opacity 1s ease-in-out;
-            background-image: url('athena.jpg'); 
         }
 
+        /* خلفية أثينا الأساسية مع تعتيم خفيف جداً */
+        #base-bg {
+            background-image: linear-gradient(rgba(0,0,0,0.3), rgba(0,0,0,0.3)), url('athena.jpg');
+        }
+
+        /* خلفية الأقسام: صافية تماماً بدون أي تعتيم */
         #category-bg {
             opacity: 0;
-            z-index: -9; /* فوق الخلفية الأساسية مباشرة */
+            z-index: -9;
         }
 
+        /* تم إزالة التعتيم من الـ overlay وجعله شفافاً تماماً */
         .overlay {
             position: fixed; inset: 0;
-            background: rgba(0, 0, 0, 0.7); /* السواد الافتراضي */
-            z-index: -5; /* فوق الصور وتحت الأزرار */
-            transition: background 0.5s;
+            background: rgba(0, 0, 0, 0); 
+            z-index: -5;
             pointer-events: none;
         }
 
-        .map-mode-overlay {
-            background: rgba(0, 0, 0, 0.4) !important; /* تقليل السواد لرؤية صور الأقسام بوضوح */
-        }
         /* ------------------------- */
 
         .top-bar {
             position: fixed; top: 0; width: 100%; padding: 10px 15px;
             display: none; justify-content: space-between; align-items: center; z-index: 1000;
-            background: var(--glass);
+            background: rgba(0, 0, 0, 0.4); /* تعتيم بسيط للبار العلوي للقراءة */
             backdrop-filter: blur(15px);
             -webkit-backdrop-filter: blur(15px);
             box-sizing: border-box; 
@@ -88,8 +90,8 @@
 
         .player-badge {
             display: flex; align-items: center; gap: 6px;
-            background: rgba(255,255,255,0.08); padding: 4px 10px;
-            border-radius: 50px; border: 1px solid rgba(255,255,255,0.1);
+            background: rgba(255,255,255,0.15); padding: 4px 10px;
+            border-radius: 50px; border: 1px solid rgba(255,255,255,0.2);
         }
         .player-avatar {
             width: 24px; height: 24px; background: var(--gold);
@@ -99,8 +101,8 @@
 
         .hearts-group {
             display: flex; align-items: center; gap: 2px;
-            background: rgba(255, 77, 77, 0.1);
-            border: 1px solid rgba(255, 77, 77, 0.3);
+            background: rgba(0, 0, 0, 0.3);
+            border: 1px solid rgba(255, 77, 77, 0.5);
             padding: 2px 4px; border-radius: 50px;
         }
 
@@ -127,7 +129,7 @@
         }
 
         .icon-btn {
-            background: rgba(255,255,255,0.1); border: 1px solid rgba(255,255,255,0.1);
+            background: rgba(0,0,0,0.3); border: 1px solid rgba(255,255,255,0.2);
             width: 36px; height: 36px; border-radius: 10px; cursor: pointer; 
             display: flex; align-items: center; justify-content: center;
             color: white; transition: 0.2s; font-size: 1rem;
@@ -138,15 +140,15 @@
         .name-box input { width: 100%; padding: 15px; border-radius: 15px; border: 1px solid #333; margin: 20px 0; font-size: 1.2rem; text-align: center; background: #222; color: white; box-sizing: border-box; font-family: 'Cairo'; }
         .screen { position: relative; z-index: 10; height: 100vh; display: none; flex-direction: column; align-items: center; justify-content: center; text-align: center; padding: 20px; box-sizing: border-box; }
         .active { display: flex; }
-        .fact-container { background: var(--glass); padding: 25px; border-radius: 25px; margin: 20px; max-width: 400px; max-height: 180px; overflow-y: auto; border: 1px solid rgba(255,255,255,0.1); }
+        .fact-container { background: rgba(0,0,0,0.5); padding: 25px; border-radius: 25px; margin: 20px; max-width: 400px; max-height: 180px; overflow-y: auto; border: 1px solid rgba(255,255,255,0.1); }
         .gold-btn { background: var(--gold); color: black; border: none; padding: 20px 100px; border-radius: 60px; font-size: 1.4rem; font-weight: 900; cursor: pointer; transition: 0.3s; box-shadow: 0 0 20px rgba(255, 215, 0, 0.3); animation: btnPulse 2s infinite; }
         .gold-btn:disabled { background: #444; color: #888; cursor: not-allowed; animation: none; box-shadow: none; }
         @keyframes btnPulse { 0% { transform: scale(1); } 50% { transform: scale(1.05); } 100% { transform: scale(1); } }
         .lang-toggle-container { margin-bottom: 25px; display: flex; justify-content: center; flex-wrap: wrap; gap: 10px; }
-        .lang-btn { background: var(--glass); border: 1px solid rgba(255,255,255,0.2); color: white; padding: 10px 15px; border-radius: 15px; cursor: pointer; font-weight: 900; }
+        .lang-btn { background: rgba(0,0,0,0.5); border: 1px solid rgba(255,255,255,0.2); color: white; padding: 10px 15px; border-radius: 15px; cursor: pointer; font-weight: 900; }
         .lang-btn.active-lang { background: var(--blue); border-color: var(--blue); }
         .cat-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; width: 100%; max-width: 450px; }
-        .cat-btn { background: var(--glass); backdrop-filter: blur(15px); padding: 25px 10px; border-radius: 20px; border: 1px solid rgba(255,255,255,0.1); cursor: pointer; font-weight: 900; transition: 0.3s; color: white; font-size: 1.1rem; }
+        .cat-btn { background: rgba(0,0,0,0.6); backdrop-filter: blur(10px); padding: 25px 10px; border-radius: 20px; border: 1px solid rgba(255,255,255,0.2); cursor: pointer; font-weight: 900; transition: 0.3s; color: white; font-size: 1.1rem; }
         
         .map-view { 
             width: 100%; 
@@ -163,14 +165,15 @@
         
         .lvl-node { 
             width: 80px; height: 80px; border-radius: 50%; 
-            background: rgba(255, 255, 255, 0.05); 
-            border: 4px solid rgba(255, 255, 255, 0.2); 
+            background: rgba(0, 0, 0, 0.4); 
+            border: 4px solid rgba(255, 255, 255, 0.8); 
             display: flex; align-items: center; justify-content: center; 
             font-size: 1.6rem; font-weight: 900; cursor: default; 
-            transition: 0.4s; color: rgba(255, 255, 255, 0.3);
+            transition: 0.4s; color: white;
             backdrop-filter: blur(5px); flex-shrink: 0;
             position: relative;
             z-index: 2;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.3);
         }
 
         .lvl-node.completed { 
@@ -207,7 +210,7 @@
         .leader-item { display: flex; justify-content: space-between; align-items: center; padding: 10px; border-bottom: 1px solid #333; }
         .ad-modal { position: fixed; inset: 0; display: none; align-items: center; justify-content: center; background: rgba(0,0,0,0.9); z-index: 4000; }
         .ad-box { background: #222; padding: 35px; border-radius: 25px; width: 85%; max-width: 400px; text-align: center; border: 2px solid var(--gold); }
-        .glass-btn { background: rgba(255,255,255,0.1); border: 1px solid rgba(255,255,255,0.2); color: white; padding: 12px 25px; border-radius: 15px; cursor: pointer; }
+        .glass-btn { background: rgba(0,0,0,0.5); border: 1px solid rgba(255,255,255,0.2); color: white; padding: 12px 25px; border-radius: 15px; cursor: pointer; }
         #regen-timer { font-size: 0.65rem; color: #ddd; margin-right: 3px; font-weight: normal; }
 
         .logo-wrapper { margin-bottom: 30px; perspective: 1000px; }
@@ -241,7 +244,7 @@
             </div>
             <button onclick="showAdModal('manual')" class="recharge-mini-btn">+</button>
         </div>
-        <div class="stat-badge" style="color: var(--gold); background: rgba(255,215,0,0.1); border: 1px solid rgba(255,215,0,0.2);">
+        <div class="stat-badge" style="color: var(--gold); background: rgba(0, 0, 0, 0.4); border: 1px solid rgba(255,215,0,0.4);">
             <span>🏆</span> <span id="score-val">0</span>
         </div>
     </div>
@@ -272,7 +275,7 @@
 </div>
 
 <div id="scr-cats" class="screen">
-    <h2 id="txt-select-cat" style="margin-bottom: 20px; font-size: 1.8rem;">اختر التصنيف</h2>
+    <h2 id="txt-select-cat" style="margin-bottom: 20px; font-size: 1.8rem; text-shadow: 2px 2px 10px rgba(0,0,0,0.8);">اختر التصنيف</h2>
     <div class="lang-toggle-container">
         <button id="btn-lang-ar" class="lang-btn" onclick="setLanguage('ar')">Ar 🇸🇦</button>
         <button id="btn-lang-en" class="lang-btn" onclick="setLanguage('en')">En 🇺🇸</button>
@@ -348,24 +351,19 @@
         ar: { dir: "rtl", font: "'Cairo', sans-serif", logo: "IQ ثقافة", sub: "النسخة العالمية", start: "استمرار", select: "اختر التصنيف", recharge: "+", noHearts: "انتهت القلوب!", adDesc: "شاهد إعلان للحصول على قلوب كاملة.", later: "ربما لاحقاً", removeBtn: "حذف خيارين (50 نقطة)", factLoading: "جاري التحميل...", leaderboardBtn: "🏆 قائمة المتصدرين العالمية", leaderboardTitle: "أفضل 10 لاعبين في العالم", close: "إغلاق", offline: "⚠️ لا يوجد اتصال بالإنترنت", factsGid: "605574246", cats: [{ name: "⏳ التاريخ", gid: "11216236", key: "history" }, { name: "🌍 الجغرافيا", gid: "99625756", key: "geo" }, { name: "🧬 العلوم", gid: "1843208636", key: "science" }, { name: "💡 ثقافة عامة", gid: "564130158", key: "general" }, { name: "⚽ الرياضة", gid: "0", key: "sports" }] },
         en: { dir: "ltr", font: "'Poppins', sans-serif", logo: "IQ Culture", sub: "GLOBAL EDITION", start: "Continue", select: "Select Category", recharge: "+", noHearts: "No Hearts!", adDesc: "Watch ad to get full hearts.", later: "Maybe later", removeBtn: "Remove 2 (50 pts)", factLoading: "Loading fact...", leaderboardBtn: "🏆 Global Leaderboard", leaderboardTitle: "Top 10 Players in the World", close: "Close", offline: "⚠️ No internet connection", factsGid: "259198059", cats: [{ name: "⏳ History", gid: "1950805065", key: "history" }, { name: "🌍 Geography", gid: "1899297807", key: "geo" }, { name: "🧬 Science", gid: "407039200", key: "science" }, { name: "💡 General", gid: "1044248022", key: "general" }, { name: "⚽ Sports", gid: "1559005659", key: "sports" }] },
         es: { dir: "ltr", font: "'Poppins', sans-serif", logo: "IQ Cultura", sub: "EDICIÓN GLOBAL", start: "Continuar", select: "Seleccionar Categoría", recharge: "+", noHearts: "¡Sin Corazones!", adDesc: "Mira un anuncio para obtener corazones.", later: "Más tarde", removeBtn: "Eliminar 2 (50 pts)", factLoading: "Cargando...", leaderboardBtn: "🏆 Tabla de Líderes", leaderboardTitle: "Los 10 mejores jugadores", close: "Cerrar", offline: "⚠️ Sin conexión a internet", factsGid: "1911794502", cats: [{ name: "⏳ Historia", gid: "948777647", key: "history" }, { name: "🌍 Geografía", gid: "1233201488", key: "geo" }, { name: "🧬 Ciencia", gid: "2028449800", key: "science" }, { name: "💡 Cultura General", gid: "1662832315", key: "general" }, { name: "⚽ Deportes", gid: "1795176380", key: "sports" }] },
-        fr: { dir: "ltr", font: "'Poppins', sans-serif", logo: "QI Culture", sub: "ÉDITION MONDIALE", start: "Continuer", select: "Choisir la Catégorie", recharge: "+", noHearts: "Plus de cœurs !", adDesc: "Regardez une pub pour des cœurs.", later: "Plus tard", removeBtn: "Supprimer 2 (50 pts)", factLoading: "Chargement...", leaderboardBtn: "🏆 Classement Mondial", leaderboardTitle: "Top 10 des meilleurs joueurs", close: "Fermer", offline: "⚠️ Pas de connexion internet", factsGid: "1356278776", cats: [{ name: "⏳ Histoire", gid: "1692460075", key: "history" }, { name: "🌍 Géographie", gid: "1888258036", key: "geo" }, { name: "🧬 Sciences", gid: "1043839601", key: "science" }, { name: "💡 Culture Générale", gid: "1000789609", key: "general" }, { name: "⚽ Sports", gid: "942675202", key: "sports" }] }
+        fr: { dir: "ltr", font: "'Poppins', sans-serif", logo: "QI Culture", sub: "ÉDITION MONDIALE", start: "Continuer", select: "Choisير la Catégorie", recharge: "+", noHearts: "Plus de cœurs !", adDesc: "Regardez une pub pour des cœurs.", later: "Plus tard", removeBtn: "Supprimer 2 (50 pts)", factLoading: "Chargement...", leaderboardBtn: "🏆 Classement Mondial", leaderboardTitle: "Top 10 des meilleurs joueurs", close: "Fermer", offline: "⚠️ Pas de connexion internet", factsGid: "1356278776", cats: [{ name: "⏳ Histoire", gid: "1692460075", key: "history" }, { name: "🌍 Géographie", gid: "1888258036", key: "geo" }, { name: "🧬 Sciences", gid: "1043839601", key: "science" }, { name: "💡 Culture Générale", gid: "1000789609", key: "general" }, { name: "⚽ Sports", gid: "942675202", key: "sports" }] }
     };
 
     const audioEl = document.getElementById('bg-audio');
     const muteBtn = document.getElementById('mute-btn');
 
-    // دالة تحديث الخلفية المصححة
     function updateBackground(catKey) {
         const catLayer = document.getElementById('category-bg');
-        const overlay = document.getElementById('main-overlay');
-        
         if (catKey && CAT_BGS[catKey]) {
             catLayer.style.backgroundImage = `url('${CAT_BGS[catKey]}')`;
             catLayer.style.opacity = '1';
-            overlay.classList.add('map-mode-overlay');
         } else {
             catLayer.style.opacity = '0';
-            overlay.classList.remove('map-mode-overlay');
         }
     }
 
