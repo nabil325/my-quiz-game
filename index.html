@@ -221,7 +221,7 @@
         </div>
         <div class="hearts-group">
             <div class="stat-badge" style="color: #ff4d4d;">
-                <span>❤️</span> <span id="hearts-val">5</span>
+                <span>❤️</span> <span id="hearts-val">3</span>
                 <span id="regen-timer"></span>
             </div>
             <button onclick="showAdModal('manual')" class="recharge-mini-btn">+</button>
@@ -305,7 +305,8 @@
     const db = firebase.database();
     const CSV = "https://docs.google.com/spreadsheets/d/e/2PACX-1vSJ4RCU1_iXMqLS3ApB1g8SjSrL2hbIAv-1VniqdMElnalov--mSDTpe9rjMxaWGCuP6gpxWV7OZDe1/pub?output=csv";
 
-    const MAX_HEARTS = 5;
+    // تم تغيير الحد الأقصى للقلوب هنا إلى 3
+    const MAX_HEARTS = 3; 
     const REGEN_TIME = 5 * 60 * 1000;
 
     let gameState = {
@@ -325,13 +326,12 @@
         ar: { dir: "rtl", font: "'Cairo', sans-serif", logo: "IQ ثقافة", sub: "النسخة العالمية", start: "استمرار", select: "اختر التصنيف", recharge: "+", noHearts: "انتهت القلوب!", adDesc: "شاهد إعلان للحصول على قلوب كاملة.", later: "ربما لاحقاً", removeBtn: "حذف خيارين (50 نقطة)", factLoading: "جاري التحميل...", leaderboardBtn: "🏆 قائمة المتصدرين العالمية", leaderboardTitle: "أفضل 10 لاعبين في العالم", close: "إغلاق", offline: "⚠️ لا يوجد اتصال بالإنترنت", factsGid: "605574246", cats: [{ name: "⏳ التاريخ", gid: "11216236", key: "history" }, { name: "🌍 الجغرافيا", gid: "99625756", key: "geo" }, { name: "🧬 العلوم", gid: "1843208636", key: "science" }, { name: "💡 ثقافة عامة", gid: "564130158", key: "general" }, { name: "⚽ الرياضة", gid: "0", key: "sports" }] },
         en: { dir: "ltr", font: "'Poppins', sans-serif", logo: "IQ Culture", sub: "GLOBAL EDITION", start: "Continue", select: "Select Category", recharge: "+", noHearts: "No Hearts!", adDesc: "Watch ad to get full hearts.", later: "Maybe later", removeBtn: "Remove 2 (50 pts)", factLoading: "Loading fact...", leaderboardBtn: "🏆 Global Leaderboard", leaderboardTitle: "Top 10 Players in the World", close: "Close", offline: "⚠️ No internet connection", factsGid: "259198059", cats: [{ name: "⏳ History", gid: "1950805065", key: "history" }, { name: "🌍 Geography", gid: "1899297807", key: "geo" }, { name: "🧬 Science", gid: "407039200", key: "science" }, { name: "💡 General", gid: "1044248022", key: "general" }, { name: "⚽ Sports", gid: "1559005659", key: "sports" }] },
         es: { dir: "ltr", font: "'Poppins', sans-serif", logo: "IQ Cultura", sub: "EDICIÓN GLOBAL", start: "Continuar", select: "Seleccionar Categoría", recharge: "+", noHearts: "¡Sin Corazones!", adDesc: "Mira un anuncio para obtener corazones.", later: "Más tarde", removeBtn: "Eliminar 2 (50 pts)", factLoading: "Cargando...", leaderboardBtn: "🏆 Tabla de Líderes", leaderboardTitle: "Los 10 mejores jugadores", close: "Cerrar", offline: "⚠️ Sin conexión a internet", factsGid: "1911794502", cats: [{ name: "⏳ Historia", gid: "948777647", key: "history" }, { name: "🌍 Geografía", gid: "1233201488", key: "geo" }, { name: "🧬 Ciencia", gid: "2028449800", key: "science" }, { name: "💡 Cultura General", gid: "1662832315", key: "general" }, { name: "⚽ Deportes", gid: "1795176380", key: "sports" }] },
-        fr: { dir: "ltr", font: "'Poppins', sans-serif", logo: "QI Culture", sub: "ÉDITION MONDIALE", start: "Continuer", select: "Choisir la Catégorie", recharge: "+", noHearts: "Plus de cœurs !", adDesc: "Regardez une pub pour des cœurs.", later: "Plus tard", removeBtn: "Supprimer 2 (50 pts)", factLoading: "Chargement...", leaderboardBtn: "🏆 Classement Mondial", leaderboardTitle: "Top 10 des meilleurs joueurs", close: "Fermer", offline: "⚠️ Pas de connexion internet", factsGid: "1356278776", cats: [{ name: "⏳ Histoire", gid: "1692460075", key: "histoire" }, { name: "🌍 Géographie", gid: "1888258036", key: "geo" }, { name: "🧬 Sciences", gid: "1043839601", key: "science" }, { name: "💡 Culture Générale", gid: "1000789609", key: "general" }, { name: "⚽ Sports", gid: "942675202", key: "sports" }] }
+        fr: { dir: "ltr", font: "'Poppins', sans-serif", logo: "QI Culture", sub: "ÉDITION MONDIALE", start: "Continuer", select: "Choisير la Catégorie", recharge: "+", noHearts: "Plus de cœurs !", adDesc: "Regardez une pub pour des cœurs.", later: "Plus tard", removeBtn: "Supprimer 2 (50 pts)", factLoading: "Chargement...", leaderboardBtn: "🏆 Classement Mondial", leaderboardTitle: "Top 10 des meilleurs joueurs", close: "Fermer", offline: "⚠️ Pas de connexion internet", factsGid: "1356278776", cats: [{ name: "⏳ Histoire", gid: "1692460075", key: "histoire" }, { name: "🌍 Géographie", gid: "1888258036", key: "geo" }, { name: "🧬 Sciences", gid: "1043839601", key: "science" }, { name: "💡 Culture Générale", gid: "1000789609", key: "general" }, { name: "⚽ Sports", gid: "942675202", key: "sports" }] }
     };
 
     const audioEl = document.getElementById('bg-audio');
     const muteBtn = document.getElementById('mute-btn');
 
-    // وظيفة التحقق من الاتصال مع ترجمة الرسالة
     function checkConnection() {
         const warning = document.getElementById('offline-warning');
         const startBtn = document.getElementById('btn-start');
@@ -347,7 +347,6 @@
     window.addEventListener('online', checkConnection);
     window.addEventListener('offline', checkConnection);
 
-    // إصلاح الموسيقى عند الخروج من اللعبة أو تغيير التبويب
     document.addEventListener("visibilitychange", function() {
         if (document.hidden) {
             audioEl.pause();
@@ -556,7 +555,9 @@
         const progKey = `${gameState.lang}_${gameState.currentCat}`;
         if(selectedLetter.toLowerCase().trim() === correctLetter.toLowerCase().trim()) {
             btn.classList.add('correct'); gameState.score += 10; gameState.adCounter++;
-            if(gameState.adCounter >= 7) {
+            
+            // تم تعديل الشرط هنا ليظهر الإعلان كل 5 أسئلة
+            if(gameState.adCounter >= 5) { 
                 gameState.adCounter = 0;
                 if(gameState.activeIdx + 1 === (gameState.progress[progKey] || 1)) { gameState.progress[progKey] = (gameState.progress[progKey] || 1) + 1; }
                 setTimeout(() => { document.getElementById('quiz-ui').classList.remove('show'); showAdModal('milestone'); }, 800);
@@ -590,7 +591,8 @@
         watchBtn.setAttribute('data-ad-type', type);
         if(type === 'milestone') {
             t.innerText = gameState.lang === 'ar' ? "أحسنت!" : "Great Progress!";
-            d.innerText = gameState.lang === 'ar' ? "أكملت 7 أسئلة! شاهد إعلاناً سريعاً للمتابعة." : "7 questions done! Watch a quick ad to continue.";
+            // تعديل النص البرمجي ليوافق التغيير الجديد (5 أسئلة)
+            d.innerText = gameState.lang === 'ar' ? "أكملت 5 أسئلة! شاهد إعلاناً سريعاً للمتابعة." : "5 questions done! Watch a quick ad to continue.";
             watchBtn.innerText = gameState.lang === 'ar' ? "مشاهدة الإعلان" : "Watch Ad";
         } else {
             t.innerText = conf.noHearts; d.innerText = conf.adDesc;
