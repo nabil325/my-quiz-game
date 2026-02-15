@@ -29,7 +29,6 @@
             --danger: #ff4d4d;
         }
 
-        /* تنبيه حالة الإنترنت */
         #offline-warning {
             position: fixed; top: 0; left: 0; width: 100%;
             background: var(--danger); color: white;
@@ -46,20 +45,13 @@
             background-attachment: fixed;
         }
 
-        .overlay {
-            position: fixed; inset: 0;
-            background: rgba(0, 0, 0, 0.55);
-            z-index: 1;
-        }
+        .overlay { position: fixed; inset: 0; background: rgba(0, 0, 0, 0.55); z-index: 1; }
 
         .top-bar {
             position: fixed; top: 0; width: 100%; padding: 10px 15px;
             display: none; justify-content: space-between; align-items: center; z-index: 1000;
-            background: var(--glass);
-            backdrop-filter: blur(15px);
-            -webkit-backdrop-filter: blur(15px);
-            box-sizing: border-box; 
-            border-bottom: 1px solid rgba(255,255,255,0.1);
+            background: var(--glass); backdrop-filter: blur(15px); -webkit-backdrop-filter: blur(15px);
+            box-sizing: border-box; border-bottom: 1px solid rgba(255,255,255,0.1);
             padding-top: env(safe-area-inset-top);
         }
 
@@ -140,49 +132,21 @@
             scroll-behavior: smooth;
             position: relative;
         }
-        
-        .map-view svg {
-            position: absolute;
-            top: 0; left: 0;
-            width: 100%; height: 100%;
-            pointer-events: none;
-            z-index: -1;
-        }
 
         .lvl-node { 
             width: 80px; height: 80px; border-radius: 50%; 
-            background: rgba(255, 255, 255, 0.05); 
-            border: 4px solid rgba(255, 255, 255, 0.2); 
+            background: rgba(255, 255, 255, 0.05); border: 4px solid rgba(255, 255, 255, 0.2); 
             display: flex; align-items: center; justify-content: center; 
             font-size: 1.6rem; font-weight: 900; cursor: default; 
             transition: 0.4s; color: rgba(255, 255, 255, 0.3);
             backdrop-filter: blur(5px); flex-shrink: 0;
-            position: relative;
-            z-index: 2;
+            position: relative; z-index: 2;
         }
 
-        .lvl-node.completed { 
-            background: var(--gold); 
-            border-color: #b8860b; 
-            color: black; 
-            cursor: pointer;
-            box-shadow: 0 0 15px rgba(255, 215, 0, 0.5);
-        }
+        .lvl-node.completed { background: var(--gold); border-color: #b8860b; color: black; cursor: pointer; box-shadow: 0 0 15px rgba(255, 215, 0, 0.5); }
+        .lvl-node.current { background: white; border-color: var(--gold); color: black; cursor: pointer; animation: pulseWhite 2s infinite; box-shadow: 0 0 25px rgba(255, 255, 255, 0.7); z-index: 5; }
 
-        .lvl-node.current { 
-            background: white; 
-            border-color: var(--gold); 
-            color: black; 
-            cursor: pointer;
-            animation: pulseWhite 2s infinite; 
-            box-shadow: 0 0 25px rgba(255, 255, 255, 0.7);
-            z-index: 5;
-        }
-
-        @keyframes pulseWhite { 
-            0%, 100% { transform: scale(1); } 
-            50% { transform: scale(1.15); } 
-        }
+        @keyframes pulseWhite { 0%, 100% { transform: scale(1); } 50% { transform: scale(1.15); } }
 
         .quiz-container { position: fixed; bottom: -100%; left: 0; width: 100%; background: rgba(15, 15, 15, 0.98); backdrop-filter: blur(30px); border-radius: 35px 35px 0 0; border-top: 3px solid var(--gold); padding: 30px 20px; box-sizing: border-box; z-index: 2000; transition: 0.6s cubic-bezier(0.19, 1, 0.22, 1); max-height: 75vh; overflow-y: auto; }
         .quiz-container.show { bottom: 0; }
@@ -221,7 +185,7 @@
         </div>
         <div class="hearts-group">
             <div class="stat-badge" style="color: #ff4d4d;">
-                <span>❤️</span> <span id="hearts-val">5</span>
+                <span>❤️</span> <span id="hearts-val">3</span>
                 <span id="regen-timer"></span>
             </div>
             <button onclick="showAdModal('manual')" class="recharge-mini-btn">+</button>
@@ -300,7 +264,7 @@
 </div>
 
 <script>
-    // معرفات إعلانات AdMob الخاصة بك
+    // معرفات إعلانات AdMob الحقيقية
     const INTERSTITIAL_ID = "ca-app-pub-8686649972547288/5921443180";
     const REWARDED_ID = "ca-app-pub-8686649972547288/7102662917";
 
@@ -309,7 +273,8 @@
     const db = firebase.database();
     const CSV = "https://docs.google.com/spreadsheets/d/e/2PACX-1vSJ4RCU1_iXMqLS3ApB1g8SjSrL2hbIAv-1VniqdMElnalov--mSDTpe9rjMxaWGCuP6gpxWV7OZDe1/pub?output=csv";
 
-    const MAX_HEARTS = 5;
+    // تعديل عدد القلوب هنا ليكون 3
+    const MAX_HEARTS = 3;
     const REGEN_TIME = 5 * 60 * 1000;
 
     let gameState = {
@@ -328,7 +293,7 @@
     const langConfig = {
         ar: { dir: "rtl", font: "'Cairo', sans-serif", logo: "IQ ثقافة", sub: "النسخة العالمية", start: "استمرار", select: "اختر التصنيف", recharge: "+", noHearts: "انتهت القلوب!", adDesc: "شاهد إعلان للحصول على قلوب كاملة.", later: "ربما لاحقاً", removeBtn: "حذف خيارين (50 نقطة)", factLoading: "جاري التحميل...", leaderboardBtn: "🏆 قائمة المتصدرين العالمية", leaderboardTitle: "أفضل 10 لاعبين في العالم", close: "إغلاق", offline: "⚠️ لا يوجد اتصال بالإنترنت", factsGid: "605574246", cats: [{ name: "⏳ التاريخ", gid: "11216236", key: "history" }, { name: "🌍 الجغرافيا", gid: "99625756", key: "geo" }, { name: "🧬 العلوم", gid: "1843208636", key: "science" }, { name: "💡 ثقافة عامة", gid: "564130158", key: "general" }, { name: "⚽ الرياضة", gid: "0", key: "sports" }] },
         en: { dir: "ltr", font: "'Poppins', sans-serif", logo: "IQ Culture", sub: "GLOBAL EDITION", start: "Continue", select: "Select Category", recharge: "+", noHearts: "No Hearts!", adDesc: "Watch ad to get full hearts.", later: "Maybe later", removeBtn: "Remove 2 (50 pts)", factLoading: "Loading fact...", leaderboardBtn: "🏆 Global Leaderboard", leaderboardTitle: "Top 10 Players in the World", close: "Close", offline: "⚠️ No internet connection", factsGid: "259198059", cats: [{ name: "⏳ History", gid: "1950805065", key: "history" }, { name: "🌍 Geography", gid: "1899297807", key: "geo" }, { name: "🧬 Science", gid: "407039200", key: "science" }, { name: "💡 General", gid: "1044248022", key: "general" }, { name: "⚽ Sports", gid: "1559005659", key: "sports" }] },
-        es: { dir: "ltr", font: "'Poppins', sans-serif", logo: "IQ Cultura", sub: "EDICIÓN GLOBAL", start: "Continuar", select: "Seleccionar Categoría", recharge: "+", noHearts: "¡Sin Corazones!", adDesc: "Mira un anuncio para obtener corazones.", later: "Más tarde", removeBtn: "Eliminar 2 (50 pts)", factLoading: "Cargando...", leaderboardBtn: "🏆 Tabla de Líderes", leaderboardTitle: "Los 10 mejores jugadores", close: "Cerrar", offline: "⚠️ Sin conexión a internet", factsGid: "1911794502", cats: [{ name: "⏳ Historia", gid: "948777647", key: "history" }, { name: "🌍 Geografía", gid: "1233201488", key: "geo" }, { name: "🧬 Ciencia", gid: "2028449800", key: "science" }, { name: "💡 Cultura General", gid: "1662832315", key: "general" }, { name: "⚽ Deportes", gid: "1795176380", key: "sports" }] },
+        es: { dir: "ltr", font: "'Poppins', sans-serif", logo: "IQ Cultura", sub: "EDICIÓN GLOBAL", start: "Continuar", select: "Seleccionar Categoría", recharge: "+", noHearts: "¡Sin Corازones!", adDesc: "Mira un anuncio para obtener corazones.", later: "Más tarde", removeBtn: "Eliminar 2 (50 pts)", factLoading: "Cargando...", leaderboardBtn: "🏆 Tabla de Líderes", leaderboardTitle: "Los 10 mejores jugadores", close: "Cerrar", offline: "⚠️ Sin conexión a internet", factsGid: "1911794502", cats: [{ name: "⏳ Historia", gid: "948777647", key: "history" }, { name: "🌍 Geografía", gid: "1233201488", key: "geo" }, { name: "🧬 Ciencia", gid: "2028449800", key: "science" }, { name: "💡 Cultura General", gid: "1662832315", key: "general" }, { name: "⚽ Deportes", gid: "1795176380", key: "sports" }] },
         fr: { dir: "ltr", font: "'Poppins', sans-serif", logo: "QI Culture", sub: "ÉDITION MONDIALE", start: "Continuer", select: "Choisir la Catégorie", recharge: "+", noHearts: "Plus de cœurs !", adDesc: "Regardez une pub pour des cœurs.", later: "Plus tard", removeBtn: "Supprimer 2 (50 pts)", factLoading: "Chargement...", leaderboardBtn: "🏆 Classement Mondial", leaderboardTitle: "Top 10 des meilleurs joueurs", close: "Fermer", offline: "⚠️ Pas de connexion internet", factsGid: "1356278776", cats: [{ name: "⏳ Histoire", gid: "1692460075", key: "histoire" }, { name: "🌍 Géographie", gid: "1888258036", key: "geo" }, { name: "🧬 Sciences", gid: "1043831001", key: "science" }, { name: "💡 Culture Générale", gid: "1000789609", key: "general" }, { name: "⚽ Sports", gid: "942675202", key: "sports" }] }
     };
 
@@ -339,25 +304,15 @@
         const warning = document.getElementById('offline-warning');
         const startBtn = document.getElementById('btn-start');
         warning.innerText = langConfig[gameState.lang].offline;
-        if (!navigator.onLine) {
-            warning.style.display = 'block';
-            if(startBtn) startBtn.disabled = true;
-        } else {
-            warning.style.display = 'none';
-            if(startBtn) startBtn.disabled = false;
-        }
+        if (!navigator.onLine) { warning.style.display = 'block'; if(startBtn) startBtn.disabled = true; } 
+        else { warning.style.display = 'none'; if(startBtn) startBtn.disabled = false; }
     }
     window.addEventListener('online', checkConnection);
     window.addEventListener('offline', checkConnection);
 
     document.addEventListener("visibilitychange", function() {
-        if (document.hidden) {
-            audioEl.pause();
-        } else {
-            if (!gameState.muted) {
-                audioEl.play().catch(() => {});
-            }
-        }
+        if (document.hidden) audioEl.pause();
+        else if (!gameState.muted) audioEl.play().catch(() => {});
     });
 
     function goBack() {
@@ -365,17 +320,12 @@
         if (quizUI.classList.contains('show')) { quizUI.classList.remove('show'); return; }
         const mapScreen = document.getElementById('scr-map');
         const catsScreen = document.getElementById('scr-cats');
-        if (mapScreen.classList.contains('active')) { switchScreen('scr-cats'); } 
-        else if (catsScreen.classList.contains('active')) { 
-            switchScreen('scr-start'); 
-            document.getElementById('top-bar').style.display = 'none'; 
-            document.getElementById('main-exit-btn').style.display = 'none'; 
-        }
+        if (mapScreen.classList.contains('active')) switchScreen('scr-cats');
+        else if (catsScreen.classList.contains('active')) { switchScreen('scr-start'); document.getElementById('top-bar').style.display = 'none'; document.getElementById('main-exit-btn').style.display = 'none'; }
     }
 
     function init() {
-        checkConnection();
-        checkPlayerName(); applyLanguage(); updateUI();
+        checkConnection(); checkPlayerName(); applyLanguage(); updateUI();
         muteBtn.onclick = toggleMute;
         document.getElementById('remove-two-btn').onclick = useRemoveTwo;
         document.getElementById('watch-ad-btn').onclick = triggerRewardedAd;
@@ -392,14 +342,10 @@
                 const regenEl = document.getElementById('regen-timer');
                 if(regenEl) regenEl.innerText = `${mins}:${secs < 10 ? '0' : ''}${secs}`;
             }
-        } else { 
-            const regenEl = document.getElementById('regen-timer');
-            if(regenEl) regenEl.innerText = ""; 
-            gameState.lastHeartTime = Date.now(); 
-        }
+        } else { document.getElementById('regen-timer').innerText = ""; gameState.lastHeartTime = Date.now(); }
     }
 
-    function checkPlayerName() { if (!gameState.playerName) { document.getElementById('name-screen').style.display = 'flex'; } else { updatePlayerDisplay(); } }
+    function checkPlayerName() { if (!gameState.playerName) document.getElementById('name-screen').style.display = 'flex'; else updatePlayerDisplay(); }
 
     function submitName() {
         let input = document.getElementById('player-name-input').value.trim();
@@ -448,8 +394,7 @@
         document.getElementById('txt-leaderboard-title').innerText = conf.leaderboardTitle; document.getElementById('btn-close-leader').innerText = conf.close;
         document.querySelectorAll('.lang-btn').forEach(b => b.classList.remove('active-lang'));
         document.getElementById(`btn-lang-${gameState.lang}`).classList.add('active-lang');
-        checkConnection();
-        loadFact(); renderCats();
+        checkConnection(); loadFact(); renderCats();
     }
 
     function loadFact() {
@@ -521,12 +466,8 @@
             node.className = 'lvl-node'; node.innerText = levelNum;
             const offset = (i % 2 === 0) ? "40px" : "-40px";
             node.style.transform = `translateX(${offset})`;
-            if (levelNum < unlocked) {
-                node.classList.add('completed'); node.onclick = () => openQuiz(i);
-            } else if (levelNum === unlocked) {
-                node.classList.add('current'); node.id = "target-scroll-node"; 
-                node.onclick = () => openQuiz(i);
-            }
+            if (levelNum < unlocked) { node.classList.add('completed'); node.onclick = () => openQuiz(i); } 
+            else if (levelNum === unlocked) { node.classList.add('current'); node.id = "target-scroll-node"; node.onclick = () => openQuiz(i); }
             cont.appendChild(node);
         });
         if (shouldScroll) {
@@ -559,23 +500,19 @@
         if(selectedLetter.toLowerCase().trim() === correctLetter.toLowerCase().trim()) {
             btn.classList.add('correct'); gameState.score += 10; gameState.adCounter++;
             
-            // ظهور الإعلان البيني كل 7 إجابات صحيحة
+            // إعلان بيني كل 7 إجابات صحيحة
             if(gameState.adCounter >= 7) {
                 gameState.adCounter = 0;
-                if(gameState.activeIdx + 1 === (gameState.progress[progKey] || 1)) { gameState.progress[progKey] = (gameState.progress[progKey] || 1) + 1; }
-                setTimeout(() => { 
-                    document.getElementById('quiz-ui').classList.remove('show'); 
-                    showInterstitial(); // استدعاء الإعلان البيني
-                    renderMap(false);
-                }, 800);
+                if(gameState.activeIdx + 1 === (gameState.progress[progKey] || 1)) gameState.progress[progKey] = (gameState.progress[progKey] || 1) + 1;
+                setTimeout(() => { document.getElementById('quiz-ui').classList.remove('show'); showInterstitial(); renderMap(false); }, 800);
             } else {
-                if(gameState.activeIdx + 1 === (gameState.progress[progKey] || 1)) { gameState.progress[progKey] = (gameState.progress[progKey] || 1) + 1; }
+                if(gameState.activeIdx + 1 === (gameState.progress[progKey] || 1)) gameState.progress[progKey] = (gameState.progress[progKey] || 1) + 1;
                 setTimeout(() => { document.getElementById('quiz-ui').classList.remove('show'); renderMap(false); }, 800);
             }
         } else {
             btn.classList.add('wrong'); gameState.hearts--;
-            if (gameState.hearts === MAX_HEARTS - 1) { gameState.lastHeartTime = Date.now(); }
-            if(gameState.hearts <= 0) { setTimeout(() => { document.getElementById('quiz-ui').classList.remove('show'); showAdModal('hearts'); }, 800); }
+            if (gameState.hearts === MAX_HEARTS - 1) gameState.lastHeartTime = Date.now();
+            if(gameState.hearts <= 0) setTimeout(() => { document.getElementById('quiz-ui').classList.remove('show'); showAdModal('hearts'); }, 800);
         }
         save(); updateUI();
     }
@@ -597,54 +534,30 @@
         const watchBtn = document.getElementById('watch-ad-btn'); const conf = langConfig[gameState.lang];
         watchBtn.setAttribute('data-ad-type', type);
         if(type === 'milestone') {
-            t.innerText = gameState.lang === 'ar' ? "أحسنت!" : "Great Progress!";
-            d.innerText = gameState.lang === 'ar' ? "أكملت مجموعة من الأسئلة! شاهد إعلاناً للمتابعة." : "Great set of questions! Watch an ad to continue.";
-            watchBtn.innerText = gameState.lang === 'ar' ? "مشاهدة الإعلان" : "Watch Ad";
+            t.innerText = "أحسنت!"; d.innerText = "أكملت مجموعة من الأسئلة! شاهد إعلاناً للمتابعة."; watchBtn.innerText = "مشاهدة الإعلان";
         } else {
-            t.innerText = conf.noHearts; d.innerText = conf.adDesc;
-            watchBtn.innerText = gameState.lang === 'ar' ? "📺 شحن القلوب فوراً" : "📺 Refill Hearts Now";
+            t.innerText = conf.noHearts; d.innerText = conf.adDesc; watchBtn.innerText = "📺 شحن القلوب فوراً";
         }
         document.getElementById('ad-modal').style.display = 'flex'; 
     }
     
     function closeAdModal() { document.getElementById('ad-modal').style.display = 'none'; renderMap(false); }
 
-    // --- وظائف استدعاء الإعلانات الحقيقية للتطبيق ---
-    
-    function showInterstitial() {
-        if (window.AndroidInterface) {
-            window.AndroidInterface.showInterstitialAd(INTERSTITIAL_ID);
-        }
-    }
+    function showInterstitial() { if (window.AndroidInterface) window.AndroidInterface.showInterstitialAd(INTERSTITIAL_ID); }
 
     function triggerRewardedAd() {
-        if (window.AndroidInterface) {
-            window.AndroidInterface.showRewardedAd(REWARDED_ID);
-        } else {
-            // محاكاة للمتصفح فقط (للتجربة)
-            startFakeAd(); 
-        }
+        if (window.AndroidInterface) window.AndroidInterface.showRewardedAd(REWARDED_ID);
+        else startFakeAd(); 
     }
 
-    // يتم استدعاء هذه الدالة من التطبيق عند اكتمال مشاهدة إعلان المكافأة
-    function onAdRewarded() {
-        gameState.hearts = MAX_HEARTS;
-        gameState.lastHeartTime = Date.now();
-        save(); updateUI(); closeAdModal();
-    }
+    function onAdRewarded() { gameState.hearts = MAX_HEARTS; gameState.lastHeartTime = Date.now(); save(); updateUI(); closeAdModal(); }
 
-    // محاكاة إعلان في المتصفح فقط
     function startFakeAd() {
-        let sec = 5; const btn = document.getElementById('watch-ad-btn');
-        const tmr = document.getElementById('ad-timer');
+        let sec = 5; const btn = document.getElementById('watch-ad-btn'); const tmr = document.getElementById('ad-timer');
         btn.style.display = 'none'; tmr.style.display = 'block';
         const inter = setInterval(() => {
             tmr.innerText = sec; sec--;
-            if(sec < 0) {
-                clearInterval(inter);
-                onAdRewarded();
-                btn.style.display = 'block'; tmr.style.display = 'none';
-            }
+            if(sec < 0) { clearInterval(inter); onAdRewarded(); btn.style.display = 'block'; tmr.style.display = 'none'; }
         }, 1000);
     }
     
